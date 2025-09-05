@@ -27,6 +27,8 @@
       margin: 0; color: var(--text); background: var(--bg);
       font-family: var(--font-ui); line-height: 1.5;
       -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      /*Para prevenir desbordes horizontales*/
+      overflow-x: hidden;
     }
     img,svg,video { max-width: 100%; display: block; }
     a { color: inherit; text-decoration: none; }
@@ -197,3 +199,12 @@
       .theme-toggle span { display: none; } /* Solo mostrar icono en móviles muy pequeños */
       .theme-menu { min-width: 140px; right: -10px; }
     }
+    
+    /*Requerimiento HH-111 Diseño Responsivo-*/
+    @media (min-width: 769px) {
+      .tiles {grid-template-columns: repeat(4, 1fr);}
+      .cards {grid-template-columns: repeat(3, 1fr);}
+      .drawer {display: none;}
+    }
+ 
+   
