@@ -6,7 +6,7 @@ export const PRODUCTS_HH = [
     descripcion: "Manzanas crujientes y dulces; ideales para snack o postres.",
     practicas: ["Agricultura responsable"],
     recetas: ["https://www.ejemplo.cl/recetas/strudel-manzana"],
-    imagen: "assets/products/fr001.jpg"
+    imagen: "assets/productos/frutas/manzana-fuji.jpg"
   },
   {
     code: "FR002", nombre: "Naranjas Valencia", categoriaId: "FR",
@@ -14,7 +14,7 @@ export const PRODUCTS_HH = [
     descripcion: "Jugosas y ricas en vitamina C; perfectas para jugos.",
     practicas: ["Buenas prácticas de cosecha"],
     recetas: ["https://www.ejemplo.cl/recetas/jugo-naranja"],
-    imagen: "assets/products/fr002.jpg"
+    imagen: "assets/productos/frutas/naranja-valencia.jpg"
   },
   {
     code: "FR003", nombre: "Plátanos Cavendish", categoriaId: "FR",
@@ -22,7 +22,7 @@ export const PRODUCTS_HH = [
     descripcion: "Dulces y energéticos; ricos en potasio.",
     practicas: ["Manejo postcosecha"],
     recetas: ["https://www.ejemplo.cl/recetas/batido-platano"],
-    imagen: "assets/products/fr003.jpg"
+    imagen: "assets/productos/frutas/platano-cavendish.jpg"
   },
   {
     code: "VR001", nombre: "Zanahorias Orgánicas", categoriaId: "VR",
@@ -30,7 +30,7 @@ export const PRODUCTS_HH = [
     descripcion: "Crujientes y sin pesticidas; excelentes para ensaladas y jugos.",
     practicas: ["Certificación orgánica"],
     recetas: ["https://www.ejemplo.cl/recetas/ensalada-zanahoria"],
-    imagen: "assets/products/vr001.jpg"
+    imagen: "assets/productos/verduras/zanahoria-organica.jpg"
   },
   {
     code: "VR002", nombre: "Espinacas Frescas", categoriaId: "VR",
@@ -38,7 +38,7 @@ export const PRODUCTS_HH = [
     descripcion: "Hojas tiernas y nutritivas; ideales para ensaladas y batidos.",
     practicas: ["Riego eficiente"],
     recetas: ["https://www.ejemplo.cl/recetas/quiche-espinaca"],
-    imagen: "assets/products/vr002.jpg"
+    imagen: "assets/productos/verduras/espinaca-fresca.jpg"
   },
   {
     code: "VR003", nombre: "Pimientos Tricolores", categoriaId: "VR",
@@ -46,7 +46,7 @@ export const PRODUCTS_HH = [
     descripcion: "Rojos, amarillos y verdes; aportan color y antioxidantes.",
     practicas: ["Rotación de cultivos"],
     recetas: ["https://www.ejemplo.cl/recetas/salteado-pimientos"],
-    imagen: "assets/products/vr003.jpg"
+    imagen: "assets/productos/verduras/pimientos-tricolores.jpg"
   },
   {
     code: "PO001", nombre: "Miel Orgánica", categoriaId: "PO",
@@ -54,7 +54,7 @@ export const PRODUCTS_HH = [
     descripcion: "Miel pura y aromática; rica en antioxidantes.",
     practicas: ["Apicultura sostenible"],
     recetas: ["https://www.ejemplo.cl/recetas/te-miel-limon"],
-    imagen: "assets/products/po001.jpg"
+    imagen: "assets/productos/productos-organicos/miel-organica.jpg"
   },
   {
     code: "PO003", nombre: "Quinua Orgánica", categoriaId: "PO",
@@ -62,7 +62,7 @@ export const PRODUCTS_HH = [
     descripcion: "Grano andino de alto valor nutritivo.",
     practicas: ["Producción responsable"],
     recetas: ["https://www.ejemplo.cl/recetas/ensalada-quinua"],
-    imagen: "assets/products/po003.jpg"
+    imagen: "assets/productos/productos-organicos/quinua-organica.jpg"
   },
   {
     code: "PL001", nombre: "Leche Entera", categoriaId: "PL",
@@ -70,6 +70,6 @@ export const PRODUCTS_HH = [
     descripcion: "Leche fresca, ideal para consumo diario.",
     practicas: ["Bienestar animal"],
     recetas: ["https://www.ejemplo.cl/recetas/arroz-con-leche"],
-    imagen: "assets/products/pl001.jpg"
+    imagen: "assets/productos/productos-organicos/leche-entera.jpg"
   }
 ];

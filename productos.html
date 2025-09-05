@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Productos - MiTienda</title>
   <link rel="stylesheet" href="css/styles.css">
-
 </head>
-
-
 <body>
   <!-- HEADER -->
   <header class="site-header">
@@ -28,16 +25,13 @@
       </nav>
 
       <div class="actions">
-        <!-- Carrito -->
         <button class="btn-icon" type="button" aria-label="Abrir carrito">
           🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
         </button>
-        <!-- Toggle menú móvil -->
         <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
       </div>
     </div>
 
-    <!-- Drawer móvil -->
     <details class="nav-drawer">
       <summary class="sr-only">Abrir menú</summary>
       <div class="drawer" role="navigation" aria-label="Menú móvil">
@@ -58,21 +52,8 @@
         <h1>Nuestros Productos</h1>
         <p>Explora nuestras categorías y encuentra lo que buscas.</p>
 
-        <div class="productos-grid">
-          <article class="producto">
-            <img src="img/producto1.jpg" alt="Producto 1" />
-            <h2>Producto 1</h2>
-            <p>Descripción breve del producto.</p>
-            <button>Añadir al carrito</button>
-          </article>
-
-          <article class="producto">
-            <img src="img/producto2.jpg" alt="Producto 2" />
-            <h2>Producto 2</h2>
-            <p>Descripción breve del producto.</p>
-            <button>Añadir al carrito</button>
-          </article>
-        </div>
+        <!-- Aquí se pintarán los productos -->
+        <div class="productos-grid" id="productos-grid"></div>
       </div>
     </section>
   </main>
@@ -83,5 +64,27 @@
       <p>&copy; 2025 MiTienda. Todos los derechos reservados.</p>
     </div>
   </footer>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { PRODUCTS_HH } from './js/productos_huerto.js';
+
+    const grid = document.getElementById('productos-grid');
+
+    PRODUCTS_HH.forEach(prod => {
+      const article = document.createElement('article');
+      article.classList.add('producto');
+
+      article.innerHTML = `
+        <img src="${prod.imagen}" alt="${prod.nombre}" />
+        <h2>${prod.nombre}</h2>
+        <p>${prod.descripcion}</p>
+        <p class="precio">$${prod.precioCLP} / ${prod.unidad}</p>
+        <button data-code="${prod.code}">Añadir al carrito</button>
+      `;
+
+      grid.appendChild(article);
+    });
+  </script>
 </body>
 </html>
