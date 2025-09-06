@@ -42,8 +42,17 @@
       <button class="btn-icon" type="button" aria-label="Abrir carrito">
         🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
       </button>
+
+      <!-- Se agregaron enlaces de Inciar sesion y Registrar usuarios en el Header-->
+      <div class="user-actions">
+        <a href="#" id="login-link">Iniciar Sesión</a> /
+        <a href="#" id="register-link">Registrar Usuario</a>
+      </div>
+
+
+
       <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
-    </div>
+      </div>
 
     <!-- Menú móvil -->
     <details class="nav-drawer">
@@ -124,6 +133,82 @@
       </div>
     </div>
   </footer>
+
+  <!--Formularios insertados de iniciar sesion y registrar usuario-->
+  
+  <!-- Modal de Inicio de Sesión -->
+<div id="login-modal" class="modal hidden">
+  <div class="form-wrapper">
+    <form class="form-box">
+      <!-- Imagen y nombre de empresa -->
+      <div class="empresa-header">
+        <img src="assets/logo.png" alt="Logo empresa" class="empresa-logo">
+        <h2 class="empresa-nombre">MiTienda</h2>
+      </div>
+
+      <!-- Campos de inicio de sesión -->
+      <label for="correo-login">CORREO</label>
+      <input type="email" id="correo-login" required>
+
+      <label for="contrasena-login">CONTRASEÑA</label>
+      <input type="password" id="contrasena-login" required>
+
+      <button type="submit">Iniciar sesión</button>
+    </form>
+  </div>
+</div>
+
+
+  <!-- Modal de Registro de Usuario -->
+<div id="register-modal" class="modal hidden">
+  <div class="form-wrapper">
+    <form class="form-box">
+      <h2>Registro de usuario</h2>
+
+      <label for="nombre">NOMBRE COMPLETO</label>
+      <input type="text" id="nombre" required>
+
+      <label for="correo">CORREO</label>
+      <input type="email" id="correo" required>
+
+      <label for="confirmar-correo">CONFIRME CORREO</label>
+      <input type="email" id="confirmar-correo" required>
+
+      <label for="contrasena">CONTRASEÑA</label>
+      <input type="password" id="contrasena" required>
+
+      <label for="confirmar-contrasena">CONFIRMAR CONTRASEÑA</label>
+      <input type="password" id="confirmar-contrasena" required>
+
+      <label for="telefono">TELÉFONO (opcional)</label>
+      <input type="tel" id="telefono">
+
+      <div class="region-comuna">
+        <div class="select-group">
+          <label for="region">Seleccione la región</label>
+          <select id="region" required>
+            <option disabled selected>-- Seleccione la región --</option>
+            <option>Ver que colocar aqui</option>
+            <option>Ver que colocar aqui</option>
+            <option>Ver que colocar aqui</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label for="comuna">Seleccione su comuna</label>
+          <select id="comuna" required>
+            <option disabled selected>-- Seleccione la comuna --</option>
+            <option>Ver que colocar aqui</option>
+            <option>Ver que colocar aqui</option>
+            <option>Ver que colocar aqui</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit">REGISTRAR</button>
+    </form>
+  </div>
+</div>
 
   <!-- Scripts -->
   <script src="script.js"></script>
