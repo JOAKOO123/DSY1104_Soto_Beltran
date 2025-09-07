@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Registro de Usuario</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <h1>Formulario de Registro</h1>
+
+  <form id="registroForm">
+    <label>RUN:
+      <input type="text" id="run" maxlength="9" required placeholder="Ej: 123456785">
+    </label>
+
+    <label>Nombre:
+      <input type="text" id="nombre" required>
+    </label>
+
+    <label>Apellidos:
+      <input type="text" id="apellidos" required>
+    </label>
+
+    <label>Correo:
+      <input type="email" id="correo" maxlength="100" required placeholder="ejemplo@correo.com">
+    </label>
+
+    <label>Fecha de nacimiento:
+      <input type="date" id="fechaNacimiento" required>
+    </label>
+
+    <label>Región:
+      <select id="region" required>
+        <option value="">Seleccione región</option>
+      </select>
+    </label>
+
+    <label>Comuna:
+      <select id="comuna" required>
+        <option value="">Seleccione comuna</option>
+      </select>
+    </label>
+
+    <button type="submit">Registrar</button>
+    <p id="mensaje"></p>
+  </form>
+
+  <script type="module" src="js/registro.js"></script>
+</body>
+</html>

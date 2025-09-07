@@ -271,3 +271,184 @@
 .producto button:hover {
   background: var(--primary-600);
 }
+
+.cart-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100%;
+  background: #fff;
+  border-left: 2px solid #ddd;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.cart-panel.active {
+  transform: translateX(0);
+}
+
+.cart-panel h2 {
+  margin-top: 0;
+}
+
+#cart-items {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+#cart-items li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/*--breackpoint responsivos  */
+
+/* ≤480px (telefonos pequeños) */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+  .cards {
+    grid-template-columns: 1fr; /* 1 columna */
+  }
+}
+
+/* 481px – 768px (tablets) */
+@media (min-width: 481px) and (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+  .cards {
+    grid-template-columns: 1fr 1fr; /* 2 columnas */
+  }
+}
+
+/* ≥769px (desktop) */
+@media (min-width: 769px) {
+  body {
+    font-size: 16px;
+  }
+  .cards {
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columnas */
+  }
+}
+
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid #2e7d32; /* Verde accesible */
+  outline-offset: 2px;
+}
+
+/* === Estilos del formulario de registro === */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+input, select, button {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #256628;
+}
+
+#mensaje {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Botones de autenticación */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 20px;
+}
+
+.auth-buttons button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #2e7d32;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.auth-buttons button:hover {
+  background: #256628;
+}
+
+/* Modal */
+.modal {
+  display: none; /* oculto al inicio */
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: white;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 450px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.account-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.account-buttons a {
+  text-decoration: none;
+  color: #004aad; /* azul más elegante */
+  font-weight: 500;
+}
+
+.account-buttons a:hover {
+  text-decoration: underline;
+  color: #002f6c; /* azul más oscuro en hover */
+}
+
