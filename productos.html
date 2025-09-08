@@ -7,14 +7,17 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <!-- HEADER -->
+  <!-- ========== HEADER ========== -->
   <header class="site-header">
-    <div class="container nav-bar">ss
+    <!-- Barra de navegación principal -->
+    <div class="container nav-bar">
+      <!-- Logo y marca -->
       <a class="brand" href="./" aria-label="Ir al inicio">
         <div class="logo" aria-hidden="true"></div>
         <span>MiTienda</span>
       </a>
 
+      <!-- Navegación principal -->
       <nav class="primary-nav" aria-label="Principal">
         <ul class="menu">
           <li><a href="./">Inicio</a></li>
@@ -24,14 +27,19 @@
         </ul>
       </nav>
 
+      <!-- Botones de acción -->
       <div class="actions">
-        <button class="btn-icon" type="button" aria-label="Abrir carrito">
+        <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
           🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
         </button>
-        <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
+        <div class="account-buttons">
+          <a href="./iniciar_sesion.html">Iniciar sesión</a> |
+          <a href="./registro.html">Registrar usuario</a>
+        </div>
       </div>
     </div>
 
+    <!-- Menú móvil -->
     <details class="nav-drawer">
       <summary class="sr-only">Abrir menú</summary>
       <div class="drawer" role="navigation" aria-label="Menú móvil">
@@ -45,27 +53,25 @@
     </details>
   </header>
 
-  <!-- MAIN -->
+  <!-- ========== MAIN ========== -->
   <main id="contenido">
     <section class="catalogo">
       <div class="container">
         <h1>Nuestros Productos</h1>
         <p>Explora nuestras categorías y encuentra lo que buscas.</p>
-
-        <!-- Aquí se pintarán los productos -->
         <div class="productos-grid" id="productos-grid"></div>
       </div>
     </section>
   </main>
 
-  <!-- FOOTER -->
+  <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
     <div class="container">
       <p>&copy; 2025 MiTienda. Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- ========== SCRIPTS ========== -->
   <script type="module">
     import { PRODUCTS_HH } from './js/productos_huerto.js';
 
