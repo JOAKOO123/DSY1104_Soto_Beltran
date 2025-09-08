@@ -9,15 +9,12 @@
 <body>
   <!-- ========== HEADER ========== -->
   <header class="site-header">
-    <!-- Barra de navegación principal -->
     <div class="container nav-bar">
-      <!-- Logo y marca -->
       <a class="brand" href="./" aria-label="Ir al inicio">
-        <div class="logo" aria-hidden="true"></div>
+        <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="MiTienda" class="logo-img" />
         <span>MiTienda</span>
       </a>
 
-      <!-- Navegación principal -->
       <nav class="primary-nav" aria-label="Principal">
         <ul class="menu">
           <li><a href="./">Inicio</a></li>
@@ -27,11 +24,12 @@
         </ul>
       </nav>
 
-      <!-- Botones de acción -->
+      <!-- Acciones: carrito + botones de cuenta -->
       <div class="actions">
         <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
           🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
         </button>
+
         <div class="account-buttons">
           <a href="./iniciar_sesion.html">Iniciar sesión</a> |
           <a href="./registro.html">Registrar usuario</a>
@@ -53,6 +51,14 @@
     </details>
   </header>
 
+  <!-- Carrito desplegable (igual que en index) -->
+  <aside id="cart-panel" class="cart-panel hidden">
+    <h2>Tu carrito</h2>
+    <ul id="cart-items"></ul>
+    <p id="cart-total">Total: $0</p>
+    <button id="close-cart" type="button">Cerrar</button>
+  </aside>
+
   <!-- ========== MAIN ========== -->
   <main id="contenido">
     <section class="catalogo">
@@ -72,20 +78,33 @@
   </footer>
 
   <!-- ========== SCRIPTS ========== -->
+  <!-- Script global (carrito, listeners, etc.) -->
+  <script type="module" src="js/script.js"></script>
+
+  <!-- Render del catálogo (con filtro por ?cat=FR/VR/PO/PL) -->
   <script type="module">
     import { PRODUCTS_HH } from './js/productos_huerto.js';
 
     const grid = document.getElementById('productos-grid');
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('cat'); // FR | VR | PO | PL | null
 
-    PRODUCTS_HH.forEach(prod => {
+    const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+
+    const list = cat
+      ? PRODUCTS_HH.filter(p => p.categoriaId === cat)
+      : PRODUCTS_HH;
+
+    grid.innerHTML = '';
+    list.forEach(prod => {
       const article = document.createElement('article');
       article.classList.add('producto');
 
       article.innerHTML = `
-        <img src="${prod.imagen}" alt="${prod.nombre}" />
+        <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
         <h2>${prod.nombre}</h2>
         <p>${prod.descripcion}</p>
-        <p class="precio">$${prod.precioCLP} / ${prod.unidad}</p>
+        <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
         <button data-code="${prod.code}">Añadir al carrito</button>
       `;
 

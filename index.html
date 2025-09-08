@@ -12,21 +12,17 @@
   <!-- Estilos externos -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-
-<script type="module" src="js/script.js"></script>
-
 <body>
   <a href="#contenido" class="sr-only">Saltar al contenido</a>
- <p id="error-email" class="error" aria-live="assertive"></p>
+  <p id="error-email" class="error" aria-live="assertive"></p>
 
   <!-- ===================== HEADER ===================== -->
   <header class="site-header">
     <div class="container nav-bar">
       <a class="brand" href="./" aria-label="Ir al inicio">
-  <div class="logo" aria-hidden="true"></div>
-  <span>MiTienda</span>
-</a>
-
+        <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="MiTienda" class="logo-img" />
+        <span>MiTienda</span>
+      </a>
 
       <nav class="primary-nav" aria-label="Principal">
         <ul class="menu">
@@ -37,20 +33,19 @@
         </ul>
       </nav>
 
+      <!-- Acciones: carrito + botones de cuenta -->
+      <div class="actions">
+        <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
+          🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+        </button>
 
-<!-- Acciones: carrito + botones de cuenta -->
-<div class="actions">
-  <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
-    🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
-  </button>
+        <div class="account-buttons">
+          <a href="./iniciar_sesion.html">Iniciar sesión</a> |
+          <a href="./registro.html">Registrar usuario</a>
+        </div>
+      </div>
+    </div>
 
-  <div class="account-buttons">
-    <a href="./iniciar_sesion.html">Iniciar sesión</a> |
-    <a href="./registro.html">Registrar usuario</a>
-  </div>
-</div>
-
-<summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
     <!-- Menú móvil -->
     <details class="nav-drawer">
       <summary class="sr-only">Abrir menú</summary>
@@ -65,14 +60,13 @@
     </details>
   </header>
 
-<!-- Carrito desplegable -->
-<aside id="cart-panel" class="cart-panel hidden">
-  <h2>Tu carrito</h2>
-  <ul id="cart-items"></ul>
-  <p id="cart-total">Total: $0</p>
-  <button id="close-cart">Cerrar</button>
-</aside>
-
+  <!-- Carrito desplegable -->
+  <aside id="cart-panel" class="cart-panel hidden">
+    <h2>Tu carrito</h2>
+    <ul id="cart-items"></ul>
+    <p id="cart-total">Total: $0</p>
+    <button id="close-cart">Cerrar</button>
+  </aside>
 
   <!-- ===================== MAIN ===================== -->
   <main id="contenido">
@@ -93,22 +87,41 @@
       <div class="container">
         <h2 class="section-title">Categorías</h2>
         <ul class="tiles" aria-label="Listado de categorías">
-          <li><a class="tile" href="./productos.html?cat=FR"><div class="icon"></div><strong>Frutas Frescas</strong><span class="muted">De temporada</span></a></li>
-          <li><a class="tile" href="./productos.html?cat=VR"><div class="icon"></div><strong>Verduras</strong><span class="muted">Orgánicas</span></a></li>
-          <li><a class="tile" href="./productos.html?cat=PO"><div class="icon"></div><strong>Orgánicos</strong><span class="muted">Miel, granos</span></a></li>
-          <li><a class="tile" href="./productos.html?cat=PL"><div class="icon"></div><strong>Lácteos</strong><span class="muted">Locales</span></a></li>
+          <li>
+            <a class="tile" data-cat="FR" href="./productos.html?cat=FR">
+              <div class="icon" aria-hidden="true"></div>
+              <strong>Frutas Frescas</strong><span class="muted">De temporada</span>
+            </a>
+          </li>
+          <li>
+            <a class="tile" data-cat="VR" href="./productos.html?cat=VR">
+              <div class="icon" aria-hidden="true"></div>
+              <strong>Verduras</strong><span class="muted">Orgánicas</span>
+            </a>
+          </li>
+          <li>
+            <a class="tile" data-cat="PO" href="./productos.html?cat=PO">
+              <div class="icon" aria-hidden="true"></div>
+              <strong>Orgánicos</strong><span class="muted">Miel, granos</span>
+            </a>
+          </li>
+          <li>
+            <a class="tile" data-cat="PL" href="./productos.html?cat=PL">
+              <div class="icon" aria-hidden="true"></div>
+              <strong>Lácteos</strong><span class="muted">Locales</span>
+            </a>
+          </li>
         </ul>
       </div>
     </section>
 
     <!-- DESTACADOS -->
-<section class="featured">
-  <div class="container">
-    <h2 class="section-title">Destacados</h2>
-    <div class="cards" id="featured-grid"></div>
-  </div>
-</section>
-
+    <section class="featured">
+      <div class="container">
+        <h2 class="section-title">Destacados</h2>
+        <div class="cards" id="featured-grid"></div>
+      </div>
+    </section>
   </main>
 
   <!-- ===================== FOOTER ===================== -->
@@ -136,8 +149,7 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
-<script type="module" src="js/script.js"></script>
-
+  <!-- Script principal (modular) -->
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>

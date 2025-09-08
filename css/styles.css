@@ -460,3 +460,185 @@ button:hover {
   color: #002f6c; /* azul más oscuro en hover */
 }
 
+.logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+/* Icono con foto por categoría */
+.tile .icon{
+  position: relative;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Imágenes por categoría (rutas desde /css/styles.css → subir un nivel con ../) */
+.tile[data-cat="FR"] .icon{
+  background-image: url("../assets/productos/frutas/manzana-fuji.jpg");
+}
+.tile[data-cat="VR"] .icon{
+  background-image: url("../assets/productos/verduras/zanahoria-organica.jpg");
+}
+.tile[data-cat="PO"] .icon{
+  background-image: url("../assets/productos/productos-organicos/miel-organica.jpg");
+}
+.tile[data-cat="PL"] .icon{
+  background-image: url("../assets/productos/productos-organicos/leche-entera.jpg");
+}
+
+/* Overlay/borde sutil */
+.tile .icon::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.35);
+  pointer-events: none;
+}
+
+
+/* Evitar que el panel oculto reciba clics */
+.cart-panel.hidden{
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cart-panel.active{
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(2);
+}
+
+.tiles li{ position: relative; }      /* por si algún overlay se metió de más */
+.tile{ position: relative; display: grid; }
+.tile .icon{
+  position: relative;                 /* necesario para ::after */
+  z-index: 0;                         /* asegura que no tape texto/links */
+}
+.tile .icon::after{ pointer-events: none; } /* ya lo pusimos, mantenlo */
+
+#cart-items li{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+}
+
+.cart-line-left{
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.cart-qty{
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  margin-left: .25rem;
+}
+
+.cart-action{
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: .15rem .45rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.cart-action:hover{
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.cart-action.remove{
+  margin-left: .25rem;
+}
+
+.line-total{
+  min-width: 84px;
+  text-align: right;
+}
+
+/* Layout de líneas del carrito con miniatura */
+#cart-items li{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: .75rem;
+  padding-block: .25rem;
+}
+
+.cart-left{
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  min-width: 0; /* evita overflow de nombres largos */
+}
+
+.cart-thumb{
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex: 0 0 56px;
+}
+
+.cart-info{
+  display: grid;
+  gap: .2rem;
+}
+
+.item-name{
+  font-weight: 600;
+}
+
+.cart-qty{
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.cart-action{
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: .15rem .45rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.cart-action:hover{
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.cart-action.remove{
+  margin-left: .25rem;
+}
+
+.line-total{
+  min-width: 84px;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* DEBUG: pinta bordes para ver qué ocupa cada cosa 
+* { outline: 1px solid rgba(255,0,0,.05); }
+a { outline-color: rgba(0,128,255,.3); }
+*/
+
