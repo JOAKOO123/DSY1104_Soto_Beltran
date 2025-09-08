@@ -6,11 +6,53 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  
+<header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="./" aria-label="Ir al inicio">
+        <div class="logo" aria-hidden="true"></div>
+        <span>MiTienda</span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Principal">
+        <ul class="menu">
+          <li><a href="./">Inicio</a></li>
+          <li><a href="./productos.html">Productos</a></li>
+          <li><a href="./blogs.html">Blogs</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+<div class="actions">
+  <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
+    🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+  </button>
+
+  <div class="account-buttons">
+    <a href="./iniciar_sesion.html">Iniciar sesión</a> |
+    <a href="./registro.html">Registrar usuario</a>
+  </div>
+</div>
+
+    <details class="nav-drawer">
+      <summary class="sr-only">Abrir menú</summary>
+      <div class="drawer" role="navigation" aria-label="Menú móvil">
+        <ul class="menu">
+          <li><a href="./">Inicio</a></li>
+          <li><a href="./productos.html">Producto</a></li>
+          <li><a href="./blogs.html">Blogs</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </details>
+  </header>
+<main class="registroname">
   <h1>Formulario de Registro</h1>
+</main>
 
   <form id="registroForm">
     <label>RUN:
-      <input type="text" id="run" maxlength="9" required placeholder="Ej: 123456785">
+      <input type="text" id="run" maxlength="10" required placeholder="Ej: 123456785">
     </label>
 
     <label>Nombre:
