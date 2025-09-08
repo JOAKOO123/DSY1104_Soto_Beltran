@@ -1,171 +1,151 @@
-// js/script.js (ESM)
-
-// ====== Imports ======
+// js/script.js (ES Module)
 import { PRODUCTS_HH } from './productos_huerto.js';
 
-// ====== Utilidades ======
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-const fmtCLP = (n) => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+const $ = (s, r = document) => r.querySelector(s);
 
-// ====== State: Carrito (con persistencia) ======
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const featuredGrid = $('#featured-grid');   // home
+const cartPanel    = $('#cart-panel');
+const cartItems    = $('#cart-items');
+const cartTotal    = $('#cart-total');
+const cartCountEl  = $('#cart-count');
+const cartIconBtn  = $('.btn-icon');
+const closeCartBtn = $('#close-cart');
 
-function saveCart() {
-  localStorage.setItem('cart', JSON.stringify(cart));
-}
+let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
 
-function cartItemCount() {
-  return cart.reduce((acc, item) => acc + item.cantidad, 0);
-}
+function saveCart(){ localStorage.setItem('cart', JSON.stringify(cart)); }
+function count(){ return cart.reduce((a,i)=>a+i.cantidad,0); }
 
-// ====== DOM refs seguros (según página) ======
-const featuredGrid = $('#featured-grid');      // Solo existe en index.html
-const cartPanel   = $('#cart-panel');
-const cartItems   = $('#cart-items');
-const cartTotal   = $('#cart-total');
-const cartCountEl = $('#cart-count');
-const cartIconBtn = $('.btn-icon');
-const closeCartBtn= $('#close-cart');
-
-// Theme toggle (opcional)
-const themeToggle = $('#theme-toggle');
-const themeMenu   = $('#theme-menu');
-
-// ====== Render ======
-function renderCart() {
-  if (!cartItems || !cartTotal) return; // Si no estamos en una página con carrito visible
+function renderCart(){
+  if (!cartItems || !cartTotal) return;
 
   cartItems.innerHTML = '';
   let total = 0;
 
-  cart.forEach(item => {
-    const li = document.createElement('li');
+  for (const item of cart){
     const subtotal = item.precioCLP * item.cantidad;
     total += subtotal;
 
+    const li = document.createElement('li');
+    li.setAttribute('data-code', item.code);
     li.innerHTML = `
-      <span>${item.nombre} ×${item.cantidad}</span>
-      <span>${fmtCLP(subtotal)}</span>
+      <div class="cart-left">
+        <img class="cart-thumb" src="${item.imagen}" alt="${item.nombre}" width="56" height="56" loading="lazy">
+        <div class="cart-info">
+          <span class="item-name">${item.nombre}</span>
+          <div class="cart-qty">
+            <button class="cart-action" data-action="dec" data-code="${item.code}" aria-label="Restar 1">−</button>
+            <span class="qty" aria-live="polite">${item.cantidad}</span>
+            <button class="cart-action" data-action="inc" data-code="${item.code}" aria-label="Sumar 1">+</button>
+            <button class="cart-action remove" data-action="remove" data-code="${item.code}" aria-label="Eliminar ${item.nombre}">✕</button>
+          </div>
+        </div>
+      </div>
+      <span class="line-total">${fmtCLP(subtotal)}</span>
     `;
     cartItems.appendChild(li);
-  });
+  }
 
   cartTotal.textContent = `Total: ${fmtCLP(total)}`;
-  updateCartCount();
+  if (cartCountEl) cartCountEl.textContent = count();
   saveCart();
 }
 
-function updateCartCount() {
-  if (!cartCountEl) return;
-  cartCountEl.textContent = cartItemCount();
+
+
+function addToCart(code){
+  const p = PRODUCTS_HH?.find(x => x.code === code);
+  if (!p) return;
+  const ex = cart.find(x => x.code === code);
+  if (ex) ex.cantidad += 1; else cart.push({ ...p, cantidad: 1 });
+  renderCart();
+  openCart();
 }
 
-function renderFeatured() {
-  // Solo para index.html
-  if (!featuredGrid) return;
-
-  // Toma 3 productos (puedes cambiar la lógica si quieres aleatorios)
-  const destacados = PRODUCTS_HH.slice(0, 3);
-
-  destacados.forEach(prod => {
+function renderFeatured(){
+  if (!featuredGrid || !Array.isArray(PRODUCTS_HH)) return;
+  featuredGrid.innerHTML = '';
+  PRODUCTS_HH.slice(0, 3).forEach(prod => {
     const article = document.createElement('article');
     article.className = 'card';
     article.innerHTML = `
       <div class="thumb">
-        <img src="${prod.imagen}" alt="${prod.nombre}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+        <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
       </div>
       <h3>${prod.nombre}</h3>
       <p class="muted">${prod.descripcion}</p>
       <div class="actions">
         <span class="price">${fmtCLP(prod.precioCLP)}</span>
         <button class="btn-outline" data-code="${prod.code}">Añadir</button>
-      </div>
-    `;
+      </div>`;
     featuredGrid.appendChild(article);
   });
 }
 
-// ====== Acciones de Carrito ======
-function addToCartByCode(code) {
-  const product = PRODUCTS_HH.find(p => p.code === code);
-  if (!product) return;
-
-  const existing = cart.find(item => item.code === code);
-  if (existing) {
-    existing.cantidad += 1;
-  } else {
-    cart.push({ ...product, cantidad: 1 });
-  }
-  renderCart();
-}
-
-function openCart() {
+function openCart(){
   if (!cartPanel) return;
   cartPanel.classList.add('active');
-  cartPanel.classList.remove('hidden');
+  cartPanel.classList.remove('hidden');   // ⭐️ clave: quita hidden al abrir
 }
 
-function closeCart() {
+function closeCart(){
   if (!cartPanel) return;
   cartPanel.classList.remove('active');
+  cartPanel.classList.add('hidden');      // ⭐️ clave: vuelve a ocultar
+  document.body.style.overflow = '';
 }
 
-// ====== Listeners globales ======
-function attachGlobalListeners() {
-  // Abrir carrito
-  if (cartIconBtn) {
-    cartIconBtn.addEventListener('click', openCart);
-  }
+function attach(){
+  if (cartIconBtn)  cartIconBtn.addEventListener('click', openCart);
+  if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
 
-  // Cerrar carrito
-  if (closeCartBtn) {
-    closeCartBtn.addEventListener('click', closeCart);
-  }
+  // Delegación: cualquier botón con data-code añade al carrito
+ document.addEventListener('click', (e) => {
+  // Acciones dentro del carrito: inc / dec / remove
+  const actionBtn = e.target.closest('[data-action]');
+  if (actionBtn) {
+    const action = actionBtn.dataset.action;  // "inc" | "dec" | "remove"
+    const code   = actionBtn.dataset.code;
 
-  // Cerrar con Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && cartPanel?.classList.contains('active')) {
-      closeCart();
-    }
-    if (e.key === 'Escape' && themeMenu?.classList.contains('show')) {
-      themeMenu.classList.remove('show');
-      themeToggle?.setAttribute('aria-expanded', 'false');
-      themeToggle?.focus();
-    }
-  });
-
-  // Añadir al carrito por delegación (botones con data-code)
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-code]');
-    if (btn) {
-      const code = btn.dataset.code;
-      if (code) addToCartByCode(code);
-    }
-
-    // Cerrar theme menu al click fuera
-    if (themeToggle && themeMenu) {
-      const clickInsideToggle = themeToggle.contains(e.target);
-      const clickInsideMenu   = themeMenu.contains(e.target);
-      if (themeMenu.classList.contains('show') && !clickInsideToggle && !clickInsideMenu) {
-        themeMenu.classList.remove('show');
-        themeToggle.setAttribute('aria-expanded', 'false');
+    const idx = cart.findIndex(x => x.code === code);
+    if (idx !== -1) {
+      if (action === 'inc') {
+        cart[idx].cantidad += 1;
+      } else if (action === 'dec') {
+        cart[idx].cantidad = Math.max(0, cart[idx].cantidad - 1);
+        if (cart[idx].cantidad === 0) cart.splice(idx, 1);
+      } else if (action === 'remove') {
+        cart.splice(idx, 1);
       }
+      renderCart();
     }
-  });
-
-  // Abrir/cerrar theme menu (si existe en el DOM)
-  if (themeToggle && themeMenu) {
-    themeToggle.addEventListener('click', () => {
-      const isOpen = themeMenu.classList.toggle('show');
-      themeToggle.setAttribute('aria-expanded', String(isOpen));
-    });
+    return; // ¡importante! no seguir a "añadir"
   }
+
+  // Añadir al carrito (evita capturar los botones del carrito)
+  const addBtn = e.target.closest('[data-code]');
+  if (addBtn && !addBtn.hasAttribute('data-action')) {
+    addToCart(addBtn.dataset.code);
+  }
+});
+
+
+  // Header con sombra al hacer scroll (opcional)
+  const header = document.querySelector('.site-header');
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 }
 
-// ====== Init ======
-document.addEventListener('DOMContentLoaded', () => {
-  renderFeatured();   // Solo afecta index.html si #featured-grid existe
-  renderCart();       // Reconstruye carrito (y contador) desde localStorage
-  attachGlobalListeners();
-});
+function init(){
+  renderFeatured();   // Home
+  renderCart();       // Reconstruye carrito desde localStorage
+  attach();           // Listeners
+}
+
+// Ejecuta init incluso si DOMContentLoaded ya pasó
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
