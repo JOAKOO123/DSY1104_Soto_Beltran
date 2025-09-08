@@ -1,4 +1,11 @@
-export const REGIONES = {
+// regiones.js
+export const REGIONES_LIST = [
+  "Región Metropolitana",
+  "Valparaíso",
+  "Biobío"
+];
+
+export const COMUNAS_POR_REGION = {
   "Región Metropolitana": [
     "Santiago",
     "Puente Alto",
@@ -19,3 +26,5 @@ export const REGIONES = {
     "Chillán"
   ]
 };
+
+

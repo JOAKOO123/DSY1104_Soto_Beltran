@@ -1,13 +1,16 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Registro de Usuario</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Usuario — MiTienda</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  
-<header class="site-header">
+  <a href="#contenido" class="sr-only">Saltar al contenido</a>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
     <div class="container nav-bar">
       <a class="brand" href="./" aria-label="Ir al inicio">
         <div class="logo" aria-hidden="true"></div>
@@ -23,70 +26,125 @@
         </ul>
       </nav>
 
-<div class="actions">
-  <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
-    🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
-  </button>
+      <!-- Acciones -->
+      <div class="actions">
+        <button class="btn-icon" type="button" aria-label="Abrir carrito">
+          🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+        </button>
+        <div class="account-buttons">
+          <a href="./iniciar_sesion.html">Iniciar sesión</a> |
+          <a href="./registro.html" aria-current="page">Registrar usuario</a>
+        </div>
+      </div>
+    </div>
 
-  <div class="account-buttons">
-    <a href="./iniciar_sesion.html">Iniciar sesión</a> |
-    <a href="./registro.html">Registrar usuario</a>
-  </div>
-</div>
-
+    <!-- Menú móvil -->
     <details class="nav-drawer">
       <summary class="sr-only">Abrir menú</summary>
       <div class="drawer" role="navigation" aria-label="Menú móvil">
         <ul class="menu">
           <li><a href="./">Inicio</a></li>
-          <li><a href="./productos.html">Producto</a></li>
+          <li><a href="./productos.html">Productos</a></li>
           <li><a href="./blogs.html">Blogs</a></li>
           <li><a href="./contacto.html">Contacto</a></li>
         </ul>
       </div>
     </details>
   </header>
-<main class="registroname">
-  <h1>Formulario de Registro</h1>
-</main>
 
-  <form id="registroForm">
-    <label>RUN:
-      <input type="text" id="run" maxlength="10" required placeholder="Ej: 123456785">
-    </label>
+  <!-- Carrito (si quieres mostrar el panel en esta página también) -->
+  <aside id="cart-panel" class="cart-panel hidden" aria-labelledby="cart-title">
+    <h2 id="cart-title">Tu carrito</h2>
+    <ul id="cart-items"></ul>
+    <p id="cart-total">Total: $0</p>
+    <button id="close-cart" type="button">Cerrar</button>
+  </aside>
 
-    <label>Nombre:
-      <input type="text" id="nombre" required>
-    </label>
+  <!-- ========== MAIN ========== -->
+  <main id="contenido">
+    <section class="registroname">
+      <h1>Formulario de Registro</h1>
+    </section>
 
-    <label>Apellidos:
-      <input type="text" id="apellidos" required>
-    </label>
+    <form id="registroForm" novalidate aria-describedby="mensaje">
+      <label for="run">RUN</label>
+      <input
+        type="text"
+        id="run"
+        name="run"
+        inputmode="numeric"
+        pattern="\\d{7,8}"
+        maxlength="9"
+        required
+        placeholder="Ej: 12345678"
+        autocomplete="off"
+      />
 
-    <label>Correo:
-      <input type="email" id="correo" maxlength="100" required placeholder="ejemplo@correo.com">
-    </label>
+      <label for="nombre">Nombre</label>
+      <input
+        type="text"
+        id="nombre"
+        name="nombre"
+        required
+        autocomplete="given-name"
+      />
 
-    <label>Fecha de nacimiento:
-      <input type="date" id="fechaNacimiento" required>
-    </label>
+      <label for="apellidos">Apellidos</label>
+      <input
+        type="text"
+        id="apellidos"
+        name="apellidos"
+        required
+        autocomplete="family-name"
+      />
 
-    <label>Región:
-      <select id="region" required>
+      <label for="correo">Correo</label>
+      <input
+        type="email"
+        id="correo"
+        name="correo"
+        maxlength="100"
+        required
+        placeholder="ejemplo@correo.com"
+        autocomplete="email"
+      />
+
+      <label for="fechaNacimiento">Fecha de nacimiento</label>
+      <input
+        type="date"
+        id="fechaNacimiento"
+        name="fechaNacimiento"
+        required
+        autocomplete="bday"
+      />
+
+      <label for="region">Región</label>
+      <select id="region" name="region" required autocomplete="address-level1">
         <option value="">Seleccione región</option>
       </select>
-    </label>
 
-    <label>Comuna:
-      <select id="comuna" required>
+      <label for="comuna">Comuna</label>
+      <select id="comuna" name="comuna" required autocomplete="address-level2">
         <option value="">Seleccione comuna</option>
       </select>
-    </label>
 
-    <button type="submit">Registrar</button>
-    <p id="mensaje"></p>
-  </form>
+      <button type="submit">Registrar</button>
+      <p id="mensaje" aria-live="polite"></p>
+    </form>
+  </main>
 
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 MiTienda. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ========== SCRIPTS ========== -->
+  <!-- Script global del sitio (carrito, header, etc.) -->
+  <script type="module" src="js/script.js"></script>
+
+  <!-- Registro (asegúrate de alinear el nombre del archivo importado adentro) -->
   <script type="module" src="js/registro.js"></script>
 </body>
 </html>

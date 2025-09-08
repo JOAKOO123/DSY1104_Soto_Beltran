@@ -1,87 +1,125 @@
-import { REGIONES } from "./regiones_comunas.js";
+// registro.js
+import { REGIONES_LIST, COMUNAS_POR_REGION } from "./regiones_comunas.js";
 
+const form = document.getElementById("registroForm");
 const regionSelect = document.getElementById("region");
 const comunaSelect = document.getElementById("comuna");
-const form = document.getElementById("registroForm");
 const mensaje = document.getElementById("mensaje");
 
-// Cargar regiones en el select
-Object.keys(REGIONES).forEach(r => {
-  const opt = document.createElement("option");
-  opt.value = r;
-  opt.textContent = r;
-  regionSelect.appendChild(opt);
+// Deshabilitar comuna hasta elegir región (UX)
+comunaSelect.disabled = true;
+
+// === 1. Cargar las regiones al iniciar ===
+REGIONES_LIST.forEach(region => {
+  const option = document.createElement("option");
+  option.value = region;
+  option.textContent = region;
+  regionSelect.appendChild(option);
 });
 
-// Cargar comunas cuando cambia región
-regionSelect.addEventListener("change", e => {
-  comunaSelect.innerHTML = '<option value="">Seleccione comuna</option>';
-  REGIONES[e.target.value].forEach(c => {
-    const opt = document.createElement("option");
-    opt.value = c;
-    opt.textContent = c;
-    comunaSelect.appendChild(opt);
-  });
-});
+// === 2. Cuando cambia la región, mostrar comunas ===
+regionSelect.addEventListener("change", () => {
+  const regionSeleccionada = regionSelect.value;
 
-// === Validador RUN (con DV, sin puntos ni guion) ===
-function validarRUN(run) {
-  if (!/^\d{7,9}[0-9kK]$/.test(run)) return false;
+  // limpiar comunas anteriores
+  comunaSelect.innerHTML = `<option value="">Seleccione comuna</option>`;
 
-  const cuerpo = run.slice(0, -1);
-  const dv = run.slice(-1).toLowerCase();
+  const comunas = COMUNAS_POR_REGION[regionSeleccionada];
+  if (regionSeleccionada && Array.isArray(comunas)) {
+    // Habilitar el select
+    comunaSelect.disabled = false;
 
-  let suma = 0, multiplo = 2;
-  for (let i = cuerpo.length - 1; i >= 0; i--) {
-    suma += multiplo * parseInt(cuerpo[i]);
-    multiplo = multiplo < 7 ? multiplo + 1 : 2;
+    // (opcional) orden alfabético
+    comunas.slice().sort().forEach(comuna => {
+      const option = document.createElement("option");
+      option.value = comuna;
+      option.textContent = comuna;
+      comunaSelect.appendChild(option);
+    });
+  } else {
+    // Si no hay región válida, mantenerlo deshabilitado
+    comunaSelect.disabled = true;
   }
-  const resto = 11 - (suma % 11);
-  const dvEsperado = resto === 11 ? "0" : resto === 10 ? "k" : String(resto);
+});
 
-  return dv === dvEsperado;
+// === 3. Validaciones ===
+function validarRUN(run) {
+  return /^\d{7,8}$/.test(run); // solo números de 7 u 8 dígitos
 }
 
-// Validaciones en el submit
+function validarCorreo(correo) {
+  return /^[^\s@]+@duocuc\.cl$/.test(correo.toLowerCase());
+}
+
+
+function esMayorDeEdad(fechaNacimiento) {
+  const hoy = new Date();
+  const fechaNac = new Date(fechaNacimiento);
+  const edad = hoy.getFullYear() - fechaNac.getFullYear();
+  const m = hoy.getMonth() - fechaNac.getMonth();
+  return edad > 18 || (edad === 18 && m >= 0);
+}
+
+// === 4. Manejo del formulario ===
 form.addEventListener("submit", e => {
   e.preventDefault();
 
   const run = document.getElementById("run").value.trim();
+  const nombre = document.getElementById("nombre").value.trim();
+  const apellidos = document.getElementById("apellidos").value.trim();
   const correo = document.getElementById("correo").value.trim();
+  const fechaNacimiento = document.getElementById("fechaNacimiento").value;
+  const region = regionSelect.value;
+  const comuna = comunaSelect.value;
 
+  // Validaciones
   if (!validarRUN(run)) {
-    mensaje.textContent = "❌ RUN inválido (verifique dígito verificador)";
+    mensaje.textContent = "❌ RUN inválido. Debe tener 7 u 8 dígitos numéricos.";
     mensaje.style.color = "red";
     return;
   }
 
-  if (correo.length > 100) {
-    mensaje.textContent = "❌ El correo excede 100 caracteres";
+  if (!nombre || !apellidos) {
+    mensaje.textContent = "❌ Nombre y apellidos son obligatorios.";
     mensaje.style.color = "red";
     return;
   }
 
-  mensaje.textContent = "✅ Registro exitoso";
+ if (!validarCorreo(correo)) {
+  mensaje.textContent = "❌ Solo se permiten correos institucionales que terminen en @duocuc.cl.";
+  mensaje.style.color = "red";
+  return;
+}
+
+
+  if (!esMayorDeEdad(fechaNacimiento)) {
+    mensaje.textContent = "❌ Debes ser mayor de 18 años para registrarte.";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  if (!region || !comuna) {
+    mensaje.textContent = "❌ Debes seleccionar región y comuna.";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  // Si pasa todas las validaciones
+  mensaje.textContent = "✅ Registro exitoso.";
   mensaje.style.color = "green";
-});
 
-import { REGIONES } from "./regiones_comunas.js";
+  // Aquí podrías enviar los datos al servidor con fetch()
+  console.log({
+    run,
+    nombre,
+    apellidos,
+    correo,
+    fechaNacimiento,
+    region,
+    comuna
+  });
 
-const modal = document.getElementById("modalRegistro");
-const btnRegister = document.getElementById("btnRegister");
-const closeModal = document.getElementById("closeModal");
-
-// Abrir modal
-btnRegister.addEventListener("click", () => {
-  modal.style.display = "block";
-});
-
-// Cerrar modal
-closeModal.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
-// Cerrar si hace clic fuera del modal
-window.addEventListener("click", e => {
-  if (e.target === modal) modal.style.display = "none";
+  form.reset();
+  comunaSelect.innerHTML = `<option value="">Seleccione comuna</option>`;
+  comunaSelect.disabled = true;
 });
