@@ -460,3 +460,15 @@ button:hover {
   color: #002f6c; /* azul más oscuro en hover */
 }
 
+.logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
