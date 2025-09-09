@@ -472,3 +472,30 @@ button:hover {
   gap: .6rem;
 }
 
+
+/* Contenedor de mensajes global */
+#login-mensaje{
+  min-height: 1.25rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+#login-mensaje.error{ color:#d32f2f; }
+#login-mensaje.ok{ color:#2e7d32; }
+
+/*Enlace para registrarse desde inicio de sesión*/
+
+.no-account{
+  margin-top:10px;
+  text-align:center;
+  font-size:.95rem;
+  color: var(--muted);
+}
+.no-account a{
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.no-account a:hover{
+  text-decoration: underline;
+}
+
