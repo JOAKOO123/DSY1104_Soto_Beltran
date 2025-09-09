@@ -85,7 +85,13 @@
           <dl class="facts" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1rem;margin:0 0 1rem;">
             <div><dt style="font-weight:700;">Origen</dt><dd id="pd-origen">—</dd></div>
             <div><dt style="font-weight:700;">Stock</dt><dd id="pd-stock">—</dd></div>
-            <div><dt style="font-weight:700;">Prácticas</dt><dd id="pd-practicas">—</dd></div>
+            <div>
+  <dt style="font-weight:700;">Prácticas</dt>
+  <dd>
+    <ul id="pd-practicas-list" class="cert-list" aria-label="Prácticas y certificaciones"></ul>
+  </dd>
+</div>
+
             <div><dt style="font-weight:700;">Recetas</dt><dd id="pd-recetas">—</dd></div>
           </dl>
 
@@ -178,7 +184,22 @@
       desc.textContent   = p.descripcion;
       origen.textContent = p.origen || '—';
       stock.textContent  = typeof p.stock === 'number' ? p.stock : '—';
-      pract.textContent  = Array.isArray(p.practicas) ? p.practicas.join(', ') : '—';
+     // Lista de prácticas/certificaciones (accesible)
+const practList = document.getElementById('pd-practicas-list');
+
+if (Array.isArray(p.practicas) && p.practicas.length){
+  practList.innerHTML = p.practicas.map(item => `
+    <li>
+      <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M7.8 14.3L3.5 10l1.4-1.4 2.9 2.9 7.3-7.3 1.4 1.4-8.7 8.7z"/>
+      </svg>
+      <span class="text">${item}</span>
+    </li>
+  `).join('');
+} else {
+  practList.innerHTML = `<li><span class="text">—</span></li>`;
+}
+
       recetas.innerHTML  = Array.isArray(p.recetas) && p.recetas.length
         ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
         : '—';
