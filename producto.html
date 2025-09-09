@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Producto — MiTienda</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <!-- Header igual al resto -->
+  <!-- ===================== HEADER ===================== -->
   <header class="site-header">
     <div class="container nav-bar">
       <a class="brand" href="./" aria-label="Ir al inicio">
@@ -29,69 +29,83 @@
           🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
         </button>
         <div class="account-buttons">
-          <a href="./iniciar_sesion.html">Iniciar sesión</a> |
+          <a href="./login.html">Iniciar sesión</a> |
           <a href="./registro.html">Registrar usuario</a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Carrito -->
-  <aside id="cart-panel" class="cart-panel hidden">
-    <h2>Tu carrito</h2>
+  <!-- ===================== CARRITO ===================== -->
+  <aside id="cart-panel" class="cart-panel hidden" aria-labelledby="cart-title">
+    <h2 id="cart-title">Tu carrito</h2>
+    <div id="cart-feedback" class="cart-feedback" role="status" aria-live="polite"></div>
     <ul id="cart-items"></ul>
     <p id="cart-total">Total: $0</p>
-    <button id="close-cart" type="button">Cerrar</button>
+    <div class="cart-actions-row">
+      <!-- (opcional) botón Vaciar si lo usas en otras páginas -->
+      <!-- <button id="clear-cart" type="button" class="btn-outline">Vaciar carrito</button> -->
+      <button id="close-cart" type="button" class="btn-primary">Cerrar</button>
+    </div>
   </aside>
 
+  <!-- ===================== MAIN ===================== -->
   <main id="contenido" class="product-detail">
     <div class="container wide">
       <nav class="breadcrumb" aria-label="breadcrumbs">
         <a href="./">Inicio</a> › <a href="./productos.html">Productos</a> › <span id="bc-name">Producto</span>
       </nav>
 
-      <div class="pd-grid">
+      <div class="pd-grid" style="display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:start;">
         <!-- Galería -->
         <section class="product-gallery" aria-label="Galería">
-          <div class="main" id="pd-main">
-            <!-- imagen principal -->
+          <div class="main" id="pd-main"
+               style="aspect-ratio:4/3;border-radius:12px;border:1px solid var(--border);overflow:hidden;background:var(--surface);display:grid;place-items:center;">
           </div>
-          <div class="product-thumbs" id="pd-thumbs" aria-label="Miniaturas"></div>
+          <div class="product-thumbs" id="pd-thumbs" aria-label="Miniaturas"
+               style="margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap;"></div>
         </section>
 
         <!-- Info -->
         <section class="product-info">
-          <h1 id="pd-name">Nombre Producto</h1>
-          <div class="meta">
-            <span class="price-lg" id="pd-price">$0</span>
-            <span class="unit" id="pd-unit">/ unidad</span>
+          <h1 id="pd-name" style="margin:.25rem 0 .5rem;">Nombre Producto</h1>
+
+          <div class="rating-row" id="pd-rating-row" style="margin:.1rem 0 .75rem;">
+            <span class="star-rating" id="pd-stars" style="--rating:0"></span>
+            <span id="pd-rating-text">0.0 · 0 reseñas</span>
           </div>
 
-          <p class="desc" id="pd-desc"></p>
+          <div class="meta" style="margin:.25rem 0 1rem;">
+            <span class="price-lg" id="pd-price" style="font-size:1.35rem;font-weight:800;"></span>
+            <span class="unit" id="pd-unit" style="color:var(--muted);margin-left:.25rem;"></span>
+          </div>
 
-          <dl class="facts">
-            <div><dt>Origen</dt><dd id="pd-origen">—</dd></div>
-            <div><dt>Stock</dt><dd id="pd-stock">—</dd></div>
-            <div><dt>Prácticas</dt><dd id="pd-practicas">—</dd></div>
-            <div><dt>Recetas</dt><dd id="pd-recetas">—</dd></div>
+          <p class="desc" id="pd-desc" style="margin:.5rem 0 1rem;"></p>
+
+          <dl class="facts" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1rem;margin:0 0 1rem;">
+            <div><dt style="font-weight:700;">Origen</dt><dd id="pd-origen">—</dd></div>
+            <div><dt style="font-weight:700;">Stock</dt><dd id="pd-stock">—</dd></div>
+            <div><dt style="font-weight:700;">Prácticas</dt><dd id="pd-practicas">—</dd></div>
+            <div><dt style="font-weight:700;">Recetas</dt><dd id="pd-recetas">—</dd></div>
           </dl>
 
-          <div class="qty-row">
-            <label for="pd-qty">Cantidad</label>
-            <input id="pd-qty" type="number" min="1" value="1" inputmode="numeric">
+          <div class="qty-row" style="display:flex;gap:.5rem;align-items:center;">
+            <label for="pd-qty" style="font-weight:700;">Cantidad</label>
+            <input id="pd-qty" type="number" min="1" value="1" inputmode="numeric" style="width:90px;">
             <button id="pd-add" class="btn-primary" type="button">Añadir al carrito</button>
           </div>
         </section>
       </div>
 
       <!-- Relacionados -->
-      <section class="related">
+      <section class="related" style="margin-top:2rem;">
         <h2>Productos relacionados</h2>
         <div class="related-grid" id="related-grid"></div>
       </section>
     </div>
   </main>
 
+  <!-- ===================== FOOTER ===================== -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
@@ -116,8 +130,11 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- ===================== SCRIPTS ===================== -->
+  <!-- Script global (carrito, destacados, etc.) -->
   <script type="module" src="js/script.js"></script>
+
+  <!-- Lógica de página: detalle de producto -->
   <script type="module">
     import { PRODUCTS_HH } from './js/productos_huerto.js';
 
@@ -125,84 +142,108 @@
     const code = qs.get('code');
 
     const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+    const $ = s => document.querySelector(s);
 
-    const el = (s) => document.querySelector(s);
-    const main   = el('#pd-main');
-    const thumbs = el('#pd-thumbs');
+    const main   = $('#pd-main');
+    const thumbs = $('#pd-thumbs');
 
-    const nameEl = el('#pd-name');
-    const bcName = el('#bc-name');
-    const price  = el('#pd-price');
-    const unit   = el('#pd-unit');
-    const desc   = el('#pd-desc');
-    const origen = el('#pd-origen');
-    const stock  = el('#pd-stock');
-    const pract  = el('#pd-practicas');
-    const recetas= el('#pd-recetas');
-    const qtyInp = el('#pd-qty');
-    const addBtn = el('#pd-add');
-    const relatedGrid = el('#related-grid');
+    const nameEl = $('#pd-name');
+    const bcName = $('#bc-name');
+    const price  = $('#pd-price');
+    const unit   = $('#pd-unit');
+    const desc   = $('#pd-desc');
+    const origen = $('#pd-origen');
+    const stock  = $('#pd-stock');
+    const pract  = $('#pd-practicas');
+    const recetas= $('#pd-recetas');
+    const qtyInp = $('#pd-qty');
+    const addBtn = $('#pd-add');
+
+    const starsEl = $('#pd-stars');
+    const ratingText = $('#pd-rating-text');
+
+    const relatedGrid = $('#related-grid');
 
     const p = PRODUCTS_HH.find(x => x.code === code) || PRODUCTS_HH[0];
 
-    // Rellenar datos
-    nameEl.textContent = p.nombre;
-    bcName.textContent = p.nombre;
-    price.textContent  = fmtCLP(p.precioCLP);
-    unit.textContent   = ` / ${p.unidad}`;
-    desc.textContent   = p.descripcion;
-    origen.textContent = p.origen || '—';
-    stock.textContent  = typeof p.stock === 'number' ? p.stock : '—';
-    pract.textContent  = Array.isArray(p.practicas) ? p.practicas.join(', ') : '—';
-    recetas.innerHTML  = Array.isArray(p.recetas) && p.recetas.length
-      ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
-      : '—';
+    if (!p) {
+      document.querySelector('.product-detail .container').innerHTML =
+        '<p class="muted">Producto no encontrado.</p>';
+    } else {
+      // Datos principales
+      nameEl.textContent = p.nombre;
+      if (bcName) bcName.textContent = p.nombre;
+      price.textContent  = fmtCLP(p.precioCLP);
+      unit.textContent   = ` / ${p.unidad}`;
+      desc.textContent   = p.descripcion;
+      origen.textContent = p.origen || '—';
+      stock.textContent  = typeof p.stock === 'number' ? p.stock : '—';
+      pract.textContent  = Array.isArray(p.practicas) ? p.practicas.join(', ') : '—';
+      recetas.innerHTML  = Array.isArray(p.recetas) && p.recetas.length
+        ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
+        : '—';
 
-    // Galería (si hubiera p.galeria, la usamos; si no, solo la principal)
-    const gal = Array.isArray(p.galeria) && p.galeria.length ? p.galeria : [p.imagen];
+      // Rating
+      const rating = Number(p.rating ?? 0);
+      const reviews = Number(p.reviews ?? 0);
+      starsEl.style.setProperty('--rating', String(rating));
+      ratingText.textContent = `${rating.toFixed(1)} · ${reviews} ${reviews === 1 ? 'reseña' : 'reseñas'}`;
+      starsEl.setAttribute('title', `${rating.toFixed(1)} de 5`);
 
-    function setMain(src){
-      main.innerHTML = `
-        <img src="${src}" alt="${p.nombre}" loading="eager" style="width:100%;height:100%;object-fit:contain">
-      `;
+      // Galería
+      const gal = Array.isArray(p.galeria) && p.galeria.length ? p.galeria : [p.imagen];
+
+      function setMain(src){
+        main.innerHTML = `
+          <img src="${src}" alt="${p.nombre}" loading="eager"
+               style="width:100%;height:100%;object-fit:contain;">
+        `;
+      }
+      setMain(gal[0]);
+      thumbs.innerHTML = '';
+      gal.forEach((src, i) => {
+        const b = document.createElement('button');
+        b.className = 'thumb-btn';
+        b.style.cssText = 'width:70px;height:70px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);';
+        b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
+        b.addEventListener('click', () => setMain(src));
+        thumbs.appendChild(b);
+      });
+
+      // Añadir al carrito con cantidad (usa listener global de script.js)
+      addBtn.dataset.code = p.code;
+      addBtn.dataset.qty  = '1';
+      qtyInp.addEventListener('input', () => {
+        const q = Math.max(1, parseInt(qtyInp.value || '1', 10));
+        qtyInp.value = q;
+        addBtn.dataset.qty = String(q);
+      });
+
+      // Relacionados (misma categoría)
+      const relacionados = PRODUCTS_HH
+        .filter(x => x.categoriaId === p.categoriaId && x.code !== p.code)
+        .slice(0, 5);
+
+      relatedGrid.innerHTML = '';
+      relacionados.forEach(r => {
+        const a = document.createElement('a');
+        a.className = 'related-card';
+        a.href = `./producto.html?code=${r.code}`;
+        a.style.cssText = 'display:grid;gap:.4rem;padding:.7rem;border:1px solid var(--border);border-radius:12px;background:var(--surface);';
+        a.innerHTML = `
+          <div class="thumb" style="aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+            <img src="${r.imagen}" alt="${r.nombre}" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <span class="title" style="font-weight:700;">${r.nombre}</span>
+          <div class="rating-row" title="${(r.rating ?? 0).toFixed(1)} de 5">
+            <span class="star-rating" style="--rating:${r.rating ?? 0}"></span>
+            <span>${(r.rating ?? 0).toFixed(1)} · ${r.reviews ?? 0}</span>
+          </div>
+          <span class="price" style="font-weight:700;">${fmtCLP(r.precioCLP)}</span>
+        `;
+        relatedGrid.appendChild(a);
+      });
     }
-    setMain(gal[0]);
-    thumbs.innerHTML = '';
-    gal.forEach((src, i) => {
-      const b = document.createElement('button');
-      b.className = 'thumb-btn';
-      b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy">`;
-      b.addEventListener('click', () => setMain(src));
-      thumbs.appendChild(b);
-    });
-
-    // Añadir al carrito con cantidad (usa el listener global de script.js leyendo data-qty)
-    addBtn.dataset.code = p.code;
-    addBtn.dataset.qty  = '1';
-
-    qtyInp.addEventListener('input', () => {
-      const q = Math.max(1, parseInt(qtyInp.value || '1', 10));
-      qtyInp.value = q;
-      addBtn.dataset.qty = String(q);
-    });
-
-    // Render relacionados (misma categoría, hasta 5)
-    const relacionados = PRODUCTS_HH
-      .filter(x => x.categoriaId === p.categoriaId && x.code !== p.code)
-      .slice(0, 5);
-
-    relatedGrid.innerHTML = '';
-    relacionados.forEach(r => {
-      const a = document.createElement('a');
-      a.className = 'related-card';
-      a.href = `./producto.html?code=${r.code}`;
-      a.innerHTML = `
-        <div class="thumb"><img src="${r.imagen}" alt="${r.nombre}"></div>
-        <span class="title">${r.nombre}</span>
-        <span class="price">${fmtCLP(r.precioCLP)}</span>
-      `;
-      relatedGrid.appendChild(a);
-    });
   </script>
 </body>
 </html>
