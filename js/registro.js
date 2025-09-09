@@ -44,7 +44,7 @@ regionSelect.addEventListener("change", () => {
 
 // === 3. Validaciones ===
 function validarRUN(run) {
-  return /^\d{7,8}$/.test(run); // solo números de 7 u 8 dígitos
+  return /^\d{7,9}$/.test(run); // solo números de 7 u 8 dígitos
 }
 
 function validarCorreo(correo) {
@@ -74,7 +74,7 @@ form.addEventListener("submit", e => {
 
   // Validaciones
   if (!validarRUN(run)) {
-    mensaje.textContent = "❌ RUN inválido. Debe tener 7 u 8 dígitos numéricos.";
+    mensaje.textContent = "❌ RUN inválido. Debe tener 7 a 9 dígitos numéricos (sin puntos ni guion)";
     mensaje.style.color = "red";
     return;
   }
@@ -107,6 +107,11 @@ form.addEventListener("submit", e => {
   // Si pasa todas las validaciones
   mensaje.textContent = "✅ Registro exitoso.";
   mensaje.style.color = "green";
+
+  // Prefill del email y redirección al login
+  try { localStorage.setItem('prefill_email', correo); } catch {}
+  setTimeout(() => { window.location.href = './login.html?registro=ok'; }, 700);
+
 
   // Aquí podrías enviar los datos al servidor con fetch()
   console.log({

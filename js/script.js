@@ -149,3 +149,20 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+//Abrir y cerrar modales de iniciar sesion y registrar usuario
+document.getElementById("login-link").addEventListener("click", () => {
+  document.getElementById("login-modal").classList.remove("hidden");
+});
+
+document.getElementById("register-link").addEventListener("click", () => {
+  document.getElementById("register-modal").classList.remove("hidden");
+});
+
+document.querySelectorAll(".modal").forEach(modal => {
+  modal.addEventListener("click", e => {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+    }
+  });
+});

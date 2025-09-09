@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es" data-theme="pasteleria">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesión — MiTienda</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Login compacto y centrado en pantalla */
+    .login-wrap{min-height:calc(100vh - 80px);display:grid;place-items:center;padding:12px 0;}
+    .form-box{max-width:360px;margin:0 auto;padding:16px;}
+    .form-box input{height:40px;}
+    #login-mensaje{min-height:1.25rem;margin-top:4px;}
+    .rules{display:block;margin-top:4px;color:var(--muted);}
+  </style>
+</head>
+<body>
+  <a href="./" style="display:inline-block;margin:12px 16px;">← Volver al inicio</a>
+
+<main class="container login-wrap">
+  <form id="loginForm" class="form-box" novalidate aria-describedby="login-mensaje">
+    <div class="empresa-header">
+      <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="Logo MiTienda" class="logo-formulario">
+      <h2 class="empresa-nombre" style="margin:0;">MiTienda</h2>
+    </div>
+
+    <label for="correo-login">CORREO</label>
+    <input type="email" id="correo-login" maxlength="100" placeholder="usuario@duocuc.cl">
+
+    <label for="contrasena-login">CONTRASEÑA</label>
+    <input type="password" id="contrasena-login" minlength="4" maxlength="10" placeholder="Contraseña">
+
+    <!-- AQUÍ se mostrará CUALQUIER mensaje -->
+    <p id="login-mensaje" aria-live="polite"></p>
+
+    <button type="submit" style="margin-top:8px;">Iniciar sesión</button>
+    
+    <p class="no-account">
+      ¿No tienes cuenta?
+      <a href="./registro.html">Regístrate</a>
+    </p>
+  </form>
+</main>
+
+
+  <script src="js/login.js"></script>
+</body>
+</html>
