@@ -1,8 +1,11 @@
-// regiones.js
+// regiones_comunas.js
+
 export const REGIONES_LIST = [
   "Región Metropolitana",
   "Valparaíso",
-  "Biobío"
+  "Biobío",
+  "La Araucanía",
+  "Los Lagos"
 ];
 
 export const COMUNAS_POR_REGION = {
@@ -13,18 +16,33 @@ export const COMUNAS_POR_REGION = {
     "La Florida",
     "Las Condes"
   ],
+
   "Valparaíso": [
     "Valparaíso",
     "Viña del Mar",
     "Quilpué",
     "Villa Alemana"
   ],
+
   "Biobío": [
     "Concepción",
+    "Nacimiento",
     "Talcahuano",
     "Los Ángeles",
-    "Chillán"
+    "Coronel"
+  ],
+
+  "La Araucanía": [
+    "Villarrica",
+    "Temuco",
+    "Pucón",
+    "Padre Las Casas"
+  ],
+
+  "Los Lagos": [
+    "Puerto Montt",
+    "Puerto Varas",
+    "Osorno",
+    "Castro"
   ]
 };
-
-
