@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es" data-theme="pasteleria">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blogs — MiTienda</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Header igual al del sitio -->
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="./" aria-label="Ir al inicio">
+        <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="MiTienda" class="logo-img" />
+        <span>MiTienda</span>
+      </a>
+      <nav class="primary-nav" aria-label="Principal">
+        <ul class="menu">
+          <li><a href="./">Inicio</a></li>
+          <li><a href="./productos.html">Productos</a></li>
+          <li><a href="./blogs.html" aria-current="page">Blogs</a></li>
+          <li><a href="./nosotros.html">Nosotros</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+      <div class="actions">
+        <button class="btn-icon" type="button" aria-label="Abrir carrito">
+          🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+        </button>
+        <div class="account-buttons">
+          <a href="./login.html">Iniciar sesión</a> | <a href="./registro.html">Registrar usuario</a>
+        </div>
+      </div>
+      <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
+    </div>
+    <details class="nav-drawer">
+      <summary class="sr-only">Abrir menú</summary>
+      <div class="drawer" role="navigation" aria-label="Menú móvil">
+        <ul class="menu">
+          <li><a href="./">Inicio</a></li>
+          <li><a href="./productos.html">Productos</a></li>
+          <li><a href="./blogs.html" aria-current="page">Blogs</a></li>
+          <li><a href="./nosotros.html">Nosotros</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+    </details>
+  </header>
+
+  <main class="container" id="contenido" style="padding:1rem 0 2rem">
+    <h1 class="section-title blog-hero-title">Noticias importantes</h1>
+
+    <section class="blog-rows">
+      <div id="blog-list" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script type="module" src="js/blogs.js"></script>
+
+</body>
+</html>
