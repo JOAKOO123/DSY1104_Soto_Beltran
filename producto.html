@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Producto — MiTienda</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Header igual al resto -->
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="./" aria-label="Ir al inicio">
+        <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="MiTienda" class="logo-img" />
+        <span>MiTienda</span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Principal">
+        <ul class="menu">
+          <li><a href="./">Inicio</a></li>
+          <li><a href="./productos.html" aria-current="page">Productos</a></li>
+          <li><a href="./blogs.html">Blogs</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="actions">
+        <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
+          🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+        </button>
+        <div class="account-buttons">
+          <a href="./iniciar_sesion.html">Iniciar sesión</a> |
+          <a href="./registro.html">Registrar usuario</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Carrito -->
+  <aside id="cart-panel" class="cart-panel hidden">
+    <h2>Tu carrito</h2>
+    <ul id="cart-items"></ul>
+    <p id="cart-total">Total: $0</p>
+    <button id="close-cart" type="button">Cerrar</button>
+  </aside>
+
+  <main id="contenido" class="product-detail">
+    <div class="container wide">
+      <nav class="breadcrumb" aria-label="breadcrumbs">
+        <a href="./">Inicio</a> › <a href="./productos.html">Productos</a> › <span id="bc-name">Producto</span>
+      </nav>
+
+      <div class="pd-grid">
+        <!-- Galería -->
+        <section class="product-gallery" aria-label="Galería">
+          <div class="main" id="pd-main">
+            <!-- imagen principal -->
+          </div>
+          <div class="product-thumbs" id="pd-thumbs" aria-label="Miniaturas"></div>
+        </section>
+
+        <!-- Info -->
+        <section class="product-info">
+          <h1 id="pd-name">Nombre Producto</h1>
+          <div class="meta">
+            <span class="price-lg" id="pd-price">$0</span>
+            <span class="unit" id="pd-unit">/ unidad</span>
+          </div>
+
+          <p class="desc" id="pd-desc"></p>
+
+          <dl class="facts">
+            <div><dt>Origen</dt><dd id="pd-origen">—</dd></div>
+            <div><dt>Stock</dt><dd id="pd-stock">—</dd></div>
+            <div><dt>Prácticas</dt><dd id="pd-practicas">—</dd></div>
+            <div><dt>Recetas</dt><dd id="pd-recetas">—</dd></div>
+          </dl>
+
+          <div class="qty-row">
+            <label for="pd-qty">Cantidad</label>
+            <input id="pd-qty" type="number" min="1" value="1" inputmode="numeric">
+            <button id="pd-add" class="btn-primary" type="button">Añadir al carrito</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Relacionados -->
+      <section class="related">
+        <h2>Productos relacionados</h2>
+        <div class="related-grid" id="related-grid"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h4>MiTienda</h4>
+        <p>Calidad, cercanía y buenos precios.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <nav aria-label="Enlaces de pie">
+          <ul class="menu" style="flex-direction:column; gap:.25rem">
+            <li><a href="./">Inicio</a></li>
+            <li><a href="./productos.html">Productos</a></li>
+            <li><a href="./blogs.html">Blogs</a></li>
+            <li><a href="./contacto.html">Contacto</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>contacto@mitienda.cl<br/>+56 9 1234 5678</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/script.js"></script>
+  <script type="module">
+    import { PRODUCTS_HH } from './js/productos_huerto.js';
+
+    const qs = new URLSearchParams(location.search);
+    const code = qs.get('code');
+
+    const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+
+    const el = (s) => document.querySelector(s);
+    const main   = el('#pd-main');
+    const thumbs = el('#pd-thumbs');
+
+    const nameEl = el('#pd-name');
+    const bcName = el('#bc-name');
+    const price  = el('#pd-price');
+    const unit   = el('#pd-unit');
+    const desc   = el('#pd-desc');
+    const origen = el('#pd-origen');
+    const stock  = el('#pd-stock');
+    const pract  = el('#pd-practicas');
+    const recetas= el('#pd-recetas');
+    const qtyInp = el('#pd-qty');
+    const addBtn = el('#pd-add');
+    const relatedGrid = el('#related-grid');
+
+    const p = PRODUCTS_HH.find(x => x.code === code) || PRODUCTS_HH[0];
+
+    // Rellenar datos
+    nameEl.textContent = p.nombre;
+    bcName.textContent = p.nombre;
+    price.textContent  = fmtCLP(p.precioCLP);
+    unit.textContent   = ` / ${p.unidad}`;
+    desc.textContent   = p.descripcion;
+    origen.textContent = p.origen || '—';
+    stock.textContent  = typeof p.stock === 'number' ? p.stock : '—';
+    pract.textContent  = Array.isArray(p.practicas) ? p.practicas.join(', ') : '—';
+    recetas.innerHTML  = Array.isArray(p.recetas) && p.recetas.length
+      ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
+      : '—';
+
+    // Galería (si hubiera p.galeria, la usamos; si no, solo la principal)
+    const gal = Array.isArray(p.galeria) && p.galeria.length ? p.galeria : [p.imagen];
+
+    function setMain(src){
+      main.innerHTML = `
+        <img src="${src}" alt="${p.nombre}" loading="eager" style="width:100%;height:100%;object-fit:contain">
+      `;
+    }
+    setMain(gal[0]);
+    thumbs.innerHTML = '';
+    gal.forEach((src, i) => {
+      const b = document.createElement('button');
+      b.className = 'thumb-btn';
+      b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy">`;
+      b.addEventListener('click', () => setMain(src));
+      thumbs.appendChild(b);
+    });
+
+    // Añadir al carrito con cantidad (usa el listener global de script.js leyendo data-qty)
+    addBtn.dataset.code = p.code;
+    addBtn.dataset.qty  = '1';
+
+    qtyInp.addEventListener('input', () => {
+      const q = Math.max(1, parseInt(qtyInp.value || '1', 10));
+      qtyInp.value = q;
+      addBtn.dataset.qty = String(q);
+    });
+
+    // Render relacionados (misma categoría, hasta 5)
+    const relacionados = PRODUCTS_HH
+      .filter(x => x.categoriaId === p.categoriaId && x.code !== p.code)
+      .slice(0, 5);
+
+    relatedGrid.innerHTML = '';
+    relacionados.forEach(r => {
+      const a = document.createElement('a');
+      a.className = 'related-card';
+      a.href = `./producto.html?code=${r.code}`;
+      a.innerHTML = `
+        <div class="thumb"><img src="${r.imagen}" alt="${r.nombre}"></div>
+        <span class="title">${r.nombre}</span>
+        <span class="price">${fmtCLP(r.precioCLP)}</span>
+      `;
+      relatedGrid.appendChild(a);
+    });
+  </script>
+</body>
+</html>
