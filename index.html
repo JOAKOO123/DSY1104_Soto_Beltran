@@ -41,9 +41,8 @@
         </button>
 
         <div class="account-buttons">
-          <a href="#" id="login-link" role="button">Iniciar sesión</a> |
-          <a href="#" id="register-link" role="button">Registrar usuario</a>
-        </div>
+        <a href="./login.html" aria-current="page">Iniciar sesión</a> |
+        <a href="./registro.html">Registrar usuario</a>
       </div>
     </div>
 
@@ -170,78 +169,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- ===================== MODALES ===================== -->
-  <!-- Modal de Inicio de Sesión -->
-  <div id="login-modal" class="modal hidden">
-    <div class="form-wrapper">
-      <form class="form-box">
-        <div class="empresa-header">
-          <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="Logo MiTienda" class="logo-formulario">
-          <h2 class="empresa-nombre">MiTienda</h2>
-        </div>
-
-        <label for="correo-login">CORREO</label>
-        <input type="email" id="correo-login" required>
-
-        <label for="contrasena-login">CONTRASEÑA</label>
-        <input type="password" id="contrasena-login" required>
-
-        <button type="submit">Iniciar sesión</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal de Registro de Usuario -->
-  <div id="register-modal" class="modal hidden">
-    <div class="form-wrapper">
-      <form class="form-box">
-        <h2>Registro de usuario</h2>
-
-        <label for="nombre">NOMBRE COMPLETO</label>
-        <input type="text" id="nombre" required>
-
-        <label for="correo">CORREO</label>
-        <input type="email" id="correo" required>
-
-        <label for="confirmar-correo">CONFIRME CORREO</label>
-        <input type="email" id="confirmar-correo" required>
-
-        <label for="contrasena">CONTRASEÑA</label>
-        <input type="password" id="contrasena" required>
-
-        <label for="confirmar-contrasena">CONFIRMAR CONTRASEÑA</label>
-        <input type="password" id="confirmar-contrasena" required>
-
-        <label for="telefono">TELÉFONO (opcional)</label>
-        <input type="tel" id="telefono">
-
-        <div class="region-comuna">
-          <div class="select-group">
-            <label for="region">Seleccione la región</label>
-            <select id="region" required>
-              <option disabled selected>-- Seleccione la región --</option>
-              <option>Ver que colocar aqui</option>
-              <option>Ver que colocar aqui</option>
-              <option>Ver que colocar aqui</option>
-            </select>
-          </div>
-
-          <div class="select-group">
-            <label for="comuna">Seleccione su comuna</label>
-            <select id="comuna" required>
-              <option disabled selected>-- Seleccione la comuna --</option>
-              <option>Ver que colocar aqui</option>
-              <option>Ver que colocar aqui</option>
-              <option>Ver que colocar aqui</option>
-            </select>
-          </div>
-        </div>
-
-        <button type="submit">REGISTRAR</button>
-      </form>
-    </div>
-  </div>
 
   <!-- Scripts -->
   <script type="module" src="js/script.js"></script>

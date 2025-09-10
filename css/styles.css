@@ -380,29 +380,77 @@ footer.site-footer{ border-top:1px solid var(--border); background:var(--surface
 button:focus, a:focus, input:focus, select:focus, textarea:focus{
   outline:3px solid #2e7d32; outline-offset:2px;
 }
+.blog-title{
+  margin: 0;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  font-weight: 700;
+}
+.blog-date{ margin: 0; }
+.blog-excerpt{ margin: .25rem 0 .5rem; }
 
-/* ===================== RESPONSIVE ===================== */
-@media (max-width:1024px){
-  .hero-grid{ grid-template-columns:1fr; }
-  .cards{ grid-template-columns:repeat(2,1fr); }
-  .catalogo-grid{ grid-template-columns:230px 1fr; }
+/* === Botón "Ver caso" visible (verde) y compacto === */
+.blog-info .cta-button{
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .6rem .95rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: var(--primary);
+  color: var(--primary-contrast);
+  font-weight: 700;
+  cursor: pointer;
+  width: auto;                 /* evita que se estire al 100% */
 }
-@media (max-width:900px){
-  .pd-grid{ grid-template-columns:1fr; }
+.blog-info .cta-button:hover{
+  background: var(--primary-600);
+  color: var(--primary-contrast);
 }
-@media (max-width:768px){
-  nav.primary-nav{ display:none; }
-  .cards{ grid-template-columns:1fr; }
-  .catalogo-grid{ grid-template-columns:1fr; }
-  .filters{ position:static; }
-  .blog-row{ grid-template-columns:1fr; }
-  .blog-media img{ height:200px; }
+.blog-info .cta-button:focus-visible{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 10px;
 }
-@media (max-width:480px){
-  body{ font-size:14px; }
+.caret{ font-size: .9em; }
+
+/* Imagen a la derecha */
+.blog-media{
+  margin: 0;
+  display: grid;
+  align-items: center;
 }
-@media (min-width:769px){
-  body{ font-size:16px; }
+.blog-media img{
+  width: 100%;
+  height: 240px;
+  object-fit: cover;           /* recorte agradable */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/* Responsive: en móvil apilamos */
+@media (max-width: 768px){
+  .blog-row{
+    grid-template-columns: 1fr;
+  }
+  .blog-media img{
+    height: 200px;
+  }
+}
+
+/* BLOG — DETALLE: tamaño de la imagen principal */
+.post-hero img{
+  width: min(100%, 560px);
+  max-height: 420px;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  margin: .5rem auto 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+@media (max-width: 768px){
+  .post-hero img{ width: min(100%, 420px); max-height: 320px; }
 }
 
 /* ===================== NOSOTROS — estilo anterior restaurado ===================== */
@@ -516,3 +564,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus{
   .team-grid{  grid-template-columns: 1fr; }
   .mapbox{ height:300px; }
 }
+
+
+
+

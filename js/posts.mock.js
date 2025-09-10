@@ -5,7 +5,7 @@ export const POSTS = [
     title: "Cómo armar tu primer huerto en casa",
     date: "2025-09-05",
     excerpt: "Pasos simples para comenzar con macetas, sustratos y riego.",
-    image: "assets/LogoTienda/LogoHuertoHogar.png",
+    image: "assets/blogs/HuertoCasa.png",
     alt: "Cesta de hortalizas del logo HuertoHogar",
     href: "blog-huerto-casa.html"
   },
@@ -14,7 +14,7 @@ export const POSTS = [
     title: "Verduras orgánicas: beneficios y cuidados",
     date: "2025-08-22",
     excerpt: "Qué significa “orgánico” y cómo reconocer productos frescos.",
-    image: "assets/LogoTienda/LogoHuertoHogar.png",
+    image: "assets/blogs/VerdurasOrganicas.png",
     alt: "Logo HuertoHogar representando productos orgánicos",
     href: "blog-verduras-organicas.html"
   }
