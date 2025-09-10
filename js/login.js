@@ -1,4 +1,6 @@
-// js/login.js
+// js/login.js (MÓDULO)
+import { USUARIOS } from './usuarios.js';
+
 (function () {
   const form  = document.getElementById('loginForm');
   const email = document.getElementById('correo-login');
@@ -18,20 +20,16 @@
   };
   const clearMsg = () => setMsg('', '');
 
-  // 🔹 PREFILL y mensaje cuando vienes desde registro
+  // (opcional) mensaje si vienes desde registro y prefill
   try {
     const params = new URLSearchParams(window.location.search);
     const pre = localStorage.getItem('prefill_email');
-    if (pre) {
-      email.value = pre;                // pre-cargar email
-      localStorage.removeItem('prefill_email');
-    }
-    if (params.get('registro') === 'ok') {
-      setMsg('✅ Registro exitoso. Ahora inicia sesión.', 'ok');
-    }
+    if (pre) { email.value = pre; localStorage.removeItem('prefill_email'); }
+    if (params.get('registro') === 'ok') setMsg('✅ Registro exitoso. Ahora inicia sesión.', 'ok');
   } catch {}
 
-  // limpiar mensaje mientras escribe
+  const usuarios = Array.isArray(USUARIOS) ? USUARIOS : [];
+
   email?.addEventListener('input', clearMsg);
   pass?.addEventListener('input',  clearMsg);
 
@@ -39,40 +37,25 @@
     e.preventDefault();
     clearMsg();
 
-    const eVal = trim(email.value);
+    const eVal = trim(email.value).toLowerCase();
     const pVal = String(pass.value);
 
-    // si ambos campos están vacíos
-    if (isEmpty(eVal) && isEmpty(pVal)) {
-      setMsg('Campos requeridos', 'error');
-      email.focus();
-      return;
-    }
+    if (isEmpty(eVal) && isEmpty(pVal)) { setMsg('Campos requeridos', 'error'); email.focus(); return; }
+    if (isEmpty(eVal))               { setMsg('Email requerido', 'error'); email.focus(); return; }
+    if (eVal.length > 100)           { setMsg('El email debe tener máximo 100 caracteres', 'error'); email.focus(); return; }
+    if (!emailFmtOk(eVal))           { setMsg('Correo inválido', 'error'); email.focus(); return; }
+    if (!emailDuoc(eVal))            { setMsg('El correo debe ser institucional (@duocuc.cl)', 'error'); email.focus(); return; }
+    if (!passLenOk(pVal))            { setMsg('Contraseña debe tener entre 4 y 10 caracteres', 'error'); pass.focus(); return; }
+    if (!Array.isArray(usuarios) || usuarios.length === 0) { setMsg('No hay usuarios configurados.', 'error'); return; }
 
-    // Validaciones en orden
-    if (isEmpty(eVal)) {
-      setMsg('Email requerido', 'error'); email.focus(); return;
-    }
-    if (eVal.length > 100) {
-      setMsg('El email debe tener máximo 100 caracteres', 'error'); email.focus(); return;
-    }
-    if (!emailFmtOk(eVal)) {
-      setMsg('Correo inválido', 'error'); email.focus(); return;
-    }
-    if (!emailDuoc(eVal)) {
-      setMsg('El correo debe ser institucional (@duocuc.cl)', 'error'); email.focus(); return;
-    }
-    if (!passLenOk(pVal)) {
-      setMsg('Contraseña debe tener entre 4 y 10 caracteres', 'error'); pass.focus(); return;
-    }
+    const user = usuarios.find(u =>
+      String(u.correo || '').toLowerCase() === eVal &&
+      String(u.password || '') === pVal
+    );
+    if (!user) { setMsg('❌ Usuario o contraseña incorrectos', 'error'); return; }
 
-    // ✅ Éxito
     setMsg('✅ Inicio de sesión exitoso.', 'ok');
-
-    // Guardar "sesión" (demo sin backend) y volver al Home
-    try {
-      localStorage.setItem('mitienda_user', JSON.stringify({ email: eVal, ts: Date.now() }));
-    } catch {}
+    try { localStorage.setItem('mitienda_user', JSON.stringify({ email: eVal, ts: Date.now() })); } catch {}
     setTimeout(() => { window.location.href = './'; }, 700);
   });
 })();
