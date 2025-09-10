@@ -131,11 +131,16 @@ function addToCart(code, qty = 1){
   openCart();
 }
 
-// ===== Home: destacados =====
+// ===== Home: destacados por rating =====
 function renderFeatured(){
   if (!featuredGrid || !Array.isArray(PRODUCTS_HH)) return;
   featuredGrid.innerHTML = '';
-  PRODUCTS_HH.slice(0, 3).forEach(prod => {
+
+  const top = [...PRODUCTS_HH]
+    .sort((a,b) => (b.rating ?? 0) - (a.rating ?? 0) || (b.reviews ?? 0) - (a.reviews ?? 0))
+    .slice(0, 3);
+
+  top.forEach(prod => {
     const article = document.createElement('article');
     article.className = 'card';
     article.innerHTML = `
@@ -146,6 +151,12 @@ function renderFeatured(){
         </div>
         <h3>${prod.nombre}</h3>
       </a>
+
+      <div class="rating-row">
+        <span class="star-rating" style="--rating:${prod.rating ?? 0}"></span>
+        <span>${(prod.rating ?? 0).toFixed(1)} · ${prod.reviews ?? 0} reseñas</span>
+      </div>
+
       <p class="muted">${prod.descripcion}</p>
       <div class="actions">
         <span class="price">${fmtCLP(prod.precioCLP)}</span>
@@ -269,7 +280,6 @@ function attach(){
         };
         document.addEventListener('keydown', escToClose);
       } else {
-        // Fallback nativo
         if (window.confirm('¿Seguro que deseas vaciar el carrito?')){
           cart = [];
           renderCart();
@@ -376,16 +386,22 @@ function initCatalogoFilters(){
       const article = document.createElement('article');
       article.classList.add('producto');
       article.innerHTML = `
-        <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
-          <div class="thumb">
-            <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
-          </div>
-          <h2>${prod.nombre}</h2>
-        </a>
-        <p>${prod.descripcion}</p>
-        <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
-        <button data-code="${prod.code}">Añadir al carrito</button>
-      `;
+  <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
+    <div class="thumb">
+      <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
+    </div>
+    <h2>${prod.nombre}</h2>
+  </a>
+
+  <div class="rating-row" title="${(prod.rating ?? 0).toFixed(1)} de 5">
+    <span class="star-rating" style="--rating:${prod.rating ?? 0}"></span>
+    <span>${(prod.rating ?? 0).toFixed(1)} · ${prod.reviews ?? 0}</span>
+  </div>
+
+  <p>${prod.descripcion}</p>
+  <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
+  <button data-code="${prod.code}">Añadir al carrito</button>
+`;
       grid.appendChild(article);
     });
 
@@ -401,12 +417,6 @@ function initCatalogoFilters(){
     history.replaceState({}, '', url);
   }
 
-  function refresh(){
-    renderList(applyFilters());
-    updateURLFromState();
-    syncTabsWithState(); // mantiene tabs acordes a state
-  }
-
   // --- Tabs de categorías ---
   function syncTabsWithState(){
     if (!tabBar) return;
@@ -414,6 +424,12 @@ function initCatalogoFilters(){
     tabBar.querySelectorAll('.tab').forEach(t =>
       t.classList.toggle('is-active', t.dataset.cat === active)
     );
+  }
+
+  function refresh(){
+    renderList(applyFilters());
+    updateURLFromState();
+    syncTabsWithState(); // mantiene tabs acordes a state
   }
 
   if (tabBar){
