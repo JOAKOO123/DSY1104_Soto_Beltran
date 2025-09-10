@@ -53,29 +53,115 @@
     </details>
   </header>
 
-  <!-- Carrito desplegable (igual que en index) -->
-  <aside id="cart-panel" class="cart-panel hidden">
-    <h2>Tu carrito</h2>
+  <!-- Carrito desplegable -->
+  <aside id="cart-panel" class="cart-panel hidden" aria-labelledby="cart-title">
+    <h2 id="cart-title">Tu carrito</h2>
+
+    <!-- feedback accesible (no intrusivo) -->
+    <div id="cart-feedback" class="cart-feedback" role="status" aria-live="polite"></div>
+
     <ul id="cart-items"></ul>
     <p id="cart-total">Total: $0</p>
-    <button id="close-cart" type="button">Cerrar</button>
+
+    <div class="cart-actions-row">
+      <button id="clear-cart" type="button" class="btn-outline">Vaciar carrito</button>
+      <button id="close-cart" type="button" class="btn-primary">Cerrar</button>
+    </div>
   </aside>
+
+  <!-- Modal de confirmación accesible (fuera de los <script>) -->
+  <div id="confirm-modal" class="modal hidden" role="dialog" aria-modal="true"
+       aria-labelledby="confirm-title" aria-describedby="confirm-desc">
+    <div class="modal-content" role="document">
+      <h3 id="confirm-title">Vaciar carrito</h3>
+      <p id="confirm-desc">¿Seguro que deseas eliminar todos los productos del carrito?</p>
+      <div class="modal-actions">
+        <button id="confirm-yes" class="btn-danger" type="button">Vaciar</button>
+        <button id="confirm-no" class="btn-outline" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ========== MAIN ========== -->
   <main id="contenido">
     <section class="catalogo">
-      <div class="container">
-        <h1>Nuestros Productos</h1>
-        <p>Explora nuestras categorías y encuentra lo que buscas.</p>
-        <div class="productos-grid" id="productos-grid"></div>
+      <div class="container wide">
+        <!-- Encabezado centrado -->
+        <header class="catalogo-head">
+          <h1>Nuestros Productos</h1>
+          <p>Explora nuestras categorías y encuentra lo que buscas.</p>
+        </header>
+
+        <!-- Grid: Sidebar filtros + Resultados -->
+        <div class="catalogo-grid">
+          <!-- ========== SIDEBAR DE FILTROS ========== -->
+          <aside class="filters" aria-labelledby="filtros-title">
+            <h2 id="filtros-title">Filtrar</h2>
+
+            <!-- Búsqueda -->
+            <div class="filter-group">
+              <label for="search">Buscar por nombre</label>
+              <div class="filter-search">
+                <input id="search" type="search" placeholder="Ej: manzana, miel, leche…" autocomplete="off" />
+              </div>
+            </div>
+
+            <!-- Categorías -->
+            <fieldset class="filter-group">
+              <legend>Categorías</legend>
+              <label class="cb"><input type="checkbox" name="cat" value="FR"> Frutas Frescas</label>
+              <label class="cb"><input type="checkbox" name="cat" value="VR"> Verduras</label>
+              <label class="cb"><input type="checkbox" name="cat" value="PO"> Orgánicos</label>
+              <label class="cb"><input type="checkbox" name="cat" value="PL"> Lácteos</label>
+            </fieldset>
+
+            <div class="filter-actions">
+              <button id="clear-filters" type="button" class="btn-outline">Limpiar filtros</button>
+            </div>
+          </aside>
+
+          <!-- ========== LISTA DE PRODUCTOS ========== -->
+          <div class="results">
+<div class="results-bar">
+  <span id="result-count">0 productos</span>
+
+  <label for="order" class="sr-only">Ordenar por</label>
+  <select id="order" aria-label="Ordenar por precio">
+    <option value="priceAsc">Precio: menor a mayor</option>
+    <option value="priceDesc">Precio: mayor a menor</option>
+  </select>
+</div>
+
+
+            <div class="productos-grid" id="productos-grid"></div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
   <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2025 MiTienda. Todos los derechos reservados.</p>
+    <div class="container footer-grid">
+      <div>
+        <h4>MiTienda</h4>
+        <p>Calidad, cercanía y buenos precios.</p>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <nav aria-label="Enlaces de pie">
+          <ul class="menu" style="flex-direction:column; gap:.25rem">
+            <li><a href="./">Inicio</a></li>
+            <li><a href="./productos.html" aria-current="page">Productos</a></li>
+            <li><a href="./blogs.html">Blogs</a></li>
+            <li><a href="./contacto.html">Contacto</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+        <h4>Contacto</h4>
+        <p>contacto@mitienda.cl<br/>+56 9 1234 5678</p>
+      </div>
     </div>
   </footer>
 
@@ -83,35 +169,7 @@
   <!-- Script global (carrito, listeners, etc.) -->
   <script type="module" src="js/script.js"></script>
 
-  <!-- Render del catálogo (con filtro por ?cat=FR/VR/PO/PL) -->
-  <script type="module">
-    import { PRODUCTS_HH } from './js/productos_huerto.js';
-
-    const grid = document.getElementById('productos-grid');
-    const params = new URLSearchParams(location.search);
-    const cat = params.get('cat'); // FR | VR | PO | PL | null
-
-    const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
-
-    const list = cat
-      ? PRODUCTS_HH.filter(p => p.categoriaId === cat)
-      : PRODUCTS_HH;
-
-    grid.innerHTML = '';
-    list.forEach(prod => {
-      const article = document.createElement('article');
-      article.classList.add('producto');
-
-      article.innerHTML = `
-        <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
-        <h2>${prod.nombre}</h2>
-        <p>${prod.descripcion}</p>
-        <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
-        <button data-code="${prod.code}">Añadir al carrito</button>
-      `;
-
-      grid.appendChild(article);
-    });
-  </script>
+  <!-- Render + Filtros (solo esta lógica) -->
+<script type="module"></script>
 </body>
 </html>
