@@ -516,3 +516,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus{
   .team-grid{  grid-template-columns: 1fr; }
   .mapbox{ height:300px; }
 }
+
+.cat-group{ margin-bottom: 1.25rem; }
+.cat-title{ margin: .25rem 0 .15rem; font-size: 1.1rem; font-weight: 700; }
+.cat-desc{ margin: 0 0 .5rem; color: var(--muted); }

@@ -1,5 +1,6 @@
 // js/script.js (ES Module)
 import { PRODUCTS_HH } from './productos_huerto.js';
+import { CATEGORIES_HH } from './categorias_huerto.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 
@@ -376,36 +377,62 @@ function initCatalogoFilters(){
 
   function renderList(items){
     grid.innerHTML = '';
+
     if (!items.length){
       grid.innerHTML = `<p class="muted">No hay resultados para los filtros seleccionados.</p>`;
-      resultCount && (resultCount.textContent = `0 productos`);
+      if (resultCount) resultCount.textContent = `0 productos`;
       return;
     }
 
-    items.forEach(prod => {
-      const article = document.createElement('article');
-      article.classList.add('producto');
-      article.innerHTML = `
-  <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
-    <div class="thumb">
-      <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
-    </div>
-    <h2>${prod.nombre}</h2>
-  </a>
+    // Agrupar por categoría
+    const byCat = items.reduce((acc, p) => {
+      (acc[p.categoriaId] ||= []).push(p);
+      return acc;
+    }, {});
 
-  <div class="rating-row" title="${(prod.rating ?? 0).toFixed(1)} de 5">
-    <span class="star-rating" style="--rating:${prod.rating ?? 0}"></span>
-    <span>${(prod.rating ?? 0).toFixed(1)} · ${prod.reviews ?? 0}</span>
-  </div>
+    // Pintar secciones siguiendo el orden de CATEGORIES_HH
+    CATEGORIES_HH.forEach(cat => {
+      const group = byCat[cat.id];
+      if (!group || !group.length) return;
 
-  <p>${prod.descripcion}</p>
-  <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
-  <button data-code="${prod.code}">Añadir al carrito</button>
-`;
-      grid.appendChild(article);
+      const section = document.createElement('section');
+      section.className = 'cat-group';
+      section.innerHTML = `
+        <h2 class="cat-title">${cat.nombre}</h2>
+        <p class="cat-desc muted">${cat.descripcion}</p>
+        <div class="productos-grid"></div>
+      `;
+      const inner = section.querySelector('.productos-grid');
+
+      group.forEach(prod => {
+        const article = document.createElement('article');
+        article.classList.add('producto');
+        article.innerHTML = `
+          <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
+            <div class="thumb">
+              <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
+            </div>
+            <h2>${prod.nombre}</h2>
+          </a>
+
+          <div class="rating-row" title="${(prod.rating ?? 0).toFixed(1)} de 5">
+            <span class="star-rating" style="--rating:${prod.rating ?? 0}"></span>
+            <span>${(prod.rating ?? 0).toFixed(1)} · ${prod.reviews ?? 0}</span>
+          </div>
+
+          <p>${prod.descripcion}</p>
+          <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
+          <button data-code="${prod.code}">Añadir al carrito</button>
+        `;
+        inner.appendChild(article);
+      });
+
+      grid.appendChild(section);
     });
 
-    resultCount && (resultCount.textContent = `${items.length} producto${items.length === 1 ? '' : 's'}`);
+    if (resultCount) {
+      resultCount.textContent = `${items.length} producto${items.length === 1 ? '' : 's'}`;
+    }
   }
 
   function updateURLFromState(){
@@ -488,11 +515,11 @@ function initCatalogoFilters(){
 
 // ===== ÚNICO init =====
 function init(){
-  renderFeatured();       // Home (si no existe, no hace nada)
-  renderHeroFeatured();   // Home (si no existe, no hace nada)
+  renderFeatured();       
+  renderHeroFeatured();   
   renderCart();           // Reconstruye carrito desde localStorage
-  attach();               // Listeners globales
-  initCatalogoFilters();  // Catálogo (solo corre en productos.html si existe el grid)
+  attach();               
+  initCatalogoFilters();  
 }
 
 // Ejecutar al cargar el DOM
