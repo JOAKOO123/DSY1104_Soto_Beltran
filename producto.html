@@ -54,54 +54,77 @@
         <a href="./">Inicio</a> › <a href="./productos.html">Productos</a> › <span id="bc-name">Producto</span>
       </nav>
 
-      <div class="pd-grid" style="display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:start;">
+      <div class="pd-grid">
         <!-- Galería -->
         <section class="product-gallery" aria-label="Galería">
-          <div class="main" id="pd-main"
-               style="aspect-ratio:4/3;border-radius:12px;border:1px solid var(--border);overflow:hidden;background:var(--surface);display:grid;place-items:center;">
-          </div>
-          <div class="product-thumbs" id="pd-thumbs" aria-label="Miniaturas"
-               style="margin-top:.6rem;display:flex;gap:.5rem;flex-wrap:wrap;"></div>
+          <div class="main" id="pd-main"></div>
+          <div class="product-thumbs" id="pd-thumbs" aria-label="Miniaturas"></div>
         </section>
 
         <!-- Info -->
         <section class="product-info">
-          <h1 id="pd-name" style="margin:.25rem 0 .5rem;">Nombre Producto</h1>
+          <h1 id="pd-name">Nombre Producto</h1>
 
-          <div class="rating-row" id="pd-rating-row" style="margin:.1rem 0 .75rem;">
+          <div class="rating-row" id="pd-rating-row">
             <span class="star-rating" id="pd-stars" style="--rating:0"></span>
             <span id="pd-rating-text">0.0 · 0 reseñas</span>
           </div>
 
-          <div class="meta" style="margin:.25rem 0 1rem;">
-            <span class="price-lg" id="pd-price" style="font-size:1.35rem;font-weight:800;"></span>
-            <span class="unit" id="pd-unit" style="color:var(--muted);margin-left:.25rem;"></span>
+          <div class="meta">
+            <span class="price-lg" id="pd-price"></span>
+            <span class="unit" id="pd-unit"></span>
           </div>
 
-          <p class="desc" id="pd-desc" style="margin:.5rem 0 1rem;"></p>
+          <p class="desc" id="pd-desc"></p>
 
-          <dl class="facts" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1rem;margin:0 0 1rem;">
-            <div><dt style="font-weight:700;">Origen</dt><dd id="pd-origen">—</dd></div>
-            <div><dt style="font-weight:700;">Stock</dt><dd id="pd-stock">—</dd></div>
+          <dl class="facts">
+            <div><dt>Origen</dt><dd id="pd-origen">—</dd></div>
+            <div><dt>Stock</dt><dd id="pd-stock">—</dd></div>
             <div>
-              <dt style="font-weight:700;">Prácticas</dt>
+              <dt>Prácticas</dt>
               <dd>
                 <ul id="pd-practicas-list" class="cert-list" aria-label="Prácticas y certificaciones"></ul>
               </dd>
             </div>
-            <div><dt style="font-weight:700;">Recetas</dt><dd id="pd-recetas">—</dd></div>
+            <div>
+              <dt>Recetas</dt>
+              <dd>
+                <ul id="pd-recetas-list" class="recetas-list"></ul>
+              </dd>
+            </div>
           </dl>
 
-          <div class="qty-row" style="display:flex;gap:.5rem;align-items:center;">
-            <label for="pd-qty" style="font-weight:700;">Cantidad</label>
-            <input id="pd-qty" type="number" min="1" value="1" inputmode="numeric" style="width:90px;">
+          <div class="qty-row">
+            <label for="pd-qty">Cantidad</label>
+            <input id="pd-qty" type="number" min="1" value="1" inputmode="numeric">
             <button id="pd-add" class="btn-primary" type="button">Añadir al carrito</button>
+
+            <!-- ⬇⬇ NUEVO: botón de receta ⬇⬇ -->
+            <a id="pd-recipe-btn"
+               class="btn-outline"
+               href="#"
+               target="_blank"
+               rel="noopener"
+               aria-label="Ver receta relacionada">
+              Ver receta
+            </a>
+          </div>
+
+          <!-- Compartir -->
+          <div class="share-row" style="margin-top:.75rem;">
+            <button id="pd-share" class="btn-outline" type="button"
+                    aria-haspopup="menu" aria-expanded="false" aria-controls="share-menu">
+              Compartir
+            </button>
+            <ul id="share-menu" class="share-menu" role="menu"
+                style="display:none; margin:.5rem 0 0; padding:.5rem; border:1px solid var(--border); border-radius:10px; background:var(--surface);">
+            </ul>
           </div>
         </section>
       </div>
 
       <!-- Relacionados -->
-      <section class="related" style="margin-top:2rem;">
+      <section class="related">
         <h2>Productos relacionados</h2>
         <div class="related-grid" id="related-grid"></div>
       </section>
@@ -136,29 +159,47 @@
   <!-- ===================== SCRIPTS ===================== -->
   <script type="module" src="js/script.js"></script>
 
+  <!-- LÓGICA DE DETALLE -->
   <script type="module">
     import { PRODUCTS_HH } from './js/productos_huerto.js';
 
     const qs = new URLSearchParams(location.search);
     const code = qs.get('code');
+
     const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
     const $ = s => document.querySelector(s);
 
-    const main = $('#pd-main');
+    // Galería
+    const main   = $('#pd-main');
     const thumbs = $('#pd-thumbs');
+
+    // Info
     const nameEl = $('#pd-name');
     const bcName = $('#bc-name');
-    const price = $('#pd-price');
-    const unit = $('#pd-unit');
-    const desc = $('#pd-desc');
+    const price  = $('#pd-price');
+    const unit   = $('#pd-unit');
+    const desc   = $('#pd-desc');
     const origen = $('#pd-origen');
-    const stock = $('#pd-stock');
-    const recetas = $('#pd-recetas');
+    const stock  = $('#pd-stock');
     const qtyInp = $('#pd-qty');
     const addBtn = $('#pd-add');
-    const starsEl = $('#pd-stars');
+
+    // NUEVO: botón de receta
+    const recipeBtn = document.getElementById('pd-recipe-btn');
+
+    // Rating
+    const starsEl    = $('#pd-stars');
     const ratingText = $('#pd-rating-text');
+
+    // Recetas
+    const recetasList = document.getElementById('pd-recetas-list');
+
+    // Relacionados
     const relatedGrid = $('#related-grid');
+
+    // Compartir
+    const shareBtn  = $('#pd-share');
+    const shareMenu = $('#share-menu');
 
     const p = PRODUCTS_HH.find(x => x.code === code) || PRODUCTS_HH[0];
 
@@ -166,22 +207,23 @@
       document.querySelector('.product-detail .container').innerHTML =
         '<p class="muted">Producto no encontrado.</p>';
     } else {
+      // Datos principales
       nameEl.textContent = p.nombre;
       if (bcName) bcName.textContent = p.nombre;
-      price.textContent = fmtCLP(p.precioCLP);
-      unit.textContent = ` / ${p.unidad}`;
-      desc.textContent = p.descripcion;
+      price.textContent  = fmtCLP(p.precioCLP);
+      unit.textContent   = ` / ${p.unidad}`;
+      desc.textContent   = p.descripcion;
       origen.textContent = p.origen || '—';
-      stock.textContent = typeof p.stock === 'number' ? p.stock : '—';
+      stock.textContent  = typeof p.stock === 'number' ? p.stock : '—';
 
-      // 🔸 Deshabilitar botón si stock = 0
+      // Botón según stock
       if (typeof p.stock === 'number' && p.stock <= 0) {
         addBtn.disabled = true;
         addBtn.textContent = 'Sin stock';
         qtyInp.disabled = true;
       }
 
-      // 🔸 Mostrar alerta si stock < stockCrítico
+      // Alerta stock crítico
       const stockCritico = Number(p.stockCritico ?? NaN);
       if (!Number.isNaN(stockCritico) && typeof p.stock === 'number' && p.stock < stockCritico) {
         const warn = document.createElement('p');
@@ -190,8 +232,9 @@
         document.querySelector('.facts')?.after(warn);
       }
 
+      // Prácticas / certificaciones
       const practList = document.getElementById('pd-practicas-list');
-      if (Array.isArray(p.practicas) && p.practicas.length) {
+      if (Array.isArray(p.practicas) && p.practicas.length){
         practList.innerHTML = p.practicas.map(item => `
           <li>
             <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
@@ -204,18 +247,71 @@
         practList.innerHTML = `<li><span class="text">—</span></li>`;
       }
 
-      recetas.innerHTML = Array.isArray(p.recetas) && p.recetas.length
-        ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
-        : '—';
+      // ===== Recetas (URLs externas seguras) =====
+      function isSafeUrl(href) {
+        try {
+          const url = new URL(String(href), location.href);
+          return url.protocol === 'https:' || url.protocol === 'http:';
+        } catch { return false; }
+      }
+      function getHrefAndTitle(item, idx) {
+        if (typeof item === 'string') return { href: item, title: `Receta ${idx + 1}` };
+        if (item && typeof item === 'object' && item.href)
+          return { href: String(item.href), title: String(item.titulo || `Receta ${idx + 1}`) };
+        return null;
+      }
 
-      const rating = Number(p.rating ?? 0);
+      // Botón "Ver receta" (usa la primera receta válida)
+      const firstRecipe = (() => {
+        const src = Array.isArray(p.recetas) ? p.recetas : [];
+        for (let i = 0; i < src.length; i++) {
+          const entry = getHrefAndTitle(src[i], i);
+          if (entry && isSafeUrl(entry.href)) return entry;
+        }
+        return null;
+      })();
+
+      if (recipeBtn) {
+        if (firstRecipe) {
+          recipeBtn.href = firstRecipe.href;
+          recipeBtn.setAttribute('aria-label', `Ver receta relacionada de ${p.nombre}`);
+          recipeBtn.style.display = '';
+        } else {
+          // si no hay recetas válidas, ocultamos el botón
+          recipeBtn.style.display = 'none';
+        }
+      }
+
+      // Listado de recetas
+      (function renderRecetas() {
+        const src = Array.isArray(p.recetas) ? p.recetas : [];
+        const cleaned = src
+          .map((it, i) => getHrefAndTitle(it, i))
+          .filter(Boolean)
+          .filter(({ href }) => isSafeUrl(href));
+
+        if (!cleaned.length) {
+          recetasList.innerHTML = `<li>—</li>`;
+          return;
+        }
+        recetasList.innerHTML = cleaned.map(({ href, title }) => `
+          <li>
+            <a href="${href}" target="_blank" rel="noopener" class="recipe-link">${title}</a>
+          </li>
+        `).join('');
+      })();
+      // ===== /Recetas =====
+
+      // Rating
+      const rating  = Number(p.rating ?? 0);
       const reviews = Number(p.reviews ?? 0);
       starsEl.style.setProperty('--rating', String(rating));
       ratingText.textContent = `${rating.toFixed(1)} · ${reviews} ${reviews === 1 ? 'reseña' : 'reseñas'}`;
       starsEl.setAttribute('title', `${rating.toFixed(1)} de 5`);
 
+      // Galería
       const gal = Array.isArray(p.galeria) && p.galeria.length ? p.galeria : [p.imagen];
-      function setMain(src) {
+      function setMain(src){
         main.innerHTML = `<img src="${src}" alt="${p.nombre}" loading="eager" style="width:100%;height:100%;object-fit:contain;">`;
       }
       setMain(gal[0]);
@@ -223,20 +319,21 @@
       gal.forEach((src, i) => {
         const b = document.createElement('button');
         b.className = 'thumb-btn';
-        b.style.cssText = 'width:70px;height:70px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);';
-        b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
+        b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy">`;
         b.addEventListener('click', () => setMain(src));
         thumbs.appendChild(b);
       });
 
+      // Añadir al carrito con cantidad (usa listener global de script.js)
       addBtn.dataset.code = p.code;
-      addBtn.dataset.qty = '1';
+      addBtn.dataset.qty  = '1';
       qtyInp.addEventListener('input', () => {
         const q = Math.max(1, parseInt(qtyInp.value || '1', 10));
         qtyInp.value = q;
         addBtn.dataset.qty = String(q);
       });
 
+      // Relacionados
       const relacionados = PRODUCTS_HH
         .filter(x => x.categoriaId === p.categoriaId && x.code !== p.code)
         .slice(0, 5);
@@ -246,20 +343,77 @@
         const a = document.createElement('a');
         a.className = 'related-card';
         a.href = `./producto.html?code=${r.code}`;
-        a.style.cssText = 'display:grid;gap:.4rem;padding:.7rem;border:1px solid var(--border);border-radius:12px;background:var(--surface);';
         a.innerHTML = `
-          <div class="thumb" style="aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
-            <img src="${r.imagen}" alt="${r.nombre}" style="width:100%;height:100%;object-fit:cover;">
-          </div>
-          <span class="title" style="font-weight:700;">${r.nombre}</span>
+          <div class="thumb"><img src="${r.imagen}" alt="${r.nombre}"></div>
+          <span class="title">${r.nombre}</span>
           <div class="rating-row" title="${(r.rating ?? 0).toFixed(1)} de 5">
             <span class="star-rating" style="--rating:${r.rating ?? 0}"></span>
             <span>${(r.rating ?? 0).toFixed(1)} · ${r.reviews ?? 0}</span>
           </div>
-          <span class="price" style="font-weight:700;">${fmtCLP(r.precioCLP)}</span>
+          <span class="price">${fmtCLP(r.precioCLP)}</span>
         `;
         relatedGrid.appendChild(a);
       });
+
+      // ====== COMPARTIR ======
+      if (shareBtn && shareMenu) {
+        const url  = location.href;
+        const text = `${p.nombre} — ${fmtCLP(p.precioCLP)} / ${p.unidad}`;
+        const enc = encodeURIComponent;
+
+        const links = [
+          { href: `https://api.whatsapp.com/send?text=${enc(text + ' ' + url)}`,  label: 'WhatsApp' },
+          { href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,      label: 'Facebook' },
+          { href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`, label: 'X / Twitter' }
+        ];
+        shareMenu.innerHTML = `
+          ${links.map(l => `
+            <li role="none">
+              <a role="menuitem" href="${l.href}" target="_blank" rel="noopener" class="share-link" style="display:block;padding:.4rem .6rem;border-radius:8px;">
+                ${l.label}
+              </a>
+            </li>
+          `).join('')}
+          <li role="none">
+            <button id="copy-link" role="menuitem" class="btn-outline" type="button" style="margin-top:.25rem;">
+              Copiar enlace
+            </button>
+          </li>
+        `;
+
+        const openMenu  = () => { shareMenu.style.display = 'block'; shareMenu.classList.add('open'); shareBtn.setAttribute('aria-expanded','true'); };
+        const closeMenu = () => { shareMenu.style.display = 'none';  shareMenu.classList.remove('open'); shareBtn.setAttribute('aria-expanded','false'); };
+
+        shareBtn.addEventListener('click', async () => {
+          if (navigator.share) {
+            try { await navigator.share({ title: p.nombre, text: p.descripcion || text, url }); }
+            catch { /* cancelado */ }
+          } else {
+            if (shareMenu.classList.contains('open')) closeMenu(); else openMenu();
+          }
+        });
+
+        shareMenu.addEventListener('click', async (e) => {
+          const btn = e.target.closest('#copy-link');
+          if (!btn) return;
+          try {
+            await navigator.clipboard.writeText(url);
+            btn.textContent = '¡Enlace copiado!';
+            setTimeout(() => (btn.textContent = 'Copiar enlace'), 1200);
+          } catch {}
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!shareMenu.classList.contains('open')) return;
+          const inMenu = shareMenu.contains(e.target);
+          const onBtn  = shareBtn.contains(e.target);
+          if (!inMenu && !onBtn) closeMenu();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && shareMenu.classList.contains('open')) closeMenu();
+        });
+      }
+      // ====== /COMPARTIR ======
     }
   </script>
 </body>
