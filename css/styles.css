@@ -529,3 +529,48 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus{
 .recetas-list a { 
   text-decoration: underline; 
 }
+
+/* ===== Catálogo agrupado + paginación ===== */
+#productos-grid{ display:block; }               /* asegúrate que no sea un grid de 3 col */
+.cat-group{ grid-column:1 / -1; margin-bottom:1.25rem; }
+.cat-group .cat-title{ margin:0 0 .25rem; font-size:1.2rem; font-weight:700; }
+.cat-group .cat-desc{ margin:0 0 .5rem; color:var(--muted); }
+
+/* la grilla de cards dentro de cada sección */
+.cat-group .productos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+  gap:1.25rem;
+  margin-top:.5rem;
+}
+
+/* paginación */
+.pager{ grid-column:1 / -1; display:flex; justify-content:center; margin:1rem 0 0; }
+#load-more{ padding:.6rem 1rem; border-radius:10px; }
+
+/* ===== Catálogo agrupado + paginación ===== */
+#productos-grid{ display:block; }
+
+.cat-group{ grid-column:1 / -1; margin-bottom:1.25rem; }
+.cat-group .cat-title{ margin:0 0 .25rem; font-size:1.2rem; font-weight:700; }
+.cat-group .cat-desc{ margin:0 0 .5rem; color:var(--muted); }
+
+/* Evita cards gigantes cuando hay 1 item:
+   limitamos el ancho de cada tarjeta a ~320px como máx. de columna */
+.cat-group .productos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 320px));
+  gap:1.25rem;
+  justify-content:start;   /* no estirar al ancho total */
+  align-items:start;
+}
+
+/* Paginación */
+.pager{
+  grid-column:1 / -1;
+  display:flex;
+  gap:.5rem;
+  justify-content:center;
+  margin:1rem 0 0;
+}
+#load-more,#load-less{ padding:.6rem 1rem; border-radius:10px; }
