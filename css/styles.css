@@ -23,6 +23,14 @@
 
   --font-ui:"Montserrat",sans-serif;
   --font-head:"Playfair Display",serif;
+  
+  
+}
+
+/* Solo si quieres conservar #2E8B57 */
+button, .btn, .btn-primary, .btn-icon, .btn-outline,
+.producto button, .cart-action {
+  color: #000; /* en lugar de blanco */
 }
 
 /* ===================== RESET / BASE ===================== */
