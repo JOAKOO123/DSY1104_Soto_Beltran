@@ -1,4 +1,6 @@
 // js/contacto.js
+import { USUARIOS } from './usuarios.js';
+
 (function () {
   const form   = document.getElementById('contactoForm');
   const nombre = document.getElementById('c-nombre');
@@ -57,6 +59,15 @@
     // Comentario: requerido
     if (!tx) { setMsg('❌ Comentario obligatorio', 'error'); mark(texto, true);  texto.focus(); return; }
     mark(texto, false);
+
+    // ✅ EXTRA: el correo debe existir en la lista de usuarios
+    const existe = Array.isArray(USUARIOS) && USUARIOS.some(
+      u => String(u.correo || '').toLowerCase() === em
+    );
+    if (!existe) {
+      setMsg('❌ Este correo no está registrado en MiTienda.', 'error');
+      mark(email, true); email.focus(); return;
+    }
 
     // ——— Envío simulado ———
     setMsg('✅ Mensaje enviado. ¡Gracias por contactarnos!', 'ok');

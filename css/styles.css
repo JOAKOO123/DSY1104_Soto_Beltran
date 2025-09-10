@@ -1529,30 +1529,35 @@ a { outline-color: rgba(0,128,255,.3); }
   font-size: clamp(1.1rem, 2.2vw, 1.4rem);
   font-weight: 700;
 }
-.blog-date{
-  margin: 0;
-}
-.blog-excerpt{
-  margin: .25rem 0 .5rem;
-}
+.blog-date{ margin: 0; }
+.blog-excerpt{ margin: .25rem 0 .5rem; }
 
-.cta-button{
+/* === Botón "Ver caso" visible (verde) y compacto === */
+.blog-info .cta-button{
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  padding: .55rem .9rem;
+  padding: .6rem .95rem;
   border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  font-weight: 600;
+  border: 1px solid transparent;
+  background: var(--primary);
+  color: var(--primary-contrast);
+  font-weight: 700;
   cursor: pointer;
+  width: auto;                 /* evita que se estire al 100% */
 }
-.cta-button:hover{
-  border-color: var(--primary);
-  color: var(--primary);
+.blog-info .cta-button:hover{
+  background: var(--primary-600);
+  color: var(--primary-contrast);
+}
+.blog-info .cta-button:focus-visible{
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 10px;
 }
 .caret{ font-size: .9em; }
 
+/* Imagen a la derecha */
 .blog-media{
   margin: 0;
   display: grid;
@@ -1561,13 +1566,13 @@ a { outline-color: rgba(0,128,255,.3); }
 .blog-media img{
   width: 100%;
   height: 240px;
-  object-fit: cover;     /* imita el rectángulo del wireframe */
+  object-fit: cover;           /* recorte agradable */
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
 }
 
-/* Responsive: en móvil apilamos como en el bosquejo */
+/* Responsive: en móvil apilamos */
 @media (max-width: 768px){
   .blog-row{
     grid-template-columns: 1fr;
@@ -1579,8 +1584,8 @@ a { outline-color: rgba(0,128,255,.3); }
 
 /* BLOG — DETALLE: tamaño de la imagen principal */
 .post-hero img{
-  width: min(100%, 560px);   /* ← cambia 560 si la quieres más chica/grande */
-  max-height: 420px;         /* opcional: limita altura vertical */
+  width: min(100%, 560px);
+  max-height: 420px;
   height: auto;
   object-fit: cover;
   display: block;
@@ -1588,7 +1593,6 @@ a { outline-color: rgba(0,128,255,.3); }
   border-radius: 12px;
   border: 1px solid var(--border);
 }
-
 @media (max-width: 768px){
   .post-hero img{ width: min(100%, 420px); max-height: 320px; }
 }
@@ -1703,5 +1707,7 @@ a { outline-color: rgba(0,128,255,.3); }
   .team-grid{ grid-template-columns: 1fr; }
   .mapbox{ height: 300px; }
 }
+
+
 
 
