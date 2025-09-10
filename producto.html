@@ -72,6 +72,22 @@
             <span class="star-rating" id="pd-stars" style="--rating:0"></span>
             <span id="pd-rating-text">0.0 · 0 reseñas</span>
           </div>
+          <div class="qty-row">
+    <label for="pd-qty">Cantidad</label>
+    <input id="pd-qty" type="number" min="1" value="1" inputmode="numeric">
+    <button id="pd-add" class="btn-primary" type="button">Añadir al carrito</button>
+  </div>
+
+  <!-- ⬇⬇ AQUI va el bloque de Compartir ⬇⬇ -->
+  <div class="share-row" style="margin-top:.75rem;">
+    <button id="pd-share" class="btn-outline" type="button"
+            aria-haspopup="menu" aria-expanded="false" aria-controls="share-menu">
+      Compartir
+    </button>
+    <ul id="share-menu" class="share-menu" role="menu"
+        style="display:none; margin:.5rem 0 0; padding:.5rem; border:1px solid var(--border); border-radius:10px; background:var(--surface);">
+    </ul>
+  </div>
 
           <div class="meta" style="margin:.25rem 0 1rem;">
             <span class="price-lg" id="pd-price" style="font-size:1.35rem;font-weight:800;"></span>
@@ -136,131 +152,232 @@
   <!-- ===================== SCRIPTS ===================== -->
   <script type="module" src="js/script.js"></script>
 
-  <script type="module">
-    import { PRODUCTS_HH } from './js/productos_huerto.js';
+<script type="module">
+  import { PRODUCTS_HH } from './js/productos_huerto.js';
 
-    const qs = new URLSearchParams(location.search);
-    const code = qs.get('code');
-    const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
-    const $ = s => document.querySelector(s);
+  const qs = new URLSearchParams(location.search);
+  const code = qs.get('code');
 
-    const main = $('#pd-main');
-    const thumbs = $('#pd-thumbs');
-    const nameEl = $('#pd-name');
-    const bcName = $('#bc-name');
-    const price = $('#pd-price');
-    const unit = $('#pd-unit');
-    const desc = $('#pd-desc');
-    const origen = $('#pd-origen');
-    const stock = $('#pd-stock');
-    const recetas = $('#pd-recetas');
-    const qtyInp = $('#pd-qty');
-    const addBtn = $('#pd-add');
-    const starsEl = $('#pd-stars');
-    const ratingText = $('#pd-rating-text');
-    const relatedGrid = $('#related-grid');
+  const fmtCLP = n => n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+  const $ = s => document.querySelector(s);
 
-    const p = PRODUCTS_HH.find(x => x.code === code) || PRODUCTS_HH[0];
+  // Galería
+  const main   = $('#pd-main');
+  const thumbs = $('#pd-thumbs');
 
-    if (!p) {
-      document.querySelector('.product-detail .container').innerHTML =
-        '<p class="muted">Producto no encontrado.</p>';
+  // Info
+  const nameEl = $('#pd-name');
+  const bcName = $('#bc-name');
+  const price  = $('#pd-price');
+  const unit   = $('#pd-unit');
+  const desc   = $('#pd-desc');
+  const origen = $('#pd-origen');
+  const stock  = $('#pd-stock');
+  const recetas= $('#pd-recetas');
+  const qtyInp = $('#pd-qty');
+  const addBtn = $('#pd-add');
+
+  // Rating
+  const starsEl    = $('#pd-stars');
+  const ratingText = $('#pd-rating-text');
+
+  // Relacionados
+  const relatedGrid = $('#related-grid');
+
+  // Compartir
+  const shareBtn  = $('#pd-share');
+  const shareMenu = $('#share-menu');
+
+  const p = PRODUCTS_HH.find(x => x.code === code) || PRODUCTS_HH[0];
+
+  if (!p) {
+    document.querySelector('.product-detail .container').innerHTML =
+      '<p class="muted">Producto no encontrado.</p>';
+  } else {
+    // Datos principales
+    nameEl.textContent = p.nombre;
+    if (bcName) bcName.textContent = p.nombre;
+    price.textContent  = fmtCLP(p.precioCLP);
+    unit.textContent   = ` / ${p.unidad}`;
+    desc.textContent   = p.descripcion;
+    origen.textContent = p.origen || '—';
+    stock.textContent  = typeof p.stock === 'number' ? p.stock : '—';
+
+    // 🔸 Deshabilitar botón si stock = 0
+    if (typeof p.stock === 'number' && p.stock <= 0) {
+      addBtn.disabled = true;
+      addBtn.textContent = 'Sin stock';
+      qtyInp.disabled = true;
+    }
+
+    // 🔸 Alerta si stock < stockCrítico
+    const stockCritico = Number(p.stockCritico ?? NaN);
+    if (!Number.isNaN(stockCritico) && typeof p.stock === 'number' && p.stock < stockCritico) {
+      const warn = document.createElement('p');
+      warn.className = 'stock-alert';
+      warn.textContent = `⚠ Quedan pocas unidades (${p.stock})`;
+      document.querySelector('.facts')?.after(warn);
+    }
+
+    // Prácticas / certificaciones
+    const practList = document.getElementById('pd-practicas-list');
+    if (Array.isArray(p.practicas) && p.practicas.length){
+      practList.innerHTML = p.practicas.map(item => `
+        <li>
+          <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M7.8 14.3L3.5 10l1.4-1.4 2.9 2.9 7.3-7.3 1.4 1.4-8.7 8.7z"/>
+          </svg>
+          <span class="text">${item}</span>
+        </li>
+      `).join('');
     } else {
-      nameEl.textContent = p.nombre;
-      if (bcName) bcName.textContent = p.nombre;
-      price.textContent = fmtCLP(p.precioCLP);
-      unit.textContent = ` / ${p.unidad}`;
-      desc.textContent = p.descripcion;
-      origen.textContent = p.origen || '—';
-      stock.textContent = typeof p.stock === 'number' ? p.stock : '—';
+      practList.innerHTML = `<li><span class="text">—</span></li>`;
+    }
 
-      // 🔸 Deshabilitar botón si stock = 0
-      if (typeof p.stock === 'number' && p.stock <= 0) {
-        addBtn.disabled = true;
-        addBtn.textContent = 'Sin stock';
-        qtyInp.disabled = true;
-      }
+    // Recetas (primera)
+    recetas.innerHTML  = Array.isArray(p.recetas) && p.recetas.length
+      ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
+      : '—';
 
-      // 🔸 Mostrar alerta si stock < stockCrítico
-      const stockCritico = Number(p.stockCritico ?? NaN);
-      if (!Number.isNaN(stockCritico) && typeof p.stock === 'number' && p.stock < stockCritico) {
-        const warn = document.createElement('p');
-        warn.className = 'stock-alert';
-        warn.textContent = `⚠ Quedan pocas unidades (${p.stock})`;
-        document.querySelector('.facts')?.after(warn);
-      }
+    // Rating
+    const rating  = Number(p.rating ?? 0);
+    const reviews = Number(p.reviews ?? 0);
+    starsEl.style.setProperty('--rating', String(rating));
+    ratingText.textContent = `${rating.toFixed(1)} · ${reviews} ${reviews === 1 ? 'reseña' : 'reseñas'}`;
+    starsEl.setAttribute('title', `${rating.toFixed(1)} de 5`);
 
-      const practList = document.getElementById('pd-practicas-list');
-      if (Array.isArray(p.practicas) && p.practicas.length) {
-        practList.innerHTML = p.practicas.map(item => `
-          <li>
-            <svg class="ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M7.8 14.3L3.5 10l1.4-1.4 2.9 2.9 7.3-7.3 1.4 1.4-8.7 8.7z"/>
-            </svg>
-            <span class="text">${item}</span>
+    // Galería
+    const gal = Array.isArray(p.galeria) && p.galeria.length ? p.galeria : [p.imagen];
+    function setMain(src){
+      main.innerHTML = `
+        <img src="${src}" alt="${p.nombre}" loading="eager"
+             style="width:100%;height:100%;object-fit:contain;">
+      `;
+    }
+    setMain(gal[0]);
+    thumbs.innerHTML = '';
+    gal.forEach((src, i) => {
+      const b = document.createElement('button');
+      b.className = 'thumb-btn';
+      b.style.cssText = 'width:70px;height:70px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);';
+      b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
+      b.addEventListener('click', () => setMain(src));
+      thumbs.appendChild(b);
+    });
+
+    // Añadir al carrito con cantidad (usa listener global de script.js)
+    addBtn.dataset.code = p.code;
+    addBtn.dataset.qty  = '1';
+    qtyInp.addEventListener('input', () => {
+      const q = Math.max(1, parseInt(qtyInp.value || '1', 10));
+      qtyInp.value = q;
+      addBtn.dataset.qty = String(q);
+    });
+
+    // Relacionados
+    const relacionados = PRODUCTS_HH
+      .filter(x => x.categoriaId === p.categoriaId && x.code !== p.code)
+      .slice(0, 5);
+
+    relatedGrid.innerHTML = '';
+    relacionados.forEach(r => {
+      const a = document.createElement('a');
+      a.className = 'related-card';
+      a.href = `./producto.html?code=${r.code}`;
+      a.style.cssText = 'display:grid;gap:.4rem;padding:.7rem;border:1px solid var(--border);border-radius:12px;background:var(--surface);';
+      a.innerHTML = `
+        <div class="thumb" style="aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+          <img src="${r.imagen}" alt="${r.nombre}" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <span class="title" style="font-weight:700;">${r.nombre}</span>
+        <div class="rating-row" title="${(r.rating ?? 0).toFixed(1)} de 5">
+          <span class="star-rating" style="--rating:${r.rating ?? 0}"></span>
+          <span>${(r.rating ?? 0).toFixed(1)} · ${r.reviews ?? 0}</span>
+        </div>
+        <span class="price" style="font-weight:700;">${fmtCLP(r.precioCLP)}</span>
+      `;
+      relatedGrid.appendChild(a);
+    });
+
+    // ====== COMPARTIR ======
+    if (shareBtn && shareMenu) {
+      const url  = location.href;
+      const text = `${p.nombre} — ${fmtCLP(p.precioCLP)} / ${p.unidad}`;
+
+      // Fallback: construir menú con links (nueva pestaña + noopener)
+      const enc = encodeURIComponent;
+      const links = [
+        { href: `https://api.whatsapp.com/send?text=${enc(text + ' ' + url)}`,  label: 'WhatsApp' },
+        { href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`,      label: 'Facebook' },
+        { href: `https://twitter.com/intent/tweet?text=${enc(text)}&url=${enc(url)}`, label: 'X / Twitter' }
+      ];
+      shareMenu.innerHTML = `
+        ${links.map(l => `
+          <li role="none">
+            <a role="menuitem"
+               href="${l.href}"
+               target="_blank"
+               rel="noopener"
+               class="share-link"
+               style="display:block;padding:.4rem .6rem;border-radius:8px;">
+              ${l.label}
+            </a>
           </li>
-        `).join('');
-      } else {
-        practList.innerHTML = `<li><span class="text">—</span></li>`;
-      }
+        `).join('')}
+        <li role="none">
+          <button id="copy-link"
+                  role="menuitem"
+                  class="btn-outline"
+                  type="button"
+                  style="margin-top:.25rem;">
+            Copiar enlace
+          </button>
+        </li>
+      `;
 
-      recetas.innerHTML = Array.isArray(p.recetas) && p.recetas.length
-        ? `<a href="${p.recetas[0]}" target="_blank" rel="noopener">Ver receta</a>`
-        : '—';
+      const openMenu  = () => { shareMenu.style.display = 'block'; shareMenu.classList.add('open'); shareBtn.setAttribute('aria-expanded','true'); };
+      const closeMenu = () => { shareMenu.style.display = 'none';  shareMenu.classList.remove('open'); shareBtn.setAttribute('aria-expanded','false'); };
 
-      const rating = Number(p.rating ?? 0);
-      const reviews = Number(p.reviews ?? 0);
-      starsEl.style.setProperty('--rating', String(rating));
-      ratingText.textContent = `${rating.toFixed(1)} · ${reviews} ${reviews === 1 ? 'reseña' : 'reseñas'}`;
-      starsEl.setAttribute('title', `${rating.toFixed(1)} de 5`);
-
-      const gal = Array.isArray(p.galeria) && p.galeria.length ? p.galeria : [p.imagen];
-      function setMain(src) {
-        main.innerHTML = `<img src="${src}" alt="${p.nombre}" loading="eager" style="width:100%;height:100%;object-fit:contain;">`;
-      }
-      setMain(gal[0]);
-      thumbs.innerHTML = '';
-      gal.forEach((src, i) => {
-        const b = document.createElement('button');
-        b.className = 'thumb-btn';
-        b.style.cssText = 'width:70px;height:70px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);';
-        b.innerHTML = `<img src="${src}" alt="Vista ${i+1}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`;
-        b.addEventListener('click', () => setMain(src));
-        thumbs.appendChild(b);
+      // Click en botón Compartir
+      shareBtn.addEventListener('click', async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: p.nombre, text: p.descripcion || text, url });
+          } catch {
+            // si el usuario cancela, no hacemos nada
+          }
+        } else {
+          // Fallback accesible
+          if (shareMenu.classList.contains('open')) closeMenu();
+          else openMenu();
+        }
       });
 
-      addBtn.dataset.code = p.code;
-      addBtn.dataset.qty = '1';
-      qtyInp.addEventListener('input', () => {
-        const q = Math.max(1, parseInt(qtyInp.value || '1', 10));
-        qtyInp.value = q;
-        addBtn.dataset.qty = String(q);
+      // Copiar enlace
+      shareMenu.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#copy-link');
+        if (!btn) return;
+        try {
+          await navigator.clipboard.writeText(url);
+          btn.textContent = '¡Enlace copiado!';
+          setTimeout(() => (btn.textContent = 'Copiar enlace'), 1200);
+        } catch {}
       });
 
-      const relacionados = PRODUCTS_HH
-        .filter(x => x.categoriaId === p.categoriaId && x.code !== p.code)
-        .slice(0, 5);
-
-      relatedGrid.innerHTML = '';
-      relacionados.forEach(r => {
-        const a = document.createElement('a');
-        a.className = 'related-card';
-        a.href = `./producto.html?code=${r.code}`;
-        a.style.cssText = 'display:grid;gap:.4rem;padding:.7rem;border:1px solid var(--border);border-radius:12px;background:var(--surface);';
-        a.innerHTML = `
-          <div class="thumb" style="aspect-ratio:4/3;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
-            <img src="${r.imagen}" alt="${r.nombre}" style="width:100%;height:100%;object-fit:cover;">
-          </div>
-          <span class="title" style="font-weight:700;">${r.nombre}</span>
-          <div class="rating-row" title="${(r.rating ?? 0).toFixed(1)} de 5">
-            <span class="star-rating" style="--rating:${r.rating ?? 0}"></span>
-            <span>${(r.rating ?? 0).toFixed(1)} · ${r.reviews ?? 0}</span>
-          </div>
-          <span class="price" style="font-weight:700;">${fmtCLP(r.precioCLP)}</span>
-        `;
-        relatedGrid.appendChild(a);
+      // Cerrar con click fuera o con Escape (no bloquea teclado)
+      document.addEventListener('click', (e) => {
+        if (!shareMenu.classList.contains('open')) return;
+        const inMenu  = shareMenu.contains(e.target);
+        const onBtn   = shareBtn.contains(e.target);
+        if (!inMenu && !onBtn) closeMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && shareMenu.classList.contains('open')) closeMenu();
       });
     }
-  </script>
+    // ====== /COMPARTIR ======
+  }
+</script>
+
 </body>
 </html>
