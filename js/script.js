@@ -40,6 +40,31 @@ const toast = (msg, type='ok') => {
   feedbackEl.textContent = msg;
 };
 
+// ===== Sesión (login requerido para añadir) =====
+const SESSION_KEY = 'mitienda_user';
+const getSession  = () => {
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
+  catch { return null; }
+};
+const isLoggedIn  = () => !!getSession()?.email;
+
+function requireLogin(){
+  // aviso visual
+  toast('Debes iniciar sesión para añadir productos.', 'warn');
+
+  // si tienes modal de login en la página
+  const loginModal = document.getElementById('login-modal');
+  if (loginModal){
+    loginModal.classList.remove('hidden');
+    setTimeout(() => loginModal.querySelector('#correo-login, input[type="email"]')?.focus(), 50);
+    return;
+  }
+
+  // si no, redirige a login y vuelve a donde estaba
+  const next = `${location.pathname}${location.search}${location.hash}`;
+  window.location.href = `./login.html?next=${encodeURIComponent(next)}`;
+}
+
 // ===== Carrito: render =====
 function renderCart(){
   if (!cartItems || !cartTotal) return;
@@ -135,6 +160,12 @@ window.CartAPI = { add: cartAdd, update: cartUpdate, remove: cartRemove, clear: 
 
 // ===== Carrito: añadir =====
 function addToCart(code, qty = 1){
+  // ⛔ Requiere sesión antes de poder añadir
+  if (!isLoggedIn()){
+    requireLogin();
+    return;
+  }
+
   if (qty <= 0){
     toast('La cantidad debe ser al menos 1.', 'error');
     return;
@@ -165,6 +196,7 @@ function addToCart(code, qty = 1){
   toast('Producto añadido al carrito.', 'ok');
   openCart();
 }
+
 
 // ===== Home: destacados por rating =====
 function renderFeatured(){
