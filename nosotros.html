@@ -34,8 +34,8 @@
           <li><a href="./">Inicio</a></li>
           <li><a href="./productos.html">Productos</a></li>
           <li><a href="./blogs.html">Blogs</a></li>
-          <li><a href="./contacto.html">Contacto</a></li>
           <li><a href="./nosotros.html" aria-current="page">Nosotros</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
         </ul>
       </nav>
 
@@ -43,9 +43,12 @@
         <button class="btn-icon" type="button" aria-label="Abrir carrito">
           🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
         </button>
-        <div class="account-buttons">
-          <a href="./login.html">Iniciar sesión</a> |
-          <a href="./registro.html">Registrar usuario</a>
+        <div class="account-buttons" id="account">
+          <a href="./perfil.html" id="link-perfil" class="hidden">Perfil</a>
+          <a href="./login.html"  id="link-login">Iniciar sesión</a>
+          <span aria-hidden="true"> | </span>
+          <a href="./registro.html" id="link-registro">Registrar usuario</a>
+          <a href="#" id="link-logout" class="hidden">Cerrar sesión</a>
         </div>
       </div>
       <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
@@ -58,8 +61,8 @@
           <li><a href="./">Inicio</a></li>
           <li><a href="./productos.html">Productos</a></li>
           <li><a href="./blogs.html">Blogs</a></li>
-          <li><a href="./contacto.html">Contacto</a></li>
           <li><a href="./nosotros.html" aria-current="page">Nosotros</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
         </ul>
       </div>
     </details>
@@ -146,6 +149,8 @@
   ></script>
 
   <!-- IMPORTANTE: ahora es módulo para poder importar regiones_comunas -->
+  
+  <script type="module" src="js/script.js"></script>
   <script type="module" src="js/nosotros.js"></script>
 </body>
 </html>
