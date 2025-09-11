@@ -39,7 +39,7 @@
         <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
           🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
         </button>
-        
+
       <div class="account-buttons" id="account">
         <a href="./perfil.html" id="link-perfil" class="hidden">Perfil</a>
         <a href="./login.html"  id="link-login">Iniciar sesión</a>
@@ -139,6 +139,60 @@
         </ul>
       </div>
     </section>
+
+    <!-- FIDELIZACIÓN: Puntos y descuentos -->
+<section class="loyalty" aria-labelledby="fid-title">
+  <div class="container">
+    <h2 id="fid-title" class="section-title">Puntos & descuentos</h2>
+
+    <div class="loyalty-grid">
+      <article class="loyalty-card">
+        <div class="loy-icon" aria-hidden="true">🏅</div>
+        <h3>Gana puntos en cada compra</h3>
+        <p>1 punto por cada $1.000. Canjea desde 100 pts = $1.000 de descuento.</p>
+      </article>
+
+      <article class="loyalty-card">
+        <div class="loy-icon" aria-hidden="true">🎁</div>
+        <h3>Bonos</h3>
+        <ul class="loy-list">
+          <li>Registro: +50 pts</li>
+          <li>Primera compra: +100 pts</li>
+          <li>Cumpleaños: +200 pts</li>
+        </ul>
+      </article>
+
+      <article class="loyalty-card cta">
+        <h3>Únete gratis</h3>
+        <p id="loy-copy">Crea tu cuenta y comienza a acumular.</p>
+        <div class="btns" id="loy-cta">
+          <a class="btn-primary" href="./registro.html">Crear cuenta</a>
+          <a class="btn-outline" href="./login.html">Iniciar sesión</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Si el usuario ya inició sesión, cambia el CTA
+  (function(){
+    try{
+      const u = JSON.parse(localStorage.getItem('mitienda_user')||'null');
+      if (u?.email) {
+        const cta  = document.getElementById('loy-cta');
+        const copy = document.getElementById('loy-copy');
+        if (cta) {
+          cta.innerHTML = `
+            <a class="btn-primary" href="./perfil.html">Ver mi perfil</a>
+            <a class="btn-outline" href="./productos.html">Empezar a comprar</a>`;
+        }
+        if (copy) copy.textContent = '¡Ya eres parte! Revisa tu perfil y sigue sumando.';
+      }
+    } catch {}
+  })();
+</script>
+
 
     <!-- DESTACADOS -->
     <section class="featured">

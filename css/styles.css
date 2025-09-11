@@ -1711,3 +1711,21 @@ a { outline-color: rgba(0,128,255,.3); }
 
 .hidden { display: none !important; }
 
+/* ===== FIDELIZACIÓN ===== */
+.loyalty{ padding:2rem 0; }
+.loyalty-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+  gap:1rem;
+}
+.loyalty-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
+}
+.loy-icon{ font-size:2rem; }
+.loy-list{ margin:.25rem 0 0 1rem; color:var(--muted); }
+.loyalty-card.cta .btns{ display:flex; gap:.5rem; flex-wrap:wrap; }
+
+
