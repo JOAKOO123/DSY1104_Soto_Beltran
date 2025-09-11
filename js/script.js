@@ -91,6 +91,42 @@ function closeCart(){
   document.body.style.overflow = '';
 }
 
+/* ===== API Carrito (CRUD + persistencia) ===== */
+// alias a tu add existente
+function cartAdd(code, qty = 1) {
+  addToCart(code, qty);          // reutiliza tu lógica con stock + feedback
+}
+
+// actualizar cantidad (respeta stock y mínimo 1)
+function cartUpdate(code, qty) {
+  const it = cart.find(x => x.code === code);
+  if (!it) return;
+  const stock = getStock(code);
+  const q = Math.min(Math.max(1, Number(qty) || 1), stock);
+  it.cantidad = q;
+  renderCart();
+  toast('Cantidad actualizada.', 'ok');
+}
+
+// eliminar por code
+function cartRemove(code) {
+  cart = cart.filter(x => x.code !== code);
+  renderCart();
+  toast('Producto eliminado del carrito.', 'ok');
+}
+
+// vaciar por completo
+function cartClear() {
+  cart = [];
+  renderCart();
+  toast('Carrito vaciado.', 'ok');
+}
+
+// (opcional) expón para debug en consola
+window.CartAPI = { add: cartAdd, update: cartUpdate, remove: cartRemove, clear: cartClear };
+
+
+// ===== Carrito: añadir =====
 function addToCart(code, qty = 1){
   if (qty <= 0){ toast('La cantidad debe ser al menos 1.', 'error'); return; }
   const p = PRODUCTS_HH?.find(x => x.code === code);
@@ -185,31 +221,30 @@ function attach(){
   if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
 
   document.addEventListener('click', (e) => {
-    const actionBtn = e.target.closest('[data-action]');
-    if (actionBtn) {
-      const { action, code } = actionBtn.dataset;
-      const idx = cart.findIndex(x => x.code === code);
-      if (idx !== -1) {
-        if (action === 'inc') {
-          const stock = getStock(code);
-          if (cart[idx].cantidad >= stock) toast('Alcanzaste el stock máximo.', 'warn');
-          else cart[idx].cantidad += 1;
-        } else if (action === 'dec') {
-          if (cart[idx].cantidad > 1) cart[idx].cantidad -= 1;
-          else toast('Para quitar el producto usa “Eliminar”.', 'warn');
-        } else if (action === 'remove') {
-          cart.splice(idx, 1);
-          toast('Producto eliminado del carrito.', 'ok');
-        }
-        renderCart();
-      }
-      return;
-    }
+    // Acciones dentro del carrito ( + / − / eliminar )
+const actionBtn = e.target.closest('[data-action]');
+if (actionBtn) {
+  const { action, code } = actionBtn.dataset; // "inc" | "dec" | "remove"
+  const it = cart.find(x => x.code === code);
+  if (!it) return;
 
+  if (action === 'inc') {
+    cartUpdate(code, it.cantidad + 1);
+  } else if (action === 'dec') {
+    cartUpdate(code, it.cantidad - 1);
+  } else if (action === 'remove') {
+    cartRemove(code);
+  }
+  return; // no continuar a "añadir"
+}
+
+
+    // Añadir al carrito (evita botones del propio carrito)
     const addBtn = e.target.closest('[data-code]');
     if (addBtn && !addBtn.hasAttribute('data-action')) {
       const qty = Math.max(1, parseInt(addBtn.dataset.qty || '1', 10));
-      addToCart(addBtn.dataset.code, qty);
+      cartAdd(addBtn.dataset.code, qty);
+
     }
   });
 
@@ -227,8 +262,7 @@ function attach(){
         confirmYesBtn?.focus();
 
         const onYes = () => {
-          cart = [];
-          renderCart();
+          cartClear();
           toast('Carrito vaciado.', 'ok');
           confirmModal.classList.add('hidden');
           lastFocus?.focus();
@@ -262,10 +296,9 @@ function attach(){
         document.addEventListener('keydown', escToClose);
       } else {
         if (window.confirm('¿Seguro que deseas vaciar el carrito?')){
-          cart = [];
-          renderCart();
-          toast('Carrito vaciado.', 'ok');
+          cartClear();
         }
+
       }
     });
   }
@@ -567,4 +600,48 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
+  function syncAccountLinks() {
+  const perfil   = document.getElementById('link-perfil');
+  const login    = document.getElementById('link-login');
+  const registro = document.getElementById('link-registro');
+  const logout   = document.getElementById('link-logout');
+
+  let session = null;
+  try { session = JSON.parse(localStorage.getItem('mitienda_user') || 'null'); } catch {}
+  const logged = !!session?.email;
+
+  // Mostrar/Ocultar
+  if (logged) {
+    perfil?.classList.remove('hidden');
+    logout?.classList.remove('hidden');
+    login?.classList.add('hidden');
+    registro?.classList.add('hidden');
+  } else {
+    perfil?.classList.add('hidden');
+    logout?.classList.add('hidden');
+    login?.classList.remove('hidden');
+    registro?.classList.remove('hidden');
+  }
+
+  // Cerrar sesión
+  logout?.addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('mitienda_user');
+    // (opcional) también: localStorage.removeItem('mitienda_user_profile');
+    location.reload(); // refresca para que se oculte "Perfil"
+  }, { once: true });
+}
+
+// Llama a esto dentro de init()
+function init(){
+  renderFeatured();
+  renderHeroFeatured();
+  renderCart();
+  attach();
+  initCatalogoFilters();
+  syncAccountLinks();   // <<--- AÑADE ESTA LÍNEA
+}
+
+
+  
 }

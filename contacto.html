@@ -27,13 +27,21 @@
         </ul>
       </nav>
 
+      <!-- Acciones: carrito + botones de cuenta -->
       <div class="actions">
-        <button class="btn-icon" type="button" aria-label="Abrir carrito">🛒 <span class="badge" id="cart-count">0</span></button>
-        <div class="account-buttons">
-          <a href="./login.html">Iniciar sesión</a> |
-          <a href="./registro.html">Registrar usuario</a>
-        </div>
+        <button class="btn-icon" type="button" aria-label="Abrir carrito"> 
+          🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+        </button>
+
+      <div class="account-buttons" id="account">
+        <a href="./perfil.html" id="link-perfil" class="hidden">Perfil</a>
+        <a href="./login.html" id="link-login">Iniciar sesión</a>
+        <span aria-hidden="true"> | </span>
+        <a href="./registro.html" id="link-registro">Registrar usuario</a>
+        
+        <a href="#" id="link-logout" class="hidden">Cerrar sesión</a>
       </div>
+    </div>
 
       <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
     </div>
@@ -97,6 +105,7 @@
     </div>
   </footer>
 
+  <script type="module" src="js/script.js"></script>
   <script type="module" src="js/contacto.js"></script>
 </body>
 </html>

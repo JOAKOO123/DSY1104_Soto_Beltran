@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es" data-theme="pasteleria">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi perfil — MiTienda</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Header igual a las demás páginas -->
+  <header class="site-header">
+    <div class="container nav-bar">
+      <a class="brand" href="./" aria-label="Ir al inicio">
+        <img src="assets/LogoTienda/LogoHuertoHogar.png" alt="MiTienda" class="logo-img" />
+        <span>MiTienda</span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Principal">
+        <ul class="menu">
+          <li><a href="./">Inicio</a></li>
+          <li><a href="./productos.html">Productos</a></li>
+          <li><a href="./blogs.html">Blogs</a></li>
+          <li><a href="./nosotros.html">Nosotros</a></li>
+          <li><a href="./contacto.html">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="actions">
+        <button class="btn-icon" type="button" aria-label="Abrir carrito">
+          🛒 <span class="badge" id="cart-count" aria-live="polite">0</span>
+        </button>
+        <div class="account-buttons" id="account">
+          <a href="./perfil.html" id="link-perfil" class="hidden">Perfil</a>
+          <a href="./login.html"  id="link-login">Iniciar sesión</a>
+          <span aria-hidden="true"> | </span>
+          <a href="./registro.html" id="link-registro">Registrar usuario</a>
+          <a href="#" id="link-logout" class="hidden">Cerrar sesión</a>
+        </div>
+      </div>
+      <summary class="nav-toggle" role="button" aria-label="Abrir menú">☰</summary>
+    </div>
+  </header>
+
+  <main class="container about-wrap" id="contenido">
+    <h1 class="section-title">Mi perfil</h1>
+
+    <form id="perfilForm" class="contact-form" novalidate>
+      <p id="perfil-msg" role="status" aria-live="polite"></p>
+
+      <label for="p-nombre">Nombre</label>
+      <input id="p-nombre" type="text" maxlength="100" required />
+
+      <label for="p-email">Correo</label>
+      <input id="p-email" type="email" maxlength="100" required />
+
+      <label for="p-telefono">Teléfono (opcional)</label>
+      <input id="p-telefono" type="tel" inputmode="numeric" />
+
+      <div class="region-comuna" style="display:grid; gap:.75rem; grid-template-columns:1fr 1fr;">
+        <div class="select-group">
+          <label for="p-region">Región</label>
+          <select id="p-region" required>
+            <option disabled selected>-- Seleccione la región --</option>
+          </select>
+        </div>
+        <div class="select-group">
+          <label for="p-comuna">Comuna</label>
+          <select id="p-comuna" required>
+            <option disabled selected>-- Seleccione la comuna --</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:.5rem; margin-top:.5rem;">
+        <button type="submit" class="btn-primary">Guardar cambios</button>
+        <button type="button" id="perfil-reset" class="btn-outline">Deshacer</button>
+      </div>
+    </form>
+
+    <!-- Mensaje si no hay sesión -->
+    <p id="perfil-guard" class="muted" style="display:none;">
+      Debes iniciar sesión para editar tu perfil.
+    </p>
+  </main>
+
+  <!-- Scripts -->
+  <script type="module" src="js/script.js"></script>
+  <script type="module" src="js/perfil.js"></script>
+</body>
+</html>

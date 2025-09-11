@@ -561,64 +561,28 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus{
 }
 @media (max-width:768px){
   .about-grid{ grid-template-columns: 1fr; }
-  .team-grid{  grid-template-columns: 1fr; }
-  .mapbox{ height:300px; }
+  .team-grid{ grid-template-columns: 1fr; }
+  .mapbox{ height: 300px; }
 }
 
-.cat-group{ margin-bottom: 1.25rem; }
-.cat-title{ margin: .25rem 0 .15rem; font-size: 1.1rem; font-weight: 700; }
-.cat-desc{ margin: 0 0 .5rem; color: var(--muted); }
 
-.recetas-list { 
-  list-style: disc; 
-  padding-left: 1.2rem; 
-  margin: 0; 
-}
-.recetas-list a { 
-  text-decoration: underline; 
-}
+.hidden { display: none !important; }
 
-/* ===== Catálogo agrupado + paginación ===== */
-#productos-grid{ display:block; }               /* asegúrate que no sea un grid de 3 col */
-.cat-group{ grid-column:1 / -1; margin-bottom:1.25rem; }
-.cat-group .cat-title{ margin:0 0 .25rem; font-size:1.2rem; font-weight:700; }
-.cat-group .cat-desc{ margin:0 0 .5rem; color:var(--muted); }
-
-/* la grilla de cards dentro de cada sección */
-.cat-group .productos-grid{
+/* ===== FIDELIZACIÓN ===== */
+.loyalty{ padding:2rem 0; }
+.loyalty-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
-  gap:1.25rem;
-  margin-top:.5rem;
+  gap:1rem;
 }
-
-/* paginación */
-.pager{ grid-column:1 / -1; display:flex; justify-content:center; margin:1rem 0 0; }
-#load-more{ padding:.6rem 1rem; border-radius:10px; }
-
-/* ===== Catálogo agrupado + paginación ===== */
-#productos-grid{ display:block; }
-
-.cat-group{ grid-column:1 / -1; margin-bottom:1.25rem; }
-.cat-group .cat-title{ margin:0 0 .25rem; font-size:1.2rem; font-weight:700; }
-.cat-group .cat-desc{ margin:0 0 .5rem; color:var(--muted); }
-
-/* Evita cards gigantes cuando hay 1 item:
-   limitamos el ancho de cada tarjeta a ~320px como máx. de columna */
-.cat-group .productos-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(260px, 320px));
-  gap:1.25rem;
-  justify-content:start;   /* no estirar al ancho total */
-  align-items:start;
+.loyalty-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
 }
+.loy-icon{ font-size:2rem; }
+.loy-list{ margin:.25rem 0 0 1rem; color:var(--muted); }
+.loyalty-card.cta .btns{ display:flex; gap:.5rem; flex-wrap:wrap; }
 
-/* Paginación */
-.pager{
-  grid-column:1 / -1;
-  display:flex;
-  gap:.5rem;
-  justify-content:center;
-  margin:1rem 0 0;
-}
-#load-more,#load-less{ padding:.6rem 1rem; border-radius:10px; }
+
