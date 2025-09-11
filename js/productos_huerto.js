@@ -20,7 +20,7 @@ export const PRODUCTS_HH = [
     rating: 4.5, reviews: 98
   },
   {
-    code: "FR003", nombre: "Plátanos Cavendish", categoriaId: "FR",
+    code: "FR003", nombre: "Plátanos", categoriaId: "FR",
     precioCLP: 800, unidad: "kg", stock: 250, origen: "Zona Central",
     descripcion: "Dulces y energéticos; ricos en potasio.",
     practicas: ["Manejo postcosecha"],
@@ -28,16 +28,8 @@ export const PRODUCTS_HH = [
     imagen: "assets/productos/frutas/platano-cavendish.jpg",
     rating: 4.2, reviews: 76
   },
-  // +10 FR
   {
-    code: "FR004", nombre: "Peras Williams", categoriaId: "FR",
-    precioCLP: 1300, unidad: "kg", stock: 120, origen: "Curicó",
-    descripcion: "Peras aromáticas y jugosas, perfectas para postres.",
-    practicas: ["Riego eficiente"], recetas: ["https://www.ejemplo.cl/recetas/peras-al-vino"],
-    imagen: "assets/productos/frutas/pera-williams.jpg", rating: 4.4, reviews: 61
-  },
-  {
-    code: "FR005", nombre: "Uvas Red Globe", categoriaId: "FR",
+    code: "FR005", nombre: "Uvas Rojas", categoriaId: "FR",
     precioCLP: 1400, unidad: "kg", stock: 180, origen: "Aconcagua",
     descripcion: "Uvas grandes, dulces y crocantes.",
     practicas: ["Manejo integrado"], recetas: ["https://www.ejemplo.cl/recetas/ensalada-uvas"],
@@ -79,7 +71,7 @@ export const PRODUCTS_HH = [
     imagen: "assets/productos/frutas/ciruelas.jpg", rating: 4.2, reviews: 44
   },
   {
-    code: "FR011", nombre: "Peras Packham", categoriaId: "FR",
+    code: "FR011", nombre: "Peras", categoriaId: "FR",
     precioCLP: 1250, unidad: "kg", stock: 110, origen: "Talca",
     descripcion: "Textura mantecosa y sabor suave.",
     practicas: ["Control biológico"], recetas: ["https://www.ejemplo.cl/recetas/peras-caramelizadas"],
@@ -221,24 +213,6 @@ export const PRODUCTS_HH = [
   },
   // +10 PO (incluye PO002 y PO004..PO012)
   {
-    code: "PO002", nombre: "Polen de Abeja Orgánico", categoriaId: "PO",
-    precioCLP: 4500, unidad: "250g", stock: 60, origen: "Colmenas locales",
-    descripcion: "Superalimento natural, fuente de proteínas.",
-    practicas: ["Apicultura responsable"],
-    recetas: ["https://www.ejemplo.cl/recetas/batido-polen"],
-    imagen: "assets/productos/productos-organicos/polen-abeja.jpg",
-    rating: 4.6, reviews: 88
-  },
-  {
-    code: "PO004", nombre: "Aceite de Coco Orgánico", categoriaId: "PO",
-    precioCLP: 5900, unidad: "500ml", stock: 80, origen: "Exportación certificada",
-    descripcion: "Ideal para cocina y cosmética natural.",
-    practicas: ["Comercio justo"],
-    recetas: ["https://www.ejemplo.cl/recetas/cookies-coco"],
-    imagen: "assets/productos/productos-organicos/aceite-coco.jpg",
-    rating: 4.5, reviews: 102
-  },
-  {
     code: "PO005", nombre: "Harina de Almendra Orgánica", categoriaId: "PO",
     precioCLP: 4800, unidad: "500g", stock: 70, origen: "Productores certificados",
     descripcion: "Alternativa sin gluten para repostería.",
@@ -287,14 +261,6 @@ export const PRODUCTS_HH = [
     rating: 4.8, reviews: 230
   },
   {
-    code: "PO011", nombre: "Cacao en Polvo Orgánico", categoriaId: "PO",
-    precioCLP: 5200, unidad: "300g", stock: 85, origen: "Comercio justo",
-    descripcion: "Intenso sabor a chocolate, sin azúcar.",
-    practicas: ["Trazabilidad"], recetas: ["https://www.ejemplo.cl/recetas/brownies-cacao"],
-    imagen: "assets/productos/productos-organicos/cacao-polvo.jpg",
-    rating: 4.6, reviews: 124
-  },
-  {
     code: "PO012", nombre: "Té Verde Orgánico", categoriaId: "PO",
     precioCLP: 3500, unidad: "100g", stock: 120, origen: "Exportación certificada",
     descripcion: "Aromático, con suaves notas herbales.",
@@ -329,59 +295,10 @@ export const PRODUCTS_HH = [
     imagen: "assets/productos/lacteos/queso-fresco.jpg", rating: 4.5, reviews: 88
   },
   {
-    code: "PL004", nombre: "Queso Mantecoso", categoriaId: "PL",
-    precioCLP: 5200, unidad: "500g", stock: 60, origen: "Los Lagos",
-    descripcion: "Textura mantecosa y sabor suave.",
-    practicas: ["Maduración controlada"], recetas: ["https://www.ejemplo.cl/recetas/sandwich-mantecoso"],
-    imagen: "assets/productos/lacteos/queso-mantecoso.jpg", rating: 4.6, reviews: 72
-  },
-  {
-    code: "PL005", nombre: "Queso Gouda", categoriaId: "PL",
-    precioCLP: 5900, unidad: "500g", stock: 55, origen: "Araucanía",
-    descripcion: "Sabor balanceado, ideal para tablas.",
-    practicas: ["Control de calidad"], recetas: ["https://www.ejemplo.cl/recetas/tablas-queso"],
-    imagen: "assets/productos/lacteos/queso-gouda.jpg", rating: 4.7, reviews: 81
-  },
-  {
     code: "PL006", nombre: "Mantequilla", categoriaId: "PL",
     precioCLP: 2600, unidad: "250g", stock: 100, origen: "Valdivia",
     descripcion: "Batida a partir de crema fresca.",
     practicas: ["Trazabilidad"], recetas: ["https://www.ejemplo.cl/recetas/galletas-mantequilla"],
     imagen: "assets/productos/lacteos/mantequilla.jpg", rating: 4.3, reviews: 59
   },
-  {
-    code: "PL007", nombre: "Yogur Griego", categoriaId: "PL",
-    precioCLP: 1400, unidad: "500g", stock: 90, origen: "Osorno",
-    descripcion: "Extra cremoso, alto en proteínas.",
-    practicas: ["Fermentación lenta"], recetas: ["https://www.ejemplo.cl/recetas/dip-yogur"],
-    imagen: "assets/productos/lacteos/yogur-griego.jpg", rating: 4.6, reviews: 112
-  },
-  {
-    code: "PL008", nombre: "Leche Descremada", categoriaId: "PL",
-    precioCLP: 1100, unidad: "1L", stock: 120, origen: "Los Ríos",
-    descripcion: "Bajo contenido graso, fortificada.",
-    practicas: ["Fortificación"], recetas: ["https://www.ejemplo.cl/recetas/batido-light"],
-    imagen: "assets/productos/lacteos/leche-descremada.jpg", rating: 4.2, reviews: 41
-  },
-  {
-    code: "PL009", nombre: "Leche Semidescremada", categoriaId: "PL",
-    precioCLP: 1100, unidad: "1L", stock: 110, origen: "Los Lagos",
-    descripcion: "Equilibrio entre sabor y ligereza.",
-    practicas: ["Buenas prácticas"], recetas: ["https://www.ejemplo.cl/recetas/capuccino-casa"],
-    imagen: "assets/productos/lacteos/leche-semi.jpg", rating: 4.3, reviews: 46
-  },
-  {
-    code: "PL010", nombre: "Kéfir", categoriaId: "PL",
-    precioCLP: 1900, unidad: "500ml", stock: 60, origen: "Valdivia",
-    descripcion: "Bebida fermentada con probióticos.",
-    practicas: ["Fermentos vivos"], recetas: ["https://www.ejemplo.cl/recetas/smoothie-kefir"],
-    imagen: "assets/productos/lacteos/kefir.jpg", rating: 4.5, reviews: 53
-  },
-  {
-    code: "PL011", nombre: "Quesillo", categoriaId: "PL",
-    precioCLP: 2800, unidad: "500g", stock: 80, origen: "Araucanía",
-    descripcion: "Suave, ideal para desayunos.",
-    practicas: ["Maduración corta"], recetas: ["https://www.ejemplo.cl/recetas/quesillo-mermelada"],
-    imagen: "assets/productos/lacteos/quesillo.jpg", rating: 4.4, reviews: 62
-  }
 ];
