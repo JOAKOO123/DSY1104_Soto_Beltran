@@ -1,10 +1,10 @@
 // js/script.js (ES Module)
 import { PRODUCTS_HH } from './productos_huerto.js';
-import { CATEGORIES_HH } from './categorias_huerto.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 
-/* =================== Carrito =================== */
+// Elementos que pueden (o no) existir según la página
+const featuredGrid = $('#featured-grid');   // home
 const cartPanel    = $('#cart-panel');
 const cartItems    = $('#cart-items');
 const cartTotal    = $('#cart-total');
@@ -12,6 +12,7 @@ const cartCountEl  = $('#cart-count');
 const cartIconBtn  = $('.btn-icon');
 const closeCartBtn = $('#close-cart');
 
+// Opcionales (si existen en el HTML)
 const clearCartBtn  = document.getElementById('clear-cart');
 const feedbackEl    = document.getElementById('cart-feedback');
 const confirmModal  = document.getElementById('confirm-modal');
@@ -21,10 +22,13 @@ const confirmNoBtn  = document.getElementById('confirm-no');
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let lastFocus = null;
 
-const fmtCLP = n => n.toLocaleString('es-CL', { style:'currency', currency:'CLP', maximumFractionDigits:0 });
+const fmtCLP = n =>
+  n.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+
 const saveCart = () => localStorage.setItem('cart', JSON.stringify(cart));
 const count    = () => cart.reduce((a,i)=> a + i.cantidad, 0);
 
+// ===== Utilidades: stock + feedback =====
 const getStock = (code) => {
   const p = PRODUCTS_HH.find(x => x.code === code);
   return typeof p?.stock === 'number' ? p.stock : Infinity;
@@ -64,6 +68,7 @@ function requireLogin(){
 // ===== Carrito: render =====
 function renderCart(){
   if (!cartItems || !cartTotal) return;
+
   cartItems.innerHTML = '';
   let total = 0;
 
@@ -82,8 +87,7 @@ function renderCart(){
     li.setAttribute('data-code', item.code);
     li.innerHTML = `
       <div class="cart-left">
-        <img class="cart-thumb" src="${item.imagen}" alt="${item.nombre}" width="56" height="56" loading="lazy"
-             onerror="this.onerror=null; this.src='assets/LogoTienda/LogoHuertoHogar.png';">
+        <img class="cart-thumb" src="${item.imagen}" alt="${item.nombre}" width="56" height="56" loading="lazy">
         <div class="cart-info">
           <span class="item-name">${item.nombre}</span>
           <div class="cart-qty">
@@ -104,12 +108,14 @@ function renderCart(){
   saveCart();
 }
 
+// ===== Carrito: abrir/cerrar =====
 function openCart(){
   if (!cartPanel) return;
   cartPanel.classList.add('active');
-  cartPanel.classList.remove('hidden');
-  document.body.style.overflow = '';
+  cartPanel.classList.remove('hidden'); // por si venía oculta
+  document.body.style.overflow = '';    // permitimos scroll
 }
+
 function closeCart(){
   if (!cartPanel) return;
   cartPanel.classList.remove('active');
@@ -208,7 +214,6 @@ function renderFeatured(){
       <a class="card-link" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
         <div class="thumb">
           <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy"
-               onerror="this.onerror=null; this.src='assets/LogoTienda/LogoHuertoHogar.png';"
                style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
         </div>
         <h3>${prod.nombre}</h3>
@@ -228,6 +233,7 @@ function renderFeatured(){
   });
 }
 
+// ===== Home: hero destacado =====
 function renderHeroFeatured(){
   const heroBox = document.querySelector('.hero-visual');
   if (!heroBox || !Array.isArray(PRODUCTS_HH) || !PRODUCTS_HH.length) return;
@@ -236,8 +242,7 @@ function renderHeroFeatured(){
   heroBox.innerHTML = `
     <a class="hero-card" href="producto.html?code=${p.code}" aria-label="Ver ${p.nombre}">
       <div class="hero-card__img">
-        <img src="${p.imagen}" alt="${p.nombre}" loading="eager"
-             onerror="this.onerror=null; this.src='assets/LogoTienda/LogoHuertoHogar.png';">
+        <img src="${p.imagen}" alt="${p.nombre}" loading="eager">
       </div>
       <div class="hero-card__body">
         <span class="badge-small">Producto destacado</span>
@@ -249,11 +254,12 @@ function renderHeroFeatured(){
   `;
 }
 
-/* =================== Listeners globales =================== */
+// ===== Listeners globales =====
 function attach(){
   if (cartIconBtn)  cartIconBtn.addEventListener('click', openCart);
   if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
 
+  // Delegación de clicks
   document.addEventListener('click', (e) => {
     // Acciones dentro del carrito ( + / − / eliminar )
 const actionBtn = e.target.closest('[data-action]');
@@ -282,11 +288,13 @@ if (actionBtn) {
     }
   });
 
+  // Header sombra al hacer scroll
   const header = document.querySelector('.site-header');
   const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
+  // Confirmación "Vaciar carrito"
   if (clearCartBtn){
     clearCartBtn.addEventListener('click', (ev) => {
       ev.preventDefault();
@@ -336,9 +344,33 @@ if (actionBtn) {
       }
     });
   }
+
+  // (Opcional) Modales de login/registro si existen
+  const loginLink = document.getElementById('login-link');
+  const registerLink = document.getElementById('register-link');
+  const loginModal = document.getElementById('login-modal');
+  const registerModal = document.getElementById('register-modal');
+
+  if (loginLink && loginModal) {
+    loginLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginModal.classList.remove('hidden');
+    });
+  }
+  if (registerLink && registerModal) {
+    registerLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      registerModal.classList.remove('hidden');
+    });
+  }
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', e => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+  });
 }
 
-/* =================== Catálogo + filtros + paginación =================== */
+// ===== Catálogo: render + filtros + orden + tabs (solo en productos.html) =====
 function initCatalogoFilters(){
   const grid        = document.getElementById('productos-grid');
   if (!grid) return; // solo corre en productos.html
@@ -362,21 +394,6 @@ function initCatalogoFilters(){
   // helpers
   const norm = s => (s || '').toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
   const debounce = (fn, delay = 250) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; };
-
-  const state = {
-    q: initialQ,
-    cats: new Set(),
-    order: 'priceAsc',
-    page: 1,
-    pageSize: 12
-  };
-
-  if (initialCat) {
-    const match = catChecks.find(c => c.value === initialCat);
-    if (match) { match.checked = true; state.cats.add(initialCat); }
-  }
-  if (searchInput) searchInput.value = state.q;
-
   const stableSortByPrice = (list, dir='asc') => {
     const mul = dir==='asc' ? 1 : -1;
     return list
@@ -407,10 +424,16 @@ function initCatalogoFilters(){
     const qn = norm(state.q);
     let list = PRODUCTS_HH;
 
-    if (state.cats.size) list = list.filter(p => state.cats.has(p.categoriaId));
-    if (qn) list = list.filter(p => norm(p.nombre).includes(qn) || p.code.toLowerCase().includes(qn));
+    if (state.cats.size) {
+      list = list.filter(p => state.cats.has(p.categoriaId));
+    }
+    if (qn) {
+      list = list.filter(p => norm(p.nombre).includes(qn) || p.code.toLowerCase().includes(qn));
+    }
+    list = state.order === 'priceAsc'
+      ? stableSortByPrice(list, 'asc')
+      : stableSortByPrice(list, 'desc');
 
-    list = state.order === 'priceAsc' ? stableSortByPrice(list,'asc') : stableSortByPrice(list,'desc');
     return list;
   }
 
@@ -433,7 +456,6 @@ function initCatalogoFilters(){
     pageItems.forEach(prod => {
       const article = document.createElement('article');
       article.classList.add('producto');
-      article.dataset.page = String(pageIndex);
       article.innerHTML = `
         <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
           <div class="thumb">
@@ -515,54 +537,6 @@ function initCatalogoFilters(){
     );
   }
 
-  function resetGrid(){
-    grid.innerHTML = '';
-    current.rendered = 0;
-  }
-
-  function focusCard(el){
-    if (!el) return;
-    el.setAttribute('tabindex','-1');
-    el.focus({ preventScroll:false });
-    el.addEventListener('blur', () => el.removeAttribute('tabindex'), { once:true });
-  }
-
-  function updatePagerButtons(){
-    const total = current.all.length;
-    loadMoreBtn.style.display = current.rendered < total ? '' : 'none';
-    loadLessBtn.style.display = current.rendered > state.pageSize ? '' : 'none';
-  }
-
-  function renderNextPage({ focus = true } = {}){
-    const total = current.all.length;
-    const start = current.rendered;
-    const end   = Math.min(start + state.pageSize, total);
-    if (start >= end) return;
-
-    const firstNew = renderSlice(current.all, start, end, state.page);
-    current.rendered = end;
-    updateCounters();
-    updatePagerButtons();
-    if (focus && firstNew) focusCard(firstNew);
-  }
-
-  function hideLastPage(){
-    if (state.page <= 1) return;
-    // Quitar todos los cards con data-page == state.page
-    const toRemove = grid.querySelectorAll(`.producto[data-page="${state.page}"]`);
-    let removed = 0;
-    toRemove.forEach(n => { n.parentElement?.removeChild(n); removed++; });
-
-    if (removed > 0){
-      current.rendered = Math.max(0, current.rendered - removed);
-      state.page -= 1;
-      updateCounters();
-      updatePagerButtons();
-      const cards = grid.querySelectorAll('.producto');
-      focusCard(cards[cards.length - 1]);
-    }
-  }
-
   function refresh(scrolling = false){
     const all = applyFilters();
     renderList(all);
@@ -601,6 +575,7 @@ function initCatalogoFilters(){
       refresh();
     }, 250));
   }
+
   if (orderSelect){
     orderSelect.addEventListener('change', () => {
       state.order = orderSelect.value; // priceAsc | priceDesc
@@ -608,6 +583,7 @@ function initCatalogoFilters(){
       refresh();
     });
   }
+
   catChecks.forEach(chk => {
     chk.addEventListener('change', () => {
       if (chk.checked) state.cats.add(chk.value);
@@ -616,6 +592,7 @@ function initCatalogoFilters(){
       refresh();
     });
   });
+
   if (clearBtn){
     clearBtn.addEventListener('click', () => {
       state.q = '';
@@ -634,13 +611,14 @@ function initCatalogoFilters(){
 }
 // ===== ÚNICO init =====
 function init(){
-  renderFeatured();
-  renderHeroFeatured();
-  renderCart();
-  attach();
-  initCatalogoFilters();
+  renderFeatured();       // Home (si no existe, no hace nada)
+  renderHeroFeatured();   // Home (si no existe, no hace nada)
+  renderCart();           // Reconstruye carrito desde localStorage
+  attach();               // Listeners globales
+  initCatalogoFilters();  // Catálogo (solo corre en productos.html si existe el grid)
 }
 
+// Ejecutar al cargar el DOM
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
