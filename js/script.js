@@ -373,18 +373,23 @@ if (actionBtn) {
 // ===== Catálogo: render + filtros + orden + tabs (solo en productos.html) =====
 function initCatalogoFilters(){
   const grid        = document.getElementById('productos-grid');
-  if (!grid) return; // no estamos en productos.html
+  if (!grid) return; // solo corre en productos.html
 
+  
   const resultCount = document.getElementById('result-count');
   const searchInput = document.getElementById('search');
   const orderSelect = document.getElementById('order');
   const catChecks   = Array.from(document.querySelectorAll('input[name="cat"]'));
   const clearBtn    = document.getElementById('clear-filters');
   const tabBar      = document.querySelector('.cat-tabs');
+  const pagerEl     = document.getElementById('pager');
+
+  const PAGE_SIZE = 12;
 
   const params = new URLSearchParams(location.search);
-  const initialCat = params.get('cat');   // FR | VR | PO | PL | null
+  const initialCat = params.get('cat');               // FR | VR | PO | PL | null
   const initialQ   = params.get('q') || '';
+  const initialPg  = Math.max(1, parseInt(params.get('page') || '1', 10));
 
   // helpers
   const norm = s => (s || '').toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
@@ -394,7 +399,7 @@ function initCatalogoFilters(){
     return list
       .map((item, idx) => ({ item, idx }))
       .sort((a, b) => {
-        const diff = (a.item.precioCLP - b.item.precioCLP) * mul;
+        const diff = ((a.item.precioCLP ?? 0) - (b.item.precioCLP ?? 0)) * mul;
         return diff !== 0 ? diff : a.idx - b.idx; // orden estable
       })
       .map(x => x.item);
@@ -403,7 +408,8 @@ function initCatalogoFilters(){
   const state = {
     q: initialQ,
     cats: new Set(),
-    order: 'priceAsc'
+    order: 'priceAsc',
+    page: initialPg
   };
 
   // UI inicial desde la URL
@@ -412,6 +418,7 @@ function initCatalogoFilters(){
     if (match) { match.checked = true; state.cats.add(initialCat); }
   }
   if (searchInput) searchInput.value = state.q;
+  if (orderSelect) orderSelect.value = state.order;
 
   function applyFilters(){
     const qn = norm(state.q);
@@ -430,39 +437,85 @@ function initCatalogoFilters(){
     return list;
   }
 
-  function renderList(items){
+  function renderList(allItems){
+    // clamp de página
+    const totalPages = Math.max(1, Math.ceil(allItems.length / PAGE_SIZE));
+    if (state.page > totalPages) state.page = totalPages;
+
+    const start = (state.page - 1) * PAGE_SIZE;
+    const pageItems = allItems.slice(start, start + PAGE_SIZE);
+
     grid.innerHTML = '';
-    if (!items.length){
+    if (!pageItems.length){
       grid.innerHTML = `<p class="muted">No hay resultados para los filtros seleccionados.</p>`;
       resultCount && (resultCount.textContent = `0 productos`);
+      renderPager(0, 0); // limpia la paginación
       return;
     }
 
-    items.forEach(prod => {
+    pageItems.forEach(prod => {
       const article = document.createElement('article');
       article.classList.add('producto');
       article.innerHTML = `
-  <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
-    <div class="thumb">
-      <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
-    </div>
-    <h2>${prod.nombre}</h2>
-  </a>
+        <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
+          <div class="thumb">
+            <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
+          </div>
+          <h2>${prod.nombre}</h2>
+        </a>
 
-  <div class="rating-row" title="${(prod.rating ?? 0).toFixed(1)} de 5">
-    <span class="star-rating" style="--rating:${prod.rating ?? 0}"></span>
-    <span>${(prod.rating ?? 0).toFixed(1)} · ${prod.reviews ?? 0}</span>
-  </div>
+        <div class="rating-row" title="${(prod.rating ?? 0).toFixed(1)} de 5">
+          <span class="star-rating" style="--rating:${prod.rating ?? 0}"></span>
+          <span>${(prod.rating ?? 0).toFixed(1)} · ${prod.reviews ?? 0}</span>
+        </div>
 
-  <p>${prod.descripcion}</p>
-  <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
-  <button data-code="${prod.code}">Añadir al carrito</button>
-`;
+        <p>${prod.descripcion}</p>
+        <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
+        <button data-code="${prod.code}">Añadir al carrito</button>
+      `;
       grid.appendChild(article);
     });
 
-    resultCount && (resultCount.textContent = `${items.length} producto${items.length === 1 ? '' : 's'}`);
+    // "x–y de N" o "N productos"
+    const from = start + 1;
+    const to   = start + pageItems.length;
+    resultCount && (resultCount.textContent =
+      allItems.length > PAGE_SIZE
+        ? `${from}–${to} de ${allItems.length} productos`
+        : `${allItems.length} producto${allItems.length === 1 ? '' : 's'}`
+    );
+
+    renderPager(state.page, Math.ceil(allItems.length / PAGE_SIZE));
   }
+
+  function renderPager(current, totalPages){
+    if (!pagerEl) return;
+    if (!totalPages || totalPages <= 1){
+      pagerEl.innerHTML = '';
+      return;
+    }
+
+    let html = '';
+    html += `<button type="button" data-page="${current-1}" ${current<=1?'disabled':''} aria-label="Página anterior">‹</button>`;
+
+    // páginas (simple: todas; si quieres, puedes hacer ventana 1..total)
+    for (let p = 1; p <= totalPages; p++){
+      html += `<button type="button" data-page="${p}" class="${p===current?'is-active':''}" aria-current="${p===current?'page':''}">${p}</button>`;
+    }
+
+    html += `<button type="button" data-page="${current+1}" ${current>=totalPages?'disabled':''} aria-label="Página siguiente">›</button>`;
+    pagerEl.innerHTML = html;
+
+    pagerEl.onclick = (e) => {
+      const btn = e.target.closest('button[data-page]');
+      if (!btn) return;
+      const next = parseInt(btn.dataset.page, 10);
+      if (Number.isNaN(next) || next < 1 || next > totalPages) return;
+      state.page = next;
+      refresh(true);
+    };
+  }
+
 
   function updateURLFromState(){
     const url = new URL(location.href);
@@ -470,10 +523,12 @@ function initCatalogoFilters(){
     else url.searchParams.delete('cat');
 
     state.q ? url.searchParams.set('q', state.q) : url.searchParams.delete('q');
+
+    state.page > 1 ? url.searchParams.set('page', String(state.page)) : url.searchParams.delete('page');
+
     history.replaceState({}, '', url);
   }
 
-  // --- Tabs de categorías ---
   function syncTabsWithState(){
     if (!tabBar) return;
     const active = state.cats.size === 1 ? [...state.cats][0] : '';
@@ -482,12 +537,20 @@ function initCatalogoFilters(){
     );
   }
 
-  function refresh(){
-    renderList(applyFilters());
+  function refresh(scrolling = false){
+    const all = applyFilters();
+    renderList(all);
     updateURLFromState();
-    syncTabsWithState(); // mantiene tabs acordes a state
+    syncTabsWithState();
+
+    // scroll al inicio del grid al cambiar de página
+    if (scrolling) {
+      const y = grid.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   }
 
+  // Tabs
   if (tabBar){
     tabBar.addEventListener('click', (e) => {
       const btn = e.target.closest('.tab');
@@ -496,9 +559,10 @@ function initCatalogoFilters(){
       state.cats.clear();
       if (cat) state.cats.add(cat);
 
-      // Sincroniza checkboxes
+      // Sync checkboxes
       catChecks.forEach(c => (c.checked = state.cats.has(c.value)));
 
+      state.page = 1;
       refresh();
     });
   }
@@ -507,6 +571,7 @@ function initCatalogoFilters(){
   if (searchInput){
     searchInput.addEventListener('input', debounce(e => {
       state.q = e.target.value.trim();
+      state.page = 1;
       refresh();
     }, 250));
   }
@@ -514,6 +579,7 @@ function initCatalogoFilters(){
   if (orderSelect){
     orderSelect.addEventListener('change', () => {
       state.order = orderSelect.value; // priceAsc | priceDesc
+      state.page = 1;
       refresh();
     });
   }
@@ -522,6 +588,7 @@ function initCatalogoFilters(){
     chk.addEventListener('change', () => {
       if (chk.checked) state.cats.add(chk.value);
       else state.cats.delete(chk.value);
+      state.page = 1;
       refresh();
     });
   });
@@ -531,6 +598,7 @@ function initCatalogoFilters(){
       state.q = '';
       state.cats.clear();
       state.order = 'priceAsc';
+      state.page = 1;
       if (searchInput)  searchInput.value = '';
       if (orderSelect)  orderSelect.value = 'priceAsc';
       catChecks.forEach(c => (c.checked = false));
@@ -538,10 +606,9 @@ function initCatalogoFilters(){
     });
   }
 
-  // Primer render y sincroniza tabs
+  // Primer render
   refresh();
 }
-
 // ===== ÚNICO init =====
 function init(){
   renderFeatured();       // Home (si no existe, no hace nada)
