@@ -36,6 +36,32 @@ const toast = (msg, type='ok') => {
   feedbackEl.textContent = msg;
 };
 
+// ===== Sesión (login requerido para añadir) =====
+const SESSION_KEY = 'mitienda_user';
+const getSession  = () => {
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
+  catch { return null; }
+};
+const isLoggedIn  = () => !!getSession()?.email;
+
+function requireLogin(){
+  // aviso visual
+  toast('Debes iniciar sesión para añadir productos.', 'warn');
+
+  // si tienes modal de login en la página
+  const loginModal = document.getElementById('login-modal');
+  if (loginModal){
+    loginModal.classList.remove('hidden');
+    setTimeout(() => loginModal.querySelector('#correo-login, input[type="email"]')?.focus(), 50);
+    return;
+  }
+
+  // si no, redirige a login y vuelve a donde estaba
+  const next = `${location.pathname}${location.search}${location.hash}`;
+  window.location.href = `./login.html?next=${encodeURIComponent(next)}`;
+}
+
+// ===== Carrito: render =====
 function renderCart(){
   if (!cartItems || !cartTotal) return;
   cartItems.innerHTML = '';
@@ -128,7 +154,16 @@ window.CartAPI = { add: cartAdd, update: cartUpdate, remove: cartRemove, clear: 
 
 // ===== Carrito: añadir =====
 function addToCart(code, qty = 1){
-  if (qty <= 0){ toast('La cantidad debe ser al menos 1.', 'error'); return; }
+  // ⛔ Requiere sesión antes de poder añadir
+  if (!isLoggedIn()){
+    requireLogin();
+    return;
+  }
+
+  if (qty <= 0){
+    toast('La cantidad debe ser al menos 1.', 'error');
+    return;
+  }
   const p = PRODUCTS_HH?.find(x => x.code === code);
   if (!p) return;
 
@@ -156,9 +191,8 @@ function addToCart(code, qty = 1){
   openCart();
 }
 
-/* =================== Home destacados =================== */
-const featuredGrid = $('#featured-grid');
 
+// ===== Home: destacados por rating =====
 function renderFeatured(){
   if (!featuredGrid || !Array.isArray(PRODUCTS_HH)) return;
   featuredGrid.innerHTML = '';
@@ -307,43 +341,25 @@ if (actionBtn) {
 /* =================== Catálogo + filtros + paginación =================== */
 function initCatalogoFilters(){
   const grid        = document.getElementById('productos-grid');
-  if (!grid) return;
+  if (!grid) return; // solo corre en productos.html
 
+  
   const resultCount = document.getElementById('result-count');
   const searchInput = document.getElementById('search');
   const orderSelect = document.getElementById('order');
   const catChecks   = Array.from(document.querySelectorAll('input[name="cat"]'));
   const clearBtn    = document.getElementById('clear-filters');
   const tabBar      = document.querySelector('.cat-tabs');
+  const pagerEl     = document.getElementById('pager');
 
-  // Paginación: “Ver más” y “Mostrar menos”
-  let loadMoreBtn = document.getElementById('load-more');
-  let loadLessBtn = document.getElementById('load-less');
-  if (!loadMoreBtn || !loadLessBtn){
-    const pagerWrap = document.createElement('div');
-    pagerWrap.className = 'pager';
-    loadLessBtn = document.createElement('button');
-    loadLessBtn.id = 'load-less';
-    loadLessBtn.className = 'btn-outline';
-    loadLessBtn.type = 'button';
-    loadLessBtn.textContent = 'Mostrar menos';
-
-    loadMoreBtn = document.createElement('button');
-    loadMoreBtn.id = 'load-more';
-    loadMoreBtn.className = 'btn-outline';
-    loadMoreBtn.type = 'button';
-    loadMoreBtn.textContent = 'Ver más';
-
-    pagerWrap.append(loadLessBtn, loadMoreBtn);
-    grid.after(pagerWrap);
-  }
+  const PAGE_SIZE = 12;
 
   const params = new URLSearchParams(location.search);
-  const initialCat = params.get('cat');
+  const initialCat = params.get('cat');               // FR | VR | PO | PL | null
   const initialQ   = params.get('q') || '';
+  const initialPg  = Math.max(1, parseInt(params.get('page') || '1', 10));
 
-  const CAT_BY_ID = Object.fromEntries(CATEGORIES_HH.map((c,i)=>[c.id,{...c,_order:i}]));
-
+  // helpers
   const norm = s => (s || '').toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
   const debounce = (fn, delay = 250) => { let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; };
 
@@ -366,11 +382,26 @@ function initCatalogoFilters(){
     return list
       .map((item, idx) => ({ item, idx }))
       .sort((a, b) => {
-        const diff = (a.item.precioCLP - b.item.precioCLP) * mul;
-        return diff !== 0 ? diff : a.idx - b.idx;
+        const diff = ((a.item.precioCLP ?? 0) - (b.item.precioCLP ?? 0)) * mul;
+        return diff !== 0 ? diff : a.idx - b.idx; // orden estable
       })
       .map(x => x.item);
   };
+
+  const state = {
+    q: initialQ,
+    cats: new Set(),
+    order: 'priceAsc',
+    page: initialPg
+  };
+
+  // UI inicial desde la URL
+  if (initialCat) {
+    const match = catChecks.find(c => c.value === initialCat);
+    if (match) { match.checked = true; state.cats.add(initialCat); }
+  }
+  if (searchInput) searchInput.value = state.q;
+  if (orderSelect) orderSelect.value = state.order;
 
   function applyFilters(){
     const qn = norm(state.q);
@@ -383,45 +414,30 @@ function initCatalogoFilters(){
     return list;
   }
 
-  function ensureSection(catId){
-    let section = grid.querySelector(`.cat-group[data-cat="${catId}"]`);
-    if (section) return section;
+  function renderList(allItems){
+    // clamp de página
+    const totalPages = Math.max(1, Math.ceil(allItems.length / PAGE_SIZE));
+    if (state.page > totalPages) state.page = totalPages;
 
-    const cat = CAT_BY_ID[catId] || { nombre: catId, descripcion: '', _order: 999 };
-    section = document.createElement('section');
-    section.className = 'cat-group';
-    section.dataset.cat = catId;
-    section.dataset.order = String(cat._order);
-    section.style.gridColumn = '1 / -1';
-    section.innerHTML = `
-      <h2 class="cat-title">${cat.nombre}</h2>
-      <p class="cat-desc muted">${cat.descripcion || ''}</p>
-      <div class="productos-grid"></div>
-    `;
+    const start = (state.page - 1) * PAGE_SIZE;
+    const pageItems = allItems.slice(start, start + PAGE_SIZE);
 
-    const siblings = Array.from(grid.querySelectorAll('.cat-group'));
-    const insertBefore = siblings.find(s => Number(s.dataset.order) > cat._order);
-    if (insertBefore) grid.insertBefore(section, insertBefore); else grid.appendChild(section);
-    return section;
-  }
+    grid.innerHTML = '';
+    if (!pageItems.length){
+      grid.innerHTML = `<p class="muted">No hay resultados para los filtros seleccionados.</p>`;
+      resultCount && (resultCount.textContent = `0 productos`);
+      renderPager(0, 0); // limpia la paginación
+      return;
+    }
 
-  // Render de un "slice" (bloque) y marca los cards con data-page
-  function renderSlice(items, start, end, pageIndex){
-    let firstNewCard = null;
-
-    for (let i = start; i < end; i++){
-      const prod = items[i];
-      const sec  = ensureSection(prod.categoriaId);
-      const inner= sec.querySelector('.productos-grid');
-
+    pageItems.forEach(prod => {
       const article = document.createElement('article');
       article.classList.add('producto');
       article.dataset.page = String(pageIndex);
       article.innerHTML = `
         <a class="prod-click" href="producto.html?code=${prod.code}" aria-label="Ver ${prod.nombre}">
           <div class="thumb">
-            <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy"
-                 onerror="this.onerror=null; this.src='assets/LogoTienda/LogoHuertoHogar.png';" />
+            <img src="${prod.imagen}" alt="${prod.nombre}" loading="lazy" />
           </div>
           <h2>${prod.nombre}</h2>
         </a>
@@ -433,23 +449,51 @@ function initCatalogoFilters(){
 
         <p>${prod.descripcion}</p>
         <p class="precio">${fmtCLP(prod.precioCLP)} / ${prod.unidad}</p>
-        <button class="btn-outline" data-code="${prod.code}">Añadir al carrito</button>
+        <button data-code="${prod.code}">Añadir al carrito</button>
       `;
-      inner.appendChild(article);
-      if (!firstNewCard) firstNewCard = article;
+      grid.appendChild(article);
+    });
+
+    // "x–y de N" o "N productos"
+    const from = start + 1;
+    const to   = start + pageItems.length;
+    resultCount && (resultCount.textContent =
+      allItems.length > PAGE_SIZE
+        ? `${from}–${to} de ${allItems.length} productos`
+        : `${allItems.length} producto${allItems.length === 1 ? '' : 's'}`
+    );
+
+    renderPager(state.page, Math.ceil(allItems.length / PAGE_SIZE));
+  }
+
+  function renderPager(current, totalPages){
+    if (!pagerEl) return;
+    if (!totalPages || totalPages <= 1){
+      pagerEl.innerHTML = '';
+      return;
     }
 
-    return firstNewCard;
+    let html = '';
+    html += `<button type="button" data-page="${current-1}" ${current<=1?'disabled':''} aria-label="Página anterior">‹</button>`;
+
+    // páginas (simple: todas; si quieres, puedes hacer ventana 1..total)
+    for (let p = 1; p <= totalPages; p++){
+      html += `<button type="button" data-page="${p}" class="${p===current?'is-active':''}" aria-current="${p===current?'page':''}">${p}</button>`;
+    }
+
+    html += `<button type="button" data-page="${current+1}" ${current>=totalPages?'disabled':''} aria-label="Página siguiente">›</button>`;
+    pagerEl.innerHTML = html;
+
+    pagerEl.onclick = (e) => {
+      const btn = e.target.closest('button[data-page]');
+      if (!btn) return;
+      const next = parseInt(btn.dataset.page, 10);
+      if (Number.isNaN(next) || next < 1 || next > totalPages) return;
+      state.page = next;
+      refresh(true);
+    };
   }
 
-  let current = { all: [], rendered: 0 };
-
-  function updateCounters(){
-    if (!resultCount) return;
-    const total = current.all.length;
-    const shown = current.rendered;
-    resultCount.textContent = `${Math.min(shown, total)} de ${total} producto${total === 1 ? '' : 's'}`;
-  }
 
   function updateURLFromState(){
     const url = new URL(location.href);
@@ -457,6 +501,9 @@ function initCatalogoFilters(){
     else url.searchParams.delete('cat');
 
     state.q ? url.searchParams.set('q', state.q) : url.searchParams.delete('q');
+
+    state.page > 1 ? url.searchParams.set('page', String(state.page)) : url.searchParams.delete('page');
+
     history.replaceState({}, '', url);
   }
 
@@ -516,24 +563,17 @@ function initCatalogoFilters(){
     }
   }
 
-  function refresh(){
-    current.all = applyFilters();
-    state.page  = 1;
-    resetGrid();
-
-    if (!current.all.length){
-      grid.innerHTML = `<p class="muted">No hay resultados para los filtros seleccionados.</p>`;
-      updateCounters();
-      updateURLFromState();
-      syncTabsWithState();
-      updatePagerButtons();
-      return;
-    }
-
-    renderNextPage({ focus:false });
+  function refresh(scrolling = false){
+    const all = applyFilters();
+    renderList(all);
     updateURLFromState();
     syncTabsWithState();
-    updatePagerButtons();
+
+    // scroll al inicio del grid al cambiar de página
+    if (scrolling) {
+      const y = grid.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   }
 
   // Tabs
@@ -544,22 +584,35 @@ function initCatalogoFilters(){
       const cat = btn.dataset.cat; // "" => Todos
       state.cats.clear();
       if (cat) state.cats.add(cat);
+
+      // Sync checkboxes
       catChecks.forEach(c => (c.checked = state.cats.has(c.value)));
+
+      state.page = 1;
       refresh();
     });
   }
 
   // Listeners
   if (searchInput){
-    searchInput.addEventListener('input', debounce(e => { state.q = e.target.value.trim(); refresh(); }, 250));
+    searchInput.addEventListener('input', debounce(e => {
+      state.q = e.target.value.trim();
+      state.page = 1;
+      refresh();
+    }, 250));
   }
   if (orderSelect){
-    orderSelect.addEventListener('change', () => { state.order = orderSelect.value; refresh(); });
+    orderSelect.addEventListener('change', () => {
+      state.order = orderSelect.value; // priceAsc | priceDesc
+      state.page = 1;
+      refresh();
+    });
   }
   catChecks.forEach(chk => {
     chk.addEventListener('change', () => {
       if (chk.checked) state.cats.add(chk.value);
       else state.cats.delete(chk.value);
+      state.page = 1;
       refresh();
     });
   });
@@ -576,18 +629,10 @@ function initCatalogoFilters(){
     });
   }
 
-  // Paginación botones
-  loadMoreBtn.addEventListener('click', () => {
-    state.page += 1;
-    renderNextPage({ focus:true });
-  });
-  loadLessBtn.addEventListener('click', () => hideLastPage());
-
   // Primer render
   refresh();
 }
-
-/* =================== init =================== */
+// ===== ÚNICO init =====
 function init(){
   renderFeatured();
   renderHeroFeatured();

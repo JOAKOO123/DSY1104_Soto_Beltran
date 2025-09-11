@@ -65,7 +65,7 @@ import { USUARIOS } from './usuarios.js';
       u => String(u.correo || '').toLowerCase() === em
     );
     if (!existe) {
-      setMsg('❌ Este correo no está registrado en MiTienda.', 'error');
+      setMsg('❌ Este correo no está registrado en HuertoHogar.', 'error');
       mark(email, true); email.focus(); return;
     }
 
