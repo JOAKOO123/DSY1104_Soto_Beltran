@@ -1,15 +1,15 @@
 import Header from './components/Header';
 import Hero from './components/Hero';
+import Categories from './components/Categories'; // <-- Importa el componente
 
 function App() {
   return (
     <div>
       <Header />
       <main>
-        <Hero /> {/* <-- 2. Añade el componente aquí */}
-        {/* Aquí van secciones como Categorías, Destacados... */}
+        <Hero />
+        <Categories /> {/* <-- Añade el componente aquí */}
       </main>
-      {/* aca va el footer*/}
     </div>
   );
 }
