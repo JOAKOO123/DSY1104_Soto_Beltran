@@ -1,6 +1,11 @@
+import Header from './components/Header';
+
 function App() {
   return (
-    <h1>Mi Proyecto Limpio</h1>
+    <div>
+      <Header />
+      {/* lo demas de la página va aca */}
+    </div>
   );
 }
 
