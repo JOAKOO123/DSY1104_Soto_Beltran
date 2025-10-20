@@ -1,14 +1,17 @@
-import Header from './components/root/Header';
-import HomePage from './pages/home';
+import Hero from '../../components/home/Hero';
+import Categories from '../../components/home/Categories';
+import Loyalty from '../../components/home/Loyalty';
+import FeaturedProducts from '../../components/home/FeaturedProducts'; // <-- 1. Importa
 
-function App() {
+function HomePage() {
   return (
-    <div>
-      <Header />
-      <HomePage /> {/*página de inicio */}
-      {/*ruta pa las paginas*/}
-    </div>
+    <main>
+      <Hero />
+      <Categories />
+      <Loyalty />
+      <FeaturedProducts /> {}
+    </main>
   );
 }
 
-export default App;
+export default HomePage;
