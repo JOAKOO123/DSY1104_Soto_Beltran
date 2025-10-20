@@ -1,6 +1,6 @@
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Categories from './components/Categories'; // <-- Importa el componente
+import Header from './components/root/Header';
+import Hero from './components/home/Hero';
+import Categories from './components/home/Categories';
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
       <Header />
       <main>
         <Hero />
-        <Categories /> {/* <-- Añade el componente aquí */}
+        <Categories />
       </main>
     </div>
   );
