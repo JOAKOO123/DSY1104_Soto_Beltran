@@ -2,7 +2,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import HomePage from './pages/home';
-import ProductsPage from './pages/products'; // <-- QUITA EL COMENTARIO AQUÍ
+import ProductsPage from './pages/products'; 
 
 const router = createBrowserRouter([
   {
@@ -13,10 +13,10 @@ const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
-      { // <-- QUITA EL COMENTARIO AQUÍ
+      { 
         path: 'productos',
         element: <ProductsPage />,
-      }, // <-- QUITA EL COMENTARIO AQUÍ
+      },
       // Añade otras páginas aquí más adelante (Blogs, Nosotros, Contacto)
     ],
   },

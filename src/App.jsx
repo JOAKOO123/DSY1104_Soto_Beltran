@@ -1,14 +1,12 @@
-// src/App.jsx (¡Este es el código NUEVO con el Router!)
-
 import { Routes, Route } from 'react-router-dom';
 
 // Componentes globales (siempre visibles)
 import Header from './components/root/Header';
-// import Footer from './components/root/Footer'; // (Cuando creen el Footer, lo importan aquí)
+// import Footer from './components/root/Footer';
 
 // Páginas (las vistas que cambian)
 import HomePage from './pages/home';      // La página principal
-import ContactPage from './pages/contact';  // Tu página de contacto
+import ContactPage from './pages/contact';  //página de contacto
 
 function App() {
   return (
@@ -16,7 +14,7 @@ function App() {
       {/* El Header siempre se mostrará */}
       <Header />
 
-      {/* El <main> ahora contiene las rutas */}
+      {/* El <main> contiene las rutas */}
       <main>
         <Routes>
           {/* Ruta para el Home */}
@@ -25,11 +23,11 @@ function App() {
           {/* Ruta para tu página de Contacto */}
           <Route path="/contacto" element={<ContactPage />} />
 
-          {/* Aquí agregarán el resto de páginas: /productos, /nosotros, etc. */}
+          {/*resto de páginas: /productos, /nosotros, etc. */}
         </Routes>
       </main>
 
-      {/* <Footer /> */} {/* El Footer también iría aquí */}
+      {/* <Footer /> */} {/* El Footer*/}
     </div>
   );
 }

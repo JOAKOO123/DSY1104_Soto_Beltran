@@ -1,26 +1,24 @@
-// src/pages/contact/index.jsx (¡Traducido de tu contacto.js!)
 
 import React, { useState } from 'react';
-// 1. Importamos tu archivo de usuarios (asumiendo que está en la misma carpeta)
 import { USUARIOS } from './usuarios.js'; 
 
 function ContactPage() {
   
-  // --- Estados para los campos (reemplaza a .value) ---
+    // --- Estados para los campos del formulario ---
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [mensaje, setMensaje] = useState('');
 
-  // --- Estados para el feedback (reemplaza a setMsg) ---
+    // --- Estado para el mensaje de feedback ---
   const [feedback, setFeedback] = useState('');
   const [feedbackError, setFeedbackError] = useState(false);
 
-  // --- Estados para marcar campos inválidos (reemplaza a mark()) ---
+    // --- Estados para los campos inválidos ---
   const [invalidNombre, setInvalidNombre] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidMensaje, setInvalidMensaje] = useState(false);
 
-  // --- Constantes de tu archivo JS ---
+    // --- Constantes para validación ---
   const ALLOWED_DOMAINS = ['duocuc.cl'];
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -113,7 +111,7 @@ function ContactPage() {
       localStorage.setItem('contacto_last', JSON.stringify(payload));
     } catch {}
 
-    // Limpiamos el formulario (reemplaza a form.reset())
+    // Limpiar el formulario
     setNombre('');
     setEmail('');
     setMensaje('');
@@ -130,7 +128,7 @@ function ContactPage() {
         <h2 className="brand-title">HuertoHogar</h2>
       </div>
 
-      {/* 2. Conectamos la función al "onSubmit" */}
+      {/* --- El Formulario --- */}
       <form id="contactoForm" className="contact-form" noValidate onSubmit={handleSubmit}>
         
         <label htmlFor="c-nombre">Nombre</label>
@@ -141,7 +139,7 @@ function ContactPage() {
           autoComplete="name"
           value={nombre} 
           onChange={(e) => setNombre(e.target.value)}
-          // 3. Añadimos la clase de error si el estado es inválido
+          // Añadimos la clase de error si el estado es inválido
           className={invalidNombre ? 'is-invalid' : ''}
           aria-invalid={invalidNombre}
         />
@@ -168,11 +166,11 @@ function ContactPage() {
           aria-invalid={invalidMensaje}
         />
 
-        {/* 4. Mostramos el mensaje de feedback */}
+        {/* Mensaje de feedback */}
         <p 
           id="contacto-msg" 
           aria-live="polite" 
-          className={feedbackError ? 'error' : 'ok'} // (Tu CSS ya tiene .error y .ok)
+          className={feedbackError ? 'error' : 'ok'} 
         >
           {feedback}
         </p>
