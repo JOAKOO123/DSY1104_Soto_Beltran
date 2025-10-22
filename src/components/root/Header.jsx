@@ -1,9 +1,17 @@
+// src/components/root/Header.jsx
+// YA NO NECESITAMOS IMPORTAR EL LOGO
+
 function Header() {
   return (
     <header className="site-header">
       <div className="container nav-bar">
         <a className="brand" href="/" aria-label="Ir al inicio">
-          {/* Aquí irá tu logo más adelante */}
+          {/* 1. Usamos la ruta directa desde la carpeta 'public' */}
+          <img 
+            src="/assets/LogoTienda/LogoHuertoHogar.png" 
+            alt="Logo de HuertoHogar" 
+            className="logo-img" 
+          />
           <span>HuertoHogar</span>
         </a>
         <nav className="primary-nav" aria-label="Principal">

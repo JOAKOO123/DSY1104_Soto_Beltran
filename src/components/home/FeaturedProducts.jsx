@@ -1,10 +1,10 @@
+// src/components/home/FeaturedProducts.jsx
 import ProductCard from './ProductCard';
+// 1. Importamos el nombre correcto y le ponemos un alias "productos"
+import { PRODUCTS_HH as productos } from '../../data/productos_huerto.js';
 
-const mockProducts = [
-  { id: 1, name: 'Manzana Fuji (Kg)', price: '$2.490', image: 'https://via.placeholder.com/400x300.png/2E8B57/fff?text=Fruta' },
-  { id: 2, name: 'Zanahoria Orgánica (500g)', price: '$1.990', image: 'https://via.placeholder.com/400x300.png/FFD700/000?text=Verdura' },
-  { id: 3, name: 'Miel de Quillay (250g)', price: '$4.990', image: 'https://via.placeholder.com/400x300.png/236b45/fff?text=Orgánico' },
-];
+// 2. Esta línea ahora funcionará porque "productos" ya no es undefined
+const mockProducts = productos.slice(0, 3);
 
 function FeaturedProducts() {
   return (
@@ -14,10 +14,12 @@ function FeaturedProducts() {
         <div className="cards">
           {mockProducts.map(product => (
             <ProductCard
-              key={product.id} // La 'key' es un identificador único que React necesita
-              name={product.name}
-              price={product.price}
-              image={product.image}
+              // 3. Usamos "code" como key, ya que "id" no existe en tus datos
+              key={product.code}
+              name={product.nombre}
+              // 4. Usamos "precioCLP" y "imagen" que coinciden con tu archivo
+              price={`$${product.precioCLP.toLocaleString('es-CL')}`}
+              image={product.imagen} 
             />
           ))}
         </div>

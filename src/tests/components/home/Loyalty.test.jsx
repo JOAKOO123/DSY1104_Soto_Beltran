@@ -1,4 +1,3 @@
-// src/tests/components/home/Loyalty.test.jsx
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Loyalty from '../../../components/home/Loyalty';

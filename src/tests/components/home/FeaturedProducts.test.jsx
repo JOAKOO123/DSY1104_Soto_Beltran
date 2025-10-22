@@ -1,6 +1,9 @@
+// src/tests/components/home/FeaturedProducts.test.jsx
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import FeaturedProducts from '../../../components/home/FeaturedProducts';
+// 1. Importamos el nombre correcto y le ponemos el alias "productos"
+import { PRODUCTS_HH as productos } from '../../../data/productos_huerto.js';
 
 describe('Componente FeaturedProducts', () => {
   it('debería mostrar el título "Destacados"', () => {
@@ -8,11 +11,16 @@ describe('Componente FeaturedProducts', () => {
     expect(screen.getByText('Destacados')).toBeInTheDocument();
   });
 
-  it('debería renderizar 3 tarjetas de producto', () => {
+  it('debería renderizar los primeros 3 productos del archivo de datos', () => {
     render(<FeaturedProducts />);
-    // Buscamos los botones "Agregar", ya que cada tarjeta tiene uno.
-    const productCards = screen.getAllByText('Agregar');
-    // Verificamos que se hayan encontrado 3 botones, lo que significa que hay 3 tarjetas.
-    expect(productCards).toHaveLength(3);
+    
+    // 2. Esto ahora funcionará
+    const firstProductName = productos[0].nombre;
+    const secondProductName = productos[1].nombre;
+    const thirdProductName = productos[2].nombre;
+
+    expect(screen.getByText(firstProductName)).toBeInTheDocument();
+    expect(screen.getByText(secondProductName)).toBeInTheDocument();
+    expect(screen.getByText(thirdProductName)).toBeInTheDocument();
   });
-})
+});
