@@ -1,11 +1,11 @@
 // src/components/products/ProductGrid.jsx
 import { Link } from 'react-router-dom'; // <-- 1. Importa Link
 
-function ProductGrid({ products }) {
+function ProductGrid({ products, totalFiltered }) {
   return (
     <section className="results">
       <div className="results-bar">
-        <span>{products.length} productos encontrados</span>
+        <span>{totalFiltered} productos encontrados</span>
       </div>
       <div className="productos-grid">
         {products.map(product => (
@@ -26,6 +26,9 @@ function ProductGrid({ products }) {
           </Link>
           // --- Fin del Link ---
         ))}
+        {products.length === 0 && (
+          <p>No se encontraron productos con los filtros seleccionados.</p>
+        )}
       </div>
     </section>
   );

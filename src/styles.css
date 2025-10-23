@@ -199,22 +199,32 @@ section.hero {
 
 .hero-grid {
   display: grid;
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  grid-template-columns: 1.2fr .8fr;
+  align-items: center;
+  padding-block: 3rem;
 }
 
-.hero h1 {
-  font-family: var(--font-head);
-  line-height: 1.15;
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  margin: 0 0 .5rem;
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .hero-copy a.btn-primary {
+    margin-inline: auto;
+  }
 }
 
-.hero p.lead {
-  color: var(--muted);
-  font-size: clamp(1rem, 2vw, 1.125rem);
-  margin: 0 0 1.25rem;
+.hero-copy h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-copy p.lead {
+  font-size: 1.15rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
 }
 
 .btn-primary {
@@ -232,10 +242,22 @@ section.hero {
 }
 
 .hero-visual {
-  min-height: 240px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: radial-gradient(60% 60% at 30% 30%, color-mix(in oklab, var(--primary) 25%, transparent), transparent), radial-gradient(60% 60% at 70% 70%, color-mix(in oklab, var(--accent) 25%, transparent), transparent), linear-gradient(180deg, var(--surface), color-mix(in oklab, var(--surface) 70%, var(--bg)));
+  width: 100%;
+  height: 350px;
+  border-radius: var(--radius-lg);
+  background-color: var(--muted);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .hero-visual {
+    height: 250px;
+    margin-top: 2rem;
+  }
 }
 
 /* ===================== CATEGORÍAS ===================== */
@@ -800,18 +822,21 @@ button[disabled] {
   border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--surface);
+  color: var(--text);
   cursor: pointer;
-  transition: filter .15s;
+  transition: background .15s, color .15s, border-color .15s;
+  font-weight: 600;
 }
 
 .cat-tabs .tab:hover {
-  filter: brightness(.95);
+  border-color: var(--muted);
+  background: #f8fafc;
 }
 
 .cat-tabs .tab.is-active {
   background: var(--primary);
   color: var(--primary-contrast);
-  border-color: transparent;
+  border-color: var(--primary);
 }
 
 /* ===================== DETALLE DE PRODUCTO ===================== */
