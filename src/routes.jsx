@@ -1,37 +1,24 @@
-// src/routes.jsx
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 
 // --- Páginas ---
 import HomePage from './pages/home';
 import ProductsPage from './pages/products';
-import ContactPage from './pages/contact';    // <-- Página de Contacto]
-import NosotrosPage from './pages/nosotros';  // <-- Tu nueva página "Nosotros"
+import ProductDetailPage from './pages/product-detail'; // <-- 1. Importa (aunque aún no existe)
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />, // La plantilla (Header/Footer/Outlet)
     children: [
+      { index: true, element: <HomePage /> },
+      { path: 'productos', element: <ProductsPage /> },
+      // --- 2. AÑADE ESTA NUEVA RUTA ---
       {
-        index: true, // Esto hace que sea la página de inicio (ruta "/")
-        element: <HomePage />,
+        path: 'productos/:productCode', // :productCode es un parámetro dinámico
+        element: <ProductDetailPage />,
       },
-      {
-        path: 'productos',
-        element: <ProductsPage />,
-      },
-      {
-        // --- RUTA DE CONTACTO AÑADIDA ---
-        path: 'contacto',
-        element: <ContactPage />,
-      },
-      {
-        // --- RUTA DE NOSOTROS AÑADIDA ---
-        path: 'nosotros',
-        element: <NosotrosPage />,
-      },
-      // Aquí puedes añadir /blogs, etc. en el futuro
+      // --- Fin de la nueva ruta ---
     ],
   },
 ]);
