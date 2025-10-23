@@ -5,21 +5,24 @@ import App from './App';
 // --- Páginas ---
 import HomePage from './pages/home';
 import ProductsPage from './pages/products';
-import ProductDetailPage from './pages/product-detail'; // <-- 1. Importa (aunque aún no existe)
+import ProductDetailPage from './pages/product-detail';
+import LoginPage from './pages/login';
+import RegisterPage from './pages/register';
+import NosotrosPage from './pages/nosotros';
+import ContactPage from './pages/contact';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />, // La plantilla (Header/Footer/Outlet)
+    element: <App />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'productos', element: <ProductsPage /> },
-      // --- 2. AÑADE ESTA NUEVA RUTA ---
-      {
-        path: 'productos/:productCode', // :productCode es un parámetro dinámico
-        element: <ProductDetailPage />,
-      },
-      // --- Fin de la nueva ruta ---
+      { path: 'productos/:productCode', element: <ProductDetailPage /> },
+      { path: 'login', element: <LoginPage /> },
+      { path: 'registro', element: <RegisterPage /> },
+      { path: 'nosotros', element: <NosotrosPage /> },
+      { path: 'contacto', element: <ContactPage /> },
     ],
   },
 ]);
