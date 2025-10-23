@@ -1,37 +1,21 @@
-import { Routes, Route } from 'react-router-dom';
+// src/App.jsx (¡ESTE ES EL CÓDIGO CORRECTO!)
 
-// Componentes globales (siempre visibles)
+import { Outlet } from 'react-router-dom';
 import Header from './components/root/Header';
-// import Footer from './components/root/Footer';
-
-// Páginas (las vistas que cambian)
-import HomePage from './pages/home';
-import ContactPage from './pages/contact';
-import NosotrosPage from './pages/nosotros'; // <-- 1. IMPORTA TU PÁGINA
+// import Footer from './components/root/Footer'; // Lo dejo comentado, igual que tú
 
 function App() {
   return (
-    <div>
-      {/* El Header siempre se mostrará */}
+    <>
       <Header />
 
-      {/* El <main> contiene las rutas */}
-      <main>
-        <Routes>
-          {/* Ruta para el Home */}
-          <Route path="/" element={<HomePage />} />
+      {/* El <Outlet /> es el espacio vacío donde "routes.jsx" 
+        pondrá la página que corresponda (Home, Blogs, Contacto, etc.)
+      */}
+      <Outlet />
 
-          {/* Ruta para tu página de Contacto */}
-          <Route path="/contacto" element={<ContactPage />} />
-
-          {/* --- 2. AÑADE ESTA LÍNEA --- */}
-          <Route path="/nosotros" element={<NosotrosPage />} />
-          
-        </Routes>
-      </main>
-
-      {/* <Footer /> */} {/* El Footer*/}
-    </div>
+      {/* <Footer /> */} {/* Lo dejo comentado, igual que tú */}
+    </>
   );
 }
 
