@@ -4,7 +4,9 @@ import App from './App';
 // --- Páginas ---
 import HomePage from './pages/home';
 import ProductsPage from './pages/products';
-import ProductDetailPage from './pages/product-detail'; // <-- 1. Importa (aunque aún no existe)
+import ProductDetailPage from './pages/product-detail';
+import ContactPage from './pages/contact';    // <-- 1. Importa la de Contacto (de develop)
+import NosotrosPage from './pages/nosotros';  // <-- 2. Importa la tuya (Nosotros)
 
 const router = createBrowserRouter([
   {
@@ -13,12 +15,20 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'productos', element: <ProductsPage /> },
-      // --- 2. AÑADE ESTA NUEVA RUTA ---
       {
         path: 'productos/:productCode', // :productCode es un parámetro dinámico
         element: <ProductDetailPage />,
       },
-      // --- Fin de la nueva ruta ---
+      {
+        // --- 3. AÑADE LA RUTA DE CONTACTO ---
+        path: 'contacto',
+        element: <ContactPage />,
+      },
+      {
+        // --- 4. AÑADE LA RUTA DE NOSOTROS ---
+        path: 'nosotros',
+        element: <NosotrosPage />,
+      },
     ],
   },
 ]);

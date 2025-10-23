@@ -1,27 +1,45 @@
-// src/pages/nosotros/index.jsx
+// src/pages/nosotros/index.jsx (¡Con el Mapa Manual!)
 
 import React from 'react';
-// (Aquí importaremos el mapa más adelante)
+
+// --- 1. IMPORTACIONES PARA EL MAPA ---
+// (Esto necesita que hayas hecho "npm install react-leaflet leaflet")
+import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+// --- Fin de importaciones ---
+
+
+// --- 2. CONFIGURACIÓN DEL MAPA (MANUAL) ---
+// (¡Aquí están tus 7 puntos de presencia "a mano"!)
+const puntosDePresencia = [
+  { id: 1, nombre: 'Santiago', coords: [-33.45694, -70.64827] },
+  { id: 2, nombre: 'Valparaíso', coords: [-33.0458, -71.6197] },
+  { id: 3, nombre: 'Viña del Mar', coords: [-33.02457, -71.55183] },
+  { id: 4, nombre: 'Concepción', coords: [-36.82699, -73.05023] },
+  { id: 5, nombre: 'Nacimiento', coords: [-37.505, -72.673] },
+  { id: 6, nombre: 'Villarrica', coords: [-39.281, -72.228] },
+  { id: 7, nombre: 'Puerto Montt', coords: [-41.471, -72.939] }
+];
+
+// Centramos el mapa un poco más al sur para que se vean todos
+const mapCenter = [-38.45694, -72.64827];
+// --- Fin de configuración ---
+
 
 function NosotrosPage() {
   return (
     <main id="contenido" className="container about-wrap">
-      {/* Logo + nombre */}
+      
+      {/* --- HERO (LOGO + TÍTULO) --- */}
       <div className="about-hero">
-        {/*
-          NOTA: Para que las imágenes funcionen, tu carpeta "assets"
-          debe estar dentro de la carpeta "public/" de tu proyecto React.
-          (Las rutas ahora empiezan con "/" )
-        */}
         <img src="/assets/LogoTienda/LogoHuertoHogar.png" alt="Logo HuertoHogar" className="about-logo" />
         <h1 className="about-title">HuertoHogar</h1>
         <p className="about-sub">Frescura y Calidad de Campo</p>
       </div>
 
-      {/* Misión y Visión */}
+      {/* --- MISIÓN Y VISIÓN --- */}
       <section aria-labelledby="mision-vision" className="about-section">
         <h2 id="mision-vision" className="about-section-title">Misión & Visión</h2>
-
         <div className="about-grid">
           <article className="about-card" aria-labelledby="mision-h">
             <h3 id="mision-h" className="about-h3">Nuestra misión</h3>
@@ -30,7 +48,6 @@ function NosotrosPage() {
               agricultores locales y promoviendo una alimentación sana y sostenible.
             </p>
           </article>
-
           <article className="about-card" aria-labelledby="vision-h">
             <h3 id="vision-h" className="about-h3">Nuestra visión</h3>
             <p>
@@ -41,50 +58,47 @@ function NosotrosPage() {
         </div>
       </section>
 
-      {/* Equipo */}
+      {/* --- EQUIPO --- */}
       <section aria-labelledby="equipo" className="about-section">
         <h2 id="equipo" className="about-section-title">Nuestro equipo</h2>
-
         <div className="team-grid">
           <article className="team-card">
             <img src="/assets/equipo/Lucas.png" alt="Lucas Soto — Desarrollador Web" loading="lazy" />
             <div>
               <h3 className="team-name">Lucas Soto</h3>
               <p className="team-role">Desarrollador Web</p>
-              <p className="team-bio"></p>
             </div>
           </article>
-
           <article className="team-card">
             <img src="/assets/equipo/Joaquin.png" alt="Joaquin Beltran — Desarrollador Web" loading="lazy" />
             <div>
               <h3 className="team-name">Joaquin Beltran</h3>
               <p className="team-role">Desarrollador Web</p>
-              <p className="team-bio"></p>
             </div>
           </article>
         </div>
       </section>
 
-      {/* Mapa de presencia */}
+      {/* --- 3. SECCIÓN DEL MAPA ACTUALIZADA --- */}
       <section aria-labelledby="mapa" className="about-section">
         <h2 id="mapa" className="about-section-title">Puntos de presencia</h2>
 
         <div className="map-card">
-          {/*
-            NOTA: El mapa interactivo NO aparecerá todavía.
-            Este <div> está vacío. Necesitaremos instalar "react-leaflet"
-            para añadir el mapa aquí. Lo podemos hacer después.
-          */}
-          <div id="mapa-presencia" className="mapbox" role="region" aria-label="Mapa con puntos de presencia">
-            (El mapa interactivo irá aquí)
-          </div>
-
-          {/* Fallback si no carga el mapa (por ahora lo dejamos visible) */}
-          <figure className="map-fallback" id="mapa-fallback">
-            <img src="/assets/Mapa/static-mapa-presencia.png" alt="Mapa estático con puntos" />
-            <figcaption className="muted">Cargando mapa interactivo...</figcaption>
-          </figure>
+          <MapContainer center={mapCenter} zoom={5} scrollWheelZoom={false} className="mapbox">
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            
+            {/* Marcadores (los "pines" de tu lista manual) */}
+            {puntosDePresencia.map(punto => (
+              <Marker key={punto.id} position={punto.coords}>
+                <Popup>
+                  {punto.nombre}
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
         </div>
       </section>
     </main>

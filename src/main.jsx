@@ -1,13 +1,12 @@
+// src/main.jsx (El código correcto)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; 
-import App from './App.jsx';
+
+import AppRoutes from './routes.jsx'; // <-- 1. Importa el "cerebro"
 import './styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter> {/*ENVolver ROUTER */}
-      <App />
-    </BrowserRouter>
+    <AppRoutes /> {/* <-- 2. Usa el "cerebro" (no <App />) */}
   </React.StrictMode>
 );

@@ -5,8 +5,9 @@ import Header from './components/root/Header';
 // import Footer from './components/root/Footer';
 
 // Páginas (las vistas que cambian)
-import HomePage from './pages/home';      // La página principal
-import ContactPage from './pages/contact';  //página de contacto
+import HomePage from './pages/home';
+import ContactPage from './pages/contact';
+import NosotrosPage from './pages/nosotros'; // <-- 1. IMPORTA TU PÁGINA
 
 function App() {
   return (
@@ -23,7 +24,9 @@ function App() {
           {/* Ruta para tu página de Contacto */}
           <Route path="/contacto" element={<ContactPage />} />
 
-          {/*resto de páginas: /productos, /nosotros, etc. */}
+          {/* --- 2. AÑADE ESTA LÍNEA --- */}
+          <Route path="/nosotros" element={<NosotrosPage />} />
+          
         </Routes>
       </main>
 
