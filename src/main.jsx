@@ -1,13 +1,12 @@
-// src/main.jsx
+// src/main.jsx (El código correcto)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// Ya NO importamos BrowserRouter ni App aquí
-import AppRoutes from './routes.jsx'; // <-- Solo importamos nuestro enrutador
+
+import AppRoutes from './routes.jsx'; // <-- 1. Importa el "cerebro"
 import './styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* Renderizamos AppRoutes, que ya contiene el RouterProvider */}
-    <AppRoutes /> 
+    <AppRoutes /> {/* <-- 2. Usa el "cerebro" (no <App />) */}
   </React.StrictMode>
 );
