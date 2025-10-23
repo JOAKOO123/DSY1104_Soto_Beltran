@@ -1,23 +1,22 @@
-// src/routes.jsx
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import HomePage from './pages/home';
-import ProductsPage from './pages/products'; 
+import ProductsPage from './pages/products';
+import ProductDetailPage from './pages/product-detail'; // <-- 1. Importa (aunque aún no existe)
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
+      { index: true, element: <HomePage /> },
+      { path: 'productos', element: <ProductsPage /> },
+      // --- 2. AÑADE ESTA NUEVA RUTA ---
       {
-        index: true,
-        element: <HomePage />,
+        path: 'productos/:productCode', // :productCode es un parámetro dinámico
+        element: <ProductDetailPage />,
       },
-      { 
-        path: 'productos',
-        element: <ProductsPage />,
-      },
-      // Añade otras páginas aquí más adelante (Blogs, Nosotros, Contacto)
+      // --- Fin de la nueva ruta ---
     ],
   },
 ]);
