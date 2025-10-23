@@ -1,13 +1,13 @@
+// src/main.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; 
-import App from './App.jsx';
+// Ya NO importamos BrowserRouter ni App aquí
+import AppRoutes from './routes.jsx'; // <-- Solo importamos nuestro enrutador
 import './styles.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter> {/*ENVolver ROUTER */}
-      <App />
-    </BrowserRouter>
+    {/* Renderizamos AppRoutes, que ya contiene el RouterProvider */}
+    <AppRoutes /> 
   </React.StrictMode>
 );

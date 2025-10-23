@@ -1,33 +1,21 @@
-import { Routes, Route } from 'react-router-dom';
+// src/App.jsx
+import { Outlet } from 'react-router-dom'; // <-- IMPORTANTE: Importa Outlet
 
-// Componentes globales (siempre visibles)
 import Header from './components/root/Header';
-// import Footer from './components/root/Footer';
-
-// Páginas (las vistas que cambian)
-import HomePage from './pages/home';      // La página principal
-import ContactPage from './pages/contact';  //página de contacto
+import Footer from './components/root/Footer'; // <-- Asegúrate que Footer exista y esté importado
 
 function App() {
   return (
     <div>
-      {/* El Header siempre se mostrará */}
       <Header />
 
-      {/* El <main> contiene las rutas */}
-      <main>
-        <Routes>
-          {/* Ruta para el Home */}
-          <Route path="/" element={<HomePage />} />
-
-          {/* Ruta para tu página de Contacto */}
-          <Route path="/contacto" element={<ContactPage />} />
-
-          {/*resto de páginas: /productos, /nosotros, etc. */}
-        </Routes>
+      {/* ESTE ES EL CAMBIO CLAVE: Usa Outlet */}
+      <main> 
+        <Outlet /> 
       </main>
+      {/* FIN DEL CAMBIO CLAVE */}
 
-      {/* <Footer /> */} {/* El Footer*/}
+      <Footer /> 
     </div>
   );
 }

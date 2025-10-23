@@ -1,22 +1,42 @@
+// src/routes.jsx
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 import HomePage from './pages/home';
-import ProductsPage from './pages/products';
-import ProductDetailPage from './pages/product-detail'; // <-- 1. Importa (aunque aún no existe)
+import ProductsPage from './pages/products'; // <-- AÑADE ESTA IMPORTACIÓN
+import ProductDetailPage from './pages/product-detail'; // <-- AÑADE ESTA IMPORTACIÓN
+import ContactPage from './pages/contact'; // (Asegúrate que esta página exista)
+import LoginPage from './pages/login';
+import RegisterPage from './pages/register';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'productos', element: <ProductsPage /> },
-      // --- 2. AÑADE ESTA NUEVA RUTA ---
       {
-        path: 'productos/:productCode', // :productCode es un parámetro dinámico
+        index: true,
+        element: <HomePage />,
+      },
+      { // <-- AÑADE ESTA RUTA PARA LA LISTA DE PRODUCTOS
+        path: 'productos',
+        element: <ProductsPage />,
+      },
+      { // <-- AÑADE ESTA RUTA PARA EL DETALLE DEL PRODUCTO
+        path: 'productos/:productCode',
         element: <ProductDetailPage />,
       },
-      // --- Fin de la nueva ruta ---
+      {
+        path: 'contacto',
+        element: <ContactPage />, // (Asegúrate que esta página exista)
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+      {
+        path: 'registro',
+        element: <RegisterPage />,
+      },
     ],
   },
 ]);
