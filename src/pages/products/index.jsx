@@ -3,69 +3,65 @@ import { useState, useEffect } from 'react';
 import Filters from '../../components/products/Filters';
 import ProductGrid from '../../components/products/ProductGrid';
 import { PRODUCTS_HH as allProducts } from '../../data/productos_huerto.js';
-// (Opcional) Puedes crear un componente separado para la paginación
-// import Pagination from '../../components/products/Pagination'; 
+
+// --- 1. Importa el hook del "cerebro" del carrito ---
+import { useCart } from '../../context/CartContext'; 
 
 const ITEMS_PER_PAGE = 12; // Constante para la paginación
 
 function ProductsPage() {
+  // --- 2. Saca las funciones que necesitas del "cerebro" ---
+  const { addToCart, formatMoney } = useCart();
+
   // --- Estados ---
-  const [searchTerm, setSearchTerm] = useState(''); // Para la búsqueda
-  const [selectedCategory, setSelectedCategory] = useState(null); // Para las categorías (null = todas)
-  const [currentPage, setCurrentPage] = useState(1); // Para la página actual
+  const [searchTerm, setSearchTerm] = useState(''); 
+  const [selectedCategory, setSelectedCategory] = useState(null); 
+  const [currentPage, setCurrentPage] = useState(1);
   
-  // Estados derivados (calculados a partir de los otros)
-  const [filteredProducts, setFilteredProducts] = useState([]); // Productos después de filtrar
-  const [paginatedProducts, setPaginatedProducts] = useState([]); // Productos de la página actual
-  const [totalPages, setTotalPages] = useState(0); // Total de páginas
+  const [filteredProducts, setFilteredProducts] = useState([]); 
+  const [paginatedProducts, setPaginatedProducts] = useState([]); 
+  const [totalPages, setTotalPages] = useState(0); 
 
   // --- Efecto para FILTRAR productos ---
   useEffect(() => {
     let products = allProducts;
 
-    // 1. Filtrar por término de búsqueda (si hay algo escrito)
     if (searchTerm) {
       products = products.filter(product => 
         product.nombre.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // 2. Filtrar por categoría (si hay una seleccionada)
     if (selectedCategory) {
       products = products.filter(product => product.categoriaId === selectedCategory);
     }
 
-    setFilteredProducts(products); // Guarda los productos filtrados
-    setCurrentPage(1); // Resetea a la página 1 cada vez que cambian los filtros
-  }, [searchTerm, selectedCategory]); // Se ejecuta cuando cambia la búsqueda o la categoría
+    setFilteredProducts(products); 
+    setCurrentPage(1); 
+  }, [searchTerm, selectedCategory]); 
 
   // --- Efecto para PAGINAR productos ---
   useEffect(() => {
-    // Calcula cuántas páginas hay en total
     const total = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
     setTotalPages(total);
 
-    // Calcula el índice de inicio y fin para la página actual
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     
-    // Corta el array de productos filtrados para obtener solo los de esta página
     setPaginatedProducts(filteredProducts.slice(startIndex, endIndex));
 
-  }, [filteredProducts, currentPage]); // Se ejecuta cuando cambian los productos filtrados o la página
+  }, [filteredProducts, currentPage]); 
 
-  // --- Funciones para manejar cambios (se pasarán a los componentes hijos) ---
+  // --- Funciones para manejar cambios ---
   const handleSearchChange = (term) => {
     setSearchTerm(term);
   };
 
   const handleCategoryChange = (categoryId) => {
-    // Si se hace clic en la misma categoría, se deselecciona (muestra todas)
     setSelectedCategory(prev => (prev === categoryId ? null : categoryId));
   };
 
   const handlePageChange = (newPage) => {
-    // Evita ir a páginas inválidas
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
@@ -80,22 +76,24 @@ function ProductsPage() {
       </div>
 
       <div className="catalogo-grid">
-        {/* Pasamos los estados y funciones necesarios al componente Filters */}
         <Filters 
           searchTerm={searchTerm}
           selectedCategory={selectedCategory}
           onSearchChange={handleSearchChange}
           onCategoryChange={handleCategoryChange}
         /> 
-        {/* Pasamos los productos paginados y la cuenta total al ProductGrid */}
+        
+        {/* --- 3. Pasa las funciones al componente hijo --- */}
         <ProductGrid 
           products={paginatedProducts} 
-          totalFiltered={filteredProducts.length} // Pasamos el total filtrado
+          totalFiltered={filteredProducts.length}
+          onAddToCart={addToCart}     // <-- ¡Le pasamos la función de añadir!
+          formatMoney={formatMoney} // <-- ¡Le pasamos tu helper de dinero!
         /> 
       </div>
 
       {/* --- Controles de Paginación --- */}
-      {totalPages > 1 && ( // Solo muestra la paginación si hay más de una página
+      {totalPages > 1 && ( 
         <div className="pager" style={{ marginTop: '2rem', textAlign: 'center' }}>
           <button 
             onClick={() => handlePageChange(currentPage - 1)} 
@@ -114,8 +112,6 @@ function ProductsPage() {
           </button>
         </div>
       )}
-      {/* --- Fin Paginación --- */}
-
     </div>
   );
 }

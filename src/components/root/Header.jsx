@@ -1,36 +1,59 @@
 // src/components/root/Header.jsx
-// YA NO NECESITAMOS IMPORTAR EL LOGO
+import React from 'react';
+// 1. Importamos NavLink (para la navegación) y useCart (para el carrito)
+import { NavLink, Link } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 
-function Header() {
+// 2. Aceptamos la prop "onCartClick" que viene desde App.jsx
+function Header({ onCartClick }) {
+  
+  // 3. Obtenemos el contador de ítems del "cerebro" del carrito
+  const { totalCount } = useCart();
+
   return (
     <header className="site-header">
       <div className="container nav-bar">
-        <a className="brand" href="/" aria-label="Ir al inicio">
-          {/* 1. Usamos la ruta directa desde la carpeta 'public' */}
+        
+        {/* 4. CORREGIDO: Usamos <Link> para el logo */}
+        <Link className="brand" to="/" aria-label="Ir al inicio">
           <img 
             src="/assets/LogoTienda/LogoHuertoHogar.png" 
             alt="Logo de HuertoHogar" 
             className="logo-img" 
           />
           <span>HuertoHogar</span>
-        </a>
+        </Link>
+        
         <nav className="primary-nav" aria-label="Principal">
           <ul className="menu">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/productos">Productos</a></li>
-            <li><a href="/blogs">Blogs</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-            <li><a href="/contacto">Contacto</a></li>
+            {/* 5. CORREGIDO: Usamos <NavLink> para la navegación */}
+            <li><NavLink to="/">Inicio</NavLink></li>
+            <li><NavLink to="/productos">Productos</NavLink></li>
+            <li><NavLink to="/blogs">Blogs</NavLink></li>
+            <li><NavLink to="/nosotros">Nosotros</NavLink></li>
+            <li><NavLink to="/contacto">Contacto</NavLink></li>
           </ul>
         </nav>
+
         <div className="actions">
-          <button className="btn-icon" type="button" aria-label="Abrir carrito">
-            🛒 <span className="badge">0</span>
+          {/* 6. ACTUALIZADO: Conectamos el botón del carrito */}
+          <button 
+            className="btn-icon" 
+            type="button" 
+            aria-label="Abrir carrito"
+            onClick={onCartClick} // <-- Llama a la función para abrir el panel
+          >
+            🛒 
+            <span className="badge" aria-live="polite">
+              {totalCount} {/* <-- Muestra el contador real */}
+            </span>
           </button>
+          
           <div className="account-buttons">
-            <a href="/login">Iniciar sesión</a>
+            {/* 7. CORREGIDO: Usamos <NavLink> para login/registro */}
+            <NavLink to="/login">Iniciar sesión</NavLink>
             <span aria-hidden="true"> | </span>
-            <a href="/registro">Registrar usuario</a>
+            <NavLink to="/registro">Registrar usuario</NavLink>
           </div>
         </div>
       </div>

@@ -1626,3 +1626,136 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   padding-top: 1.5rem;
   margin-top: 2rem;
 }
+
+/* ===================== CARRITO (Estilos del Diseño Nuevo) ===================== */
+/* Borra el CSS anterior de .cart-panel #cart-items si choca */
+
+.cart-panel #cart-items {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/* El nuevo layout de la fila del producto */
+.cart-item-new {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .75rem;
+  align-items: center;
+  padding-block: .75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.cart-item-new .cart-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.cart-item-new .cart-item-details {
+  display: grid;
+  gap: .5rem;
+  align-items: start;
+}
+
+.cart-item-new .item-name {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* Los nuevos botones [-] 3 [+] [X] */
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+
+.cart-item-new .line-total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: right;
+}
+
+/* Feedback (para el futuro) */
+#cart-feedback.ok {
+  color: #166534;
+  font-weight: 600;
+  margin-bottom: .5rem;
+}
+
+
+/* ¡ESTA ES LA REGLA CORREGIDA! (Botones verdes) */
+.qty-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--primary); /* Borde verde */
+  background: var(--primary);     /* Fondo verde */
+  color: var(--primary-contrast); /* Texto blanco */
+  border-radius: 9px; /* Círculo */
+  font-weight: 700;
+  font-size: .875rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.qty-btn:hover {
+  background: var(--primary-600); /* Verde más oscuro al pasar el mouse */
+  border-color: var(--primary-600);
+}
+
+.qty-btn.remove {
+  margin-left: .25rem;
+  font-size: 100;
+}
+/* (El botón de remover ahora también es verde, igual que en tu foto) */
+
+.qty-text {
+  font-weight: 600;
+  min-width: 1rem;
+  text-align: center;
+}
+
+/* ... (El resto de las clases quedan igual) ... */
+
+/* --- CSS para Product Detail (Página de Detalle) --- */
+/* (Pega esto en tu src/styles.css) */
+
+/* --- ESTE ES EL NUEVO CÓDIGO (reemplaza a .facts-table) --- */
+/* Nueva lista de "Hechos" (Origen, Stock...) */
+.facts-list {
+  display: grid;
+  grid-template-columns: 1fr; /* ¡UNA columna! */
+  gap: 0.75rem; /* Espacio entre filas */
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding-block: 1rem;
+  margin-bottom: 1.5rem;
+}
+.fact-item {
+  display: grid;
+  gap: 0.1rem;
+}
+.facts-list dt {
+  font-weight: 700; /* <-- ¡AQUÍ ESTÁ LA NEGRITA! */
+  font-size: 1rem;
+  color: var(--text); /* Color de texto normal */
+}
+.facts-list dd {
+  margin: 0;
+  font-weight: 400; /* Texto normal */
+  color: var(--muted); /* Texto gris */
+}
+.facts-list dd a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+/* --- FIN DEL CÓDIGO NUEVO --- */
+
+/* (El resto de tus clases .add-to-cart-row, etc., déjalas como están) */

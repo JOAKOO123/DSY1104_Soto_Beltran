@@ -1,12 +1,16 @@
 // src/components/home/FeaturedProducts.jsx
 import ProductCard from './ProductCard';
-// 1. Importamos el nombre correcto y le ponemos un alias "productos"
 import { PRODUCTS_HH as productos } from '../../data/productos_huerto.js';
 
-// 2. Esta línea ahora funcionará porque "productos" ya no es undefined
+// --- 1. Importa el "cerebro" del carrito ---
+import { useCart } from '../../context/CartContext';
+
 const mockProducts = productos.slice(0, 3);
 
 function FeaturedProducts() {
+  // --- 2. Saca las funciones que necesitas ---
+  const { addToCart, formatMoney } = useCart();
+
   return (
     <section className="featured">
       <div className="container">
@@ -14,12 +18,13 @@ function FeaturedProducts() {
         <div className="cards">
           {mockProducts.map(product => (
             <ProductCard
-              // 3. Usamos "code" como key, ya que "id" no existe en tus datos
               key={product.code}
-              name={product.nombre}
-              // 4. Usamos "precioCLP" y "imagen" que coinciden con tu archivo
-              price={`$${product.precioCLP.toLocaleString('es-CL')}`}
-              image={product.imagen} 
+              // --- 3. ¡Pasa el objeto PRODUCTO completo! ---
+              product={product} 
+              // --- 4. ¡Pasa la función de añadir! ---
+              onAddToCart={addToCart}
+              // --- 5. ¡Pasa la función de formatear dinero! ---
+              formatMoney={formatMoney}
             />
           ))}
         </div>
