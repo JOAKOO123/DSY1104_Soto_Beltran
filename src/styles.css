@@ -1602,3 +1602,27 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   opacity: .6;
   cursor: default;
 }
+
+
+
+/* Pega esto al final de src/styles.css */
+
+.blog-detail-meta {
+  display: flex; /* <-- Esto junta la fecha y el tiempo de lectura */
+  justify-content: center;
+  align-items: center;
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: var(--muted); 
+}
+
+.blog-detail-nav {
+  display: flex; /* <-- Esto alinea los botones de abajo */
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid var(--border); 
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+}
