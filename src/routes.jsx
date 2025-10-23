@@ -1,4 +1,3 @@
-// src/routes.jsx (¡ARREGLADO!)
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App';
 
@@ -6,12 +5,12 @@ import App from './App';
 import HomePage from './pages/home';
 import ProductsPage from './pages/products';
 import ProductDetailPage from './pages/product-detail';
-import LoginPage from './pages/login';           // <-- De tu rama 'develop'
-import RegisterPage from './pages/register';     // <-- De tu rama 'develop'
-import NosotrosPage from './pages/nosotros';     // <-- Común en ambas
-import ContactPage from './pages/contact';         // <-- Común en ambas
-import BlogsPage from './pages/blogs';         // <-- De la rama 'feature/blogs'
-import BlogDetailPage from './pages/blog-detail'; // <-- De la rama 'feature/blogs'
+import LoginPage from './pages/login';           
+import RegisterPage from './pages/register';    
+import NosotrosPage from './pages/nosotros';     
+import ContactPage from './pages/contact';         
+import BlogsPage from './pages/blogs';         
+import BlogDetailPage from './pages/blog-detail'; 
 
 const router = createBrowserRouter([
   {
@@ -21,12 +20,12 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: 'productos', element: <ProductsPage /> },
       { path: 'productos/:productCode', element: <ProductDetailPage /> },
-      { path: 'login', element: <LoginPage /> },           // <-- De tu rama 'develop'
-      { path: 'registro', element: <RegisterPage /> },   // <-- De tu rama 'develop'
-      { path: 'nosotros', element: <NosotrosPage /> },     // <-- Común en ambas
-      { path: 'contacto', element: <ContactPage /> },       // <-- Común en ambas
-      { path: 'blogs', element: <BlogsPage /> },         // <-- De la rama 'feature/blogs'
-      { path: 'blogs/:blogId', element: <BlogDetailPage /> }, // <-- De la rama 'feature/blogs'
+      { path: 'login', element: <LoginPage /> },           
+      { path: 'registro', element: <RegisterPage /> },  
+      { path: 'nosotros', element: <NosotrosPage /> },     
+      { path: 'contacto', element: <ContactPage /> },      
+      { path: 'blogs', element: <BlogsPage /> },        
+      { path: 'blogs/:blogId', element: <BlogDetailPage /> }, 
     ],
   },
 ]);
