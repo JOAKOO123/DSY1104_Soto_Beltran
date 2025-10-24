@@ -3,9 +3,21 @@
 import React from 'react';
 // 1. IMPORTANTE: Usamos Link y NavLink de React Router
 import { NavLink, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 
 // 2. Aceptamos totalCount y onCartClick como props para que sean dinámicos
-function Header({ totalCount = 0, onCartClick = () => {} }) {
+function Header({ onCartClick }) {
+  const { user, logout } = useAuth();
+  const { cartItems } = useCart();
+
+  const totalItemsInCart = cartItems.reduce((sum, item) => sum + item.qty, 0);
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
+  };
+
   return (
     <header className="site-header">
       <div className="container nav-bar">
@@ -45,17 +57,26 @@ function Header({ totalCount = 0, onCartClick = () => {} }) {
             className="btn-icon" 
             type="button" 
             aria-label="Abrir carrito"
-            onClick={onCartClick} 
+            onClick={onCartClick}
           >
-            {/* Usa la prop totalCount */}
-            🛒 <span className="badge">{totalCount}</span>
+            🛒 <span className="badge">{totalItemsInCart}</span>
           </button>
           
           {/* Botones Cuenta - Usamos NavLink */}
           <div className="account-buttons">
-            <NavLink to="/login">Iniciar sesión</NavLink>
-            <span aria-hidden="true"> | </span>
-            <NavLink to="/registro">Registrar usuario</NavLink>
+            {user ? (
+              <>
+                <Link to="/perfil">Hola, {user.nombre || user.email}</Link>
+                <span aria-hidden="true"> | </span>
+                <a href="#" onClick={handleLogout}>Cerrar sesión</a>
+              </>
+            ) : (
+              <>
+                <Link to="/login">Iniciar sesión</Link>
+                <span aria-hidden="true"> | </span>
+                <Link to="/registro">Registrar usuario</Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 // src/App.jsx
 import { Outlet } from 'react-router-dom';
-import React from 'react'; // <-- Ya no se necesita useState
+import React, { useState } from 'react'; // <-- Ya no se necesita useState
     
 import Header from './components/root/Header';
 import Footer from './components/root/Footer';
@@ -10,8 +10,13 @@ import { CartPanel } from './components/CartPanel';
 import { useCart } from './context/CartContext'; 
 
 function App() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+
   // --- 2. Saca el estado y las funciones del "cerebro" ---
-  const { isOpen, openCart, closeCart } = useCart();
+  const { isOpen, openCart: openCartFromContext, closeCart: closeCartFromContext } = useCart();
 
   return (
     <>
@@ -24,7 +29,7 @@ function App() {
 
       {/* 4. Pasa el estado "isOpen" y la función "closeCart" al Panel */}
       <CartPanel 
-        isOpen={isOpen} 
+        isOpen={isCartOpen} 
         onClose={closeCart} 
       />
     </>

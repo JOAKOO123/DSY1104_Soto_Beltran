@@ -1,7 +1,13 @@
 // src/components/home/ProductCard.jsx
 
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+
 // --- 1. Acepta las nuevas props ---
 function ProductCard({ product, onAddToCart, formatMoney }) {
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   // --- 2. Función para manejar el clic en el botón ---
   const handleAddToCartClick = (e) => {
@@ -9,8 +15,11 @@ function ProductCard({ product, onAddToCart, formatMoney }) {
     e.preventDefault(); 
     e.stopPropagation(); 
     
-    // Llama a la función del "cerebro"
-    onAddToCart(product); 
+    if (!user) {
+      navigate('/login');
+    } else {
+      onAddToCart(product);
+    }
   };
 
   return (

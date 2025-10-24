@@ -1,10 +1,11 @@
 // src/pages/product-detail/index.jsx
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { PRODUCTS_HH } from '../../data/productos_huerto.js';
 import { useEffect, useState } from 'react';
 
 // 1. Importa el "cerebro" del carrito
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 // (Componente para las tarjetas de "Relacionados")
 function RelatedProductCard({ product, formatMoney }) {
@@ -35,6 +36,7 @@ function RelatedProductCard({ product, formatMoney }) {
 function ProductDetailPage() {
   // --- 2. Saca las funciones que necesitas ---
   const { addToCart, formatMoney } = useCart();
+  const { user } = useAuth();
   
   const { productCode } = useParams();
   const [product, setProduct] = useState(null);
@@ -43,6 +45,8 @@ function ProductDetailPage() {
 
   // --- 3. ¡NUEVO ESTADO para la cantidad! ---
   const [quantity, setQuantity] = useState(1);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -86,8 +90,13 @@ function ProductDetailPage() {
   
   // Función para el botón de "Añadir"
   const handleAddToCart = () => {
-    // Pasa el producto Y la cantidad seleccionada
-    addToCart(product, quantity);
+    if (!user) {
+      navigate('/login');
+    } else if (product) {
+      // Pasa el producto Y la cantidad seleccionada
+      addToCart(product, quantity);
+      console.log(`Producto ${product.nombre} añadido al carrito (usuario: ${user.email})`);
+    }
   };
 
   return (
@@ -173,6 +182,7 @@ function ProductDetailPage() {
               className="btn-primary" 
               type="button"
               onClick={handleAddToCart}
+              style={{marginTop: '1rem'}}
             >
               Añadir al carrito
             </button>
