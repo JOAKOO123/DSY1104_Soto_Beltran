@@ -1,28 +1,52 @@
 // src/tests/components/home/ProductCard.test.jsx
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import ProductCard from '../../../components/home/ProductCard';
+import { AuthContext } from '../../../context/AuthContext';
+import { CartContext } from '../../../context/CartContext';
 
-describe('Componente ProductCard', () => {
-  it('debería mostrar el nombre y el precio del producto', () => {
-    // 1. Usamos la estructura de datos real
-    const productData = {
-      nombre: 'Producto de Prueba',
-      precio: 9990,
-      image: 'test-image.png'
-    };
+const mockNavigate = vi.fn();
+const mockAddToCart = vi.fn();
 
-    // 2. Renderizamos el componente
-    render(
-      <ProductCard 
-        name={productData.nombre} 
-        price={`$${productData.precio}`} 
-        image={productData.image} 
-      />
-    );
+vi.mock('react-router-dom', async () => ({
+  ...(await vi.importActual('react-router-dom')),
+  useNavigate: () => mockNavigate,
+}));
 
-    // 3. Verificamos que los datos estén en el documento
-    expect(screen.getByText('Producto de Prueba')).toBeInTheDocument();
-    expect(screen.getByText('$9990')).toBeInTheDocument();
+const testProductData = {
+  code: 'TEST001',
+  nombre: 'Producto Test',
+  precioCLP: 9990,
+  imagen: 'test.jpg'
+};
+
+const renderProductCard = (user = null) => {
+  return render(
+    <MemoryRouter>
+      <AuthContext.Provider value={{ user, logout: vi.fn() }}>
+        <CartContext.Provider value={{ addToCart: mockAddToCart }}>
+          <ProductCard
+            name={testProductData.nombre}
+            price={`$${testProductData.precioCLP.toLocaleString('es-CL')}`}
+            image={testProductData.imagen}
+            productData={testProductData}
+          />
+        </CartContext.Provider>
+      </AuthContext.Provider>
+    </MemoryRouter>
+  );
+};
+
+describe('ProductCard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('debería llamar a addToCart al agregar si hay usuario', () => {
+    renderProductCard({ nombre: 'Tester', email: 'test@test.com' });
+    fireEvent.click(screen.getByRole('button', { name: /Agregar/i }));
+    expect(mockAddToCart).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

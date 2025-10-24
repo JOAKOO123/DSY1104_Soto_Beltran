@@ -1,31 +1,159 @@
+/* Modern theme colors and variables */
 :root {
-  --bg: #f8fafc;
+  --bg: #f8f9ff;
   --surface: #ffffff;
-  --text: #0f172a;
-  --muted: #475569;
+  --text: #1a1f36;
+  --muted: #64748b;
   --border: #e2e8f0;
   --primary: #2E8B57;
   --primary-600: #236b45;
   --primary-700: #1b3d2c;
   --primary-contrast: #ffffff;
-  --accent: #FFD700;
+  --accent: #ffd700;
   --focus: #22c55e;
-  --radius: 16px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   --container: 1200px;
-  --font-ui: "Montserrat", sans-serif;
+  --header-height: 70px;
+  --font-ui: "Inter", system-ui, -apple-system, sans-serif;
   --font-head: "Playfair Display", serif;
+  
+  /* Modern spacing system */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
 }
 
-/* Solo si quieres conservar #2E8B57 */
-button, .btn, .btn-primary, .btn-icon, 
-.cart-action {
-  color: #ffffff; /* en lugar de blanco */
+/* Modern reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.btn-outline {
-  /* Debe usar el color primario (verde) para el texto */
-  color: var(--primary) !important; 
+html {
+  scroll-behavior: smooth;
 }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Modern container */
+.container {
+  width: min(100% - 2rem, var(--container));
+  margin-inline: auto;
+}
+
+/* Modern header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-height);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: var(--space-6);
+}
+
+/* Modern buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: var(--primary-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Modern cards */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Modern grids */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Modern responsive breakpoints */
+@media (max-width: 1024px) {
+  .grid-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-3, .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-3, .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===================== RESET / BASE ===================== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -256,11 +384,10 @@ section.hero {
   height: 350px;
   border-radius: var(--radius-lg);
   background-color: var(--muted);
+  background-size: cover;
+  background-position: center;
   box-shadow: 0 10px 20px rgba(0,0,0,0.05);
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 @media (max-width: 768px) {
@@ -363,14 +490,14 @@ section.featured {
   aspect-ratio: 4/3;
   border-radius: 12px;
   border: 1px solid var(--border);
-  /* --- Esta sección es para el ProductCard.jsx --- */
-  /* Lo dejamos aquí por si se usa en otro lado, pero recuerda que ProductCard.jsx usa style= */
-  background: linear-gradient(180deg, color-mix(in oklab, var(--primary) 20%, transparent), transparent);
-  /* --- Propiedades para las imágenes de fondo de ProductCard.jsx --- */
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--muted);
+  overflow: hidden;
 }
 
+/* --- Esta sección es para el ProductCard.jsx --- */
 .card h3 {
   margin: .2rem 0;
   font-size: 1rem;
@@ -505,6 +632,8 @@ section.featured {
   list-style: none;
   padding: 0;
   margin: 20px 0;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 #cart-items li {
@@ -1753,7 +1882,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   gap: 0.1rem;
 }
 .facts-list dt {
-  font-weight: 700; /* <-- ¡AQUÍ ESTÁ LA NEGRITA! */
+  font-weight: 700; /* Fixed: removed extra 'font' */
   font-size: 1rem;
   color: var(--text); /* Color de texto normal */
 }

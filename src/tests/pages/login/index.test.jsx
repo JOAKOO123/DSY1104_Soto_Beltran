@@ -1,44 +1,26 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import LoginPage from '../../../pages/login';
+import { AuthContext } from '../../../context/AuthContext';
 
-// Mock para useNavigate
+const userParaExito = [{
+  id: 1,
+  nombre: 'Test User',
+  email: 'test@test.com',
+  password: 'password123'
+}];
+
 const mockNavigate = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
+const localStorageMock = {
+  // ...existing mock implementation...
+};
 
-// Mock para localStorage
-const localStorageMock = (() => {
-  let store = {};
-  return {
-    getItem: (key) => store[key] || null,
-    setItem: (key, value) => { store[key] = value.toString(); },
-    clear: () => { store = {}; },
-    removeItem: (key) => { delete store[key]; }
-  };
-})();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
-const renderLoginPage = () => render(
-  <MemoryRouter>
-    <Routes>
-      <Route path="/" element={<LoginPage />} />
-    </Routes>
-  </MemoryRouter>
-);
-
-describe('Page: LoginPage', () => {
+describe('LoginPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorageMock.clear();
-    const testUsers = [{ id: 1, nombre: 'Test User', email: 'test@test.com', password: 'password123' }];
-    localStorageMock.setItem('mitienda_users', JSON.stringify(testUsers));
+    localStorageMock.setItem('mitienda_users', JSON.stringify(userParaExito));
   });
 
   it('debería mostrar el formulario de login', () => {
@@ -54,7 +36,7 @@ describe('Page: LoginPage', () => {
     fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'wrong@test.com' } });
     fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'wrongpass' } });
     fireEvent.click(screen.getByRole('button', { name: /Ingresar/i }));
-    expect(await screen.findByText(/Email o contraseña incorrectos/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Credenciales incorrectas/i)).toBeInTheDocument();
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
@@ -64,14 +46,14 @@ describe('Page: LoginPage', () => {
     fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'password123' } });
     fireEvent.click(screen.getByRole('button', { name: /Ingresar/i }));
 
-    expect(await screen.findByText(/Inicio de sesión exitoso/i)).toBeInTheDocument();
-    
+    expect(await screen.findByText(/Inicio de sesión exitoso\. Redirigiendo\.\.\./i)).toBeInTheDocument();
+
     const loggedUser = JSON.parse(localStorageMock.getItem('mitienda_user'));
     expect(loggedUser).not.toBeNull();
     expect(loggedUser.email).toBe('test@test.com');
 
     await vi.waitFor(() => {
-       expect(mockNavigate).toHaveBeenCalledWith('/');
+      expect(mockNavigate).toHaveBeenCalledWith('/');
     }, { timeout: 1100 });
   });
 });
