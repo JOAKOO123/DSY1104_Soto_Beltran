@@ -13,9 +13,10 @@ import NosotrosPage from './pages/nosotros';    
 import ContactPage from './pages/contact';         
 import BlogsPage from './pages/blogs';         
 import BlogDetailPage from './pages/blog-detail'; 
-
-// ⬅️ 1. IMPORTAMOS EL NUEVO COMPONENTE DE CATEGORÍAS
 import CategoriesPage from './pages/categories'; 
+
+// 🚨 LÍNEA FALTANTE 1: IMPORTAR LA PÁGINA DE OFERTA
+import OfertaPage from './pages/oferta'; 
 
 const router = createBrowserRouter([
   {
@@ -26,9 +27,11 @@ const router = createBrowserRouter([
       { path: 'productos', element: <ProductsPage /> },
       { path: 'productos/:productCode', element: <ProductDetailPage /> },
       
-      // ⬅️ 2. AÑADIMOS LA RUTA DE CATEGORÍAS
-      { path: 'categorias', element: <CategoriesPage /> }, 
-      
+      { path: 'categorias', element: <CategoriesPage /> }, 
+      
+      // 🚨 LÍNEA FALTANTE 2: DEFINIR LA RUTA '/ofertas'
+      { path: 'ofertas', element: <OfertaPage /> },
+      
       { path: 'login', element: <LoginPage /> },           
       { path: 'registro', element: <RegisterPage /> },  
       { path: 'nosotros', element: <NosotrosPage /> },     

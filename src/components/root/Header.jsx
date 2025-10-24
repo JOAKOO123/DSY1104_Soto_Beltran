@@ -30,7 +30,7 @@ function Header({ totalCount = 0, onCartClick = () => {} }) {
             
             {/* ⬅️ ¡NUEVO ENLACE! */}
             <li><NavLink to="/categorias">Categorías</NavLink></li> 
-            
+            <li><NavLink to="/ofertas">Ofertas</NavLink></li>
             <li><NavLink to="/blogs">Blogs</NavLink></li>
             <li><NavLink to="/nosotros">Nosotros</NavLink></li>
             <li><NavLink to="/contacto">Contacto</NavLink></li>

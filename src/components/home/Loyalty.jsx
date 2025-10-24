@@ -37,8 +37,8 @@ function Loyalty() {
                 </>
               ) : (
                 <>
-                  <a className="btn-primary" href="/registro">Crear cuenta</a>
-                  <a className="btn-outline" href="/login">Iniciar sesión</a>
+                  <a className="btn-icon" href="/registro">Crear cuenta</a>
+                 <a className="btn-icon" href="/login">Iniciar sesión</a>
                 </>
               )}
             </div>

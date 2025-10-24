@@ -17,11 +17,15 @@
 }
 
 /* Solo si quieres conservar #2E8B57 */
-button, .btn, .btn-primary, .btn-icon, .btn-outline,
-.producto button, .cart-action {
-  color: #000; /* en lugar de blanco */
+button, .btn, .btn-primary, .btn-icon, 
+.cart-action {
+  color: #ffffff; /* en lugar de blanco */
 }
 
+.btn-outline {
+  /* Debe usar el color primario (verde) para el texto */
+  color: var(--primary) !important; 
+}
 /* ===================== RESET / BASE ===================== */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -52,10 +56,7 @@ a {
   text-decoration: none;
 }
 
-.container {
-  width: min(100% - 2rem, var(--container));
-  margin-inline: auto;
-}
+
 
 :focus-visible {
   outline: 3px solid var(--focus);
@@ -1861,3 +1862,51 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
     width: 120px;
   }
 }
+/* src/styles.css */
+
+/* === SOLUCIÓN FINAL PARA CENTRADO Y ALTURA UNIFORME DE PRODUCTOS === */
+
+/* 1. Estabiliza la fila (row) para que sea flexible */
+.product-grid.row {
+    display: flex;
+    flex-wrap: wrap; 
+    /* Esta es la clave de Bootstrap. Aseguramos que la fila no tenga márgenes negativos que rompan el contenedor. */
+    margin-left: -15px; 
+    margin-right: -15px; 
+}
+
+/* 2. SOLUCIÓN CRÍTICA: Hace que la columna sea un contenedor Flexbox vertical.
+   Esto es ABSOLUTAMENTE necesario para que la clase 'h-100' funcione 
+   en la tarjeta del producto, ya que le da el 100% de la altura de la columna.
+   
+   IMPORTANTE: NO USAMOS 'align-items: center' aquí, ya que rompe la grilla.
+*/
+.product-grid .col-lg-3,
+.product-grid .col-md-4,
+.product-grid .col-sm-6 {
+    display: flex; 
+    flex-direction: column;
+}
+/* 3. Asegura que la tarjeta ocupe todo el espacio vertical y horizontal */
+.product-card.card.h-100 {
+    flex-grow: 1; 
+    width: 100%; 
+    position: relative; 
+}
+/* 4. Asegura que el contenido de la tarjeta esté centrado horizontalmente */
+.product-card .product-info {
+    text-align: center;
+}
+
+/* --- FIN SOLUCIÓN DEFINITIVA --- */
+
+/* Asegura que el texto sea blanco */
+.categoria-nombre-blanco {
+    color: white !important; /* Usamos !important para asegurar que anule cualquier estilo de Bootstrap/default. */
+}
+
+/* Opcional: Centra el texto si el contenedor aún no lo hace */
+.categoria-tarjeta-contenido {
+    text-align: center; 
+}
+
