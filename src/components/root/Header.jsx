@@ -1,20 +1,17 @@
 // src/components/root/Header.jsx
+
 import React from 'react';
-// 1. Importamos NavLink (para la navegación) y useCart (para el carrito)
+// 1. IMPORTANTE: Usamos Link y NavLink de React Router
 import { NavLink, Link } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
 
-// 2. Aceptamos la prop "onCartClick" que viene desde App.jsx
-function Header({ onCartClick }) {
-  
-  // 3. Obtenemos el contador de ítems del "cerebro" del carrito
-  const { totalCount } = useCart();
-
+// 2. Aceptamos totalCount y onCartClick como props para que sean dinámicos
+function Header({ totalCount = 0, onCartClick = () => {} }) {
   return (
     <header className="site-header">
       <div className="container nav-bar">
         
-        {/* 4. CORREGIDO: Usamos <Link> para el logo */}
+        {/* ======================= 1. LOGO / BRAND ======================= */}
+        {/* Usamos Link en lugar de <a> para navegar sin recargar la página */}
         <Link className="brand" to="/" aria-label="Ir al inicio">
           <img 
             src="/assets/LogoTienda/LogoHuertoHogar.png" 
@@ -24,33 +21,38 @@ function Header({ onCartClick }) {
           <span>HuertoHogar</span>
         </Link>
         
+        {/* ======================= 2. NAVEGACIÓN PRINCIPAL ======================= */}
         <nav className="primary-nav" aria-label="Principal">
           <ul className="menu">
-            {/* 5. CORREGIDO: Usamos <NavLink> para la navegación */}
+            {/* Usamos NavLink para aplicar la clase 'active' automáticamente */}
             <li><NavLink to="/">Inicio</NavLink></li>
             <li><NavLink to="/productos">Productos</NavLink></li>
+            
+            {/* ⬅️ ¡NUEVO ENLACE! */}
+            <li><NavLink to="/categorias">Categorías</NavLink></li> 
+            
             <li><NavLink to="/blogs">Blogs</NavLink></li>
             <li><NavLink to="/nosotros">Nosotros</NavLink></li>
             <li><NavLink to="/contacto">Contacto</NavLink></li>
+            {/* Agrega aquí cualquier otro enlace como /ofertas o /comprar si lo necesitas */}
           </ul>
         </nav>
-
+        
+        {/* ======================= 3. ACCIONES ======================= */}
         <div className="actions">
-          {/* 6. ACTUALIZADO: Conectamos el botón del carrito */}
+          {/* Botón Carrito - Ahora usa la prop onCartClick */}
           <button 
             className="btn-icon" 
             type="button" 
             aria-label="Abrir carrito"
-            onClick={onCartClick} // <-- Llama a la función para abrir el panel
+            onClick={onCartClick} 
           >
-            🛒 
-            <span className="badge" aria-live="polite">
-              {totalCount} {/* <-- Muestra el contador real */}
-            </span>
+            {/* Usa la prop totalCount */}
+            🛒 <span className="badge">{totalCount}</span>
           </button>
           
+          {/* Botones Cuenta - Usamos NavLink */}
           <div className="account-buttons">
-            {/* 7. CORREGIDO: Usamos <NavLink> para login/registro */}
             <NavLink to="/login">Iniciar sesión</NavLink>
             <span aria-hidden="true"> | </span>
             <NavLink to="/registro">Registrar usuario</NavLink>
