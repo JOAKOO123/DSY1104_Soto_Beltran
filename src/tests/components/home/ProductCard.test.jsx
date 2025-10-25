@@ -15,10 +15,10 @@ vi.mock('react-router-dom', async () => ({
 }));
 
 const testProductData = {
-  code: 'TEST001',
   nombre: 'Producto Test',
   precioCLP: 9990,
-  imagen: 'test.jpg'
+  imagen: 'test.jpg',
+  code: 'TEST001'
 };
 
 const renderProductCard = (user = null) => {
@@ -26,9 +26,9 @@ const renderProductCard = (user = null) => {
     <MemoryRouter>
       <AuthContext.Provider value={{ user, logout: vi.fn() }}>
         <CartContext.Provider value={{ addToCart: mockAddToCart }}>
-          <ProductCard
+          <ProductCard 
             name={testProductData.nombre}
-            price={`$${testProductData.precioCLP.toLocaleString('es-CL')}`}
+            price={`$${testProductData.precioCLP}`}
             image={testProductData.imagen}
             productData={testProductData}
           />
@@ -38,15 +38,26 @@ const renderProductCard = (user = null) => {
   );
 };
 
-describe('ProductCard', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+describe('Componente ProductCard', () => {
+  beforeEach(() => { vi.clearAllMocks(); });
+
+  it('debería mostrar nombre y precio', () => {
+    renderProductCard();
+    expect(screen.getByText('Producto Test')).toBeInTheDocument();
+    expect(screen.getByText('$9990')).toBeInTheDocument();
   });
 
   it('debería llamar a addToCart al agregar si hay usuario', () => {
-    renderProductCard({ nombre: 'Tester', email: 'test@test.com' });
+    renderProductCard({ nombre: 'Tester' });
     fireEvent.click(screen.getByRole('button', { name: /Agregar/i }));
     expect(mockAddToCart).toHaveBeenCalledTimes(1);
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('debería redirigir a /login al agregar si no hay usuario', () => {
+    renderProductCard(null);
+    fireEvent.click(screen.getByRole('button', { name: /Agregar/i }));
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
+    expect(mockAddToCart).not.toHaveBeenCalled();
   });
 });
