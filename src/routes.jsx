@@ -1,6 +1,7 @@
 // src/routes.jsx
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 import App from './App';
 
 // --- Páginas ---
@@ -43,7 +44,11 @@ const router = createBrowserRouter([
 ]);
 
 function AppRoutes() {
-  return <RouterProvider router={router} />;
+  return (
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
+  );
 }
 
 export default AppRoutes;

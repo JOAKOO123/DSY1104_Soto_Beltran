@@ -1,28 +1,63 @@
 // src/tests/components/home/ProductCard.test.jsx
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import ProductCard from '../../../components/home/ProductCard';
+import { AuthContext } from '../../../context/AuthContext';
+import { CartContext } from '../../../context/CartContext';
+
+const mockNavigate = vi.fn();
+const mockAddToCart = vi.fn();
+
+vi.mock('react-router-dom', async () => ({
+  ...(await vi.importActual('react-router-dom')),
+  useNavigate: () => mockNavigate,
+}));
+
+const testProductData = {
+  nombre: 'Producto Test',
+  precioCLP: 9990,
+  imagen: 'test.jpg',
+  code: 'TEST001'
+};
+
+const renderProductCard = (user = null) => {
+  return render(
+    <MemoryRouter>
+      <AuthContext.Provider value={{ user, logout: vi.fn() }}>
+        <CartContext.Provider value={{ addToCart: mockAddToCart }}>
+          <ProductCard 
+            name={testProductData.nombre}
+            price={`$${testProductData.precioCLP}`}
+            image={testProductData.imagen}
+            productData={testProductData}
+          />
+        </CartContext.Provider>
+      </AuthContext.Provider>
+    </MemoryRouter>
+  );
+};
 
 describe('Componente ProductCard', () => {
-  it('debería mostrar el nombre y el precio del producto', () => {
-    // 1. Usamos la estructura de datos real
-    const productData = {
-      nombre: 'Producto de Prueba',
-      precio: 9990,
-      image: 'test-image.png'
-    };
+  beforeEach(() => { vi.clearAllMocks(); });
 
-    // 2. Renderizamos el componente
-    render(
-      <ProductCard 
-        name={productData.nombre} 
-        price={`$${productData.precio}`} 
-        image={productData.image} 
-      />
-    );
-
-    // 3. Verificamos que los datos estén en el documento
-    expect(screen.getByText('Producto de Prueba')).toBeInTheDocument();
+  it('debería mostrar nombre y precio', () => {
+    renderProductCard();
+    expect(screen.getByText('Producto Test')).toBeInTheDocument();
     expect(screen.getByText('$9990')).toBeInTheDocument();
+  });
+
+  it('debería llamar a addToCart al agregar si hay usuario', () => {
+    renderProductCard({ nombre: 'Tester' });
+    fireEvent.click(screen.getByRole('button', { name: /Agregar/i }));
+    expect(mockAddToCart).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('debería redirigir a /login al agregar si no hay usuario', () => {
+    renderProductCard(null);
+    fireEvent.click(screen.getByRole('button', { name: /Agregar/i }));
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
+    expect(mockAddToCart).not.toHaveBeenCalled();
   });
 });

@@ -4,9 +4,7 @@ import React from 'react'; // <-- Ya no se necesita useState
     
 import Header from './components/root/Header';
 import Footer from './components/root/Footer';
-import { CartPanel } from './components/CartPanel';
-
-// --- 1. Importa el "cerebro" ---
+import { CartPanel } from './components/root/CartPanel'; // Fix import path
 import { useCart } from './context/CartContext'; 
 
 function App() {
