@@ -1,51 +1,47 @@
 // src/components/CartPanel.jsx
-// (¡ACTUALIZADO CON EL MODAL DENTRO DE ESTE MISMO ARCHIVO!)
-
-import React, { useState } from 'react'; // <-- 1. Importa useState
+import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-// (Ya no importamos ConfirmModal)
+import { Link } from 'react-router-dom'; // 1. Importamos Link
 
-export function CartPanel({ isOpen, onClose }) {
+export function CartPanel() {
+  // 2. Leemos TODO desde el context (incluyendo isOpen y closeCart)
   const { 
     cartItems, 
     totalPrice, 
     formatMoney, 
     updateQuantity,
     removeFromCart,
-    clearCart 
+    clearCart, // <-- Esta es la función que vacía SIN preguntar
+    isOpen,    // <-- Estado para mostrar/ocultar panel
+    closeCart  // <-- Función para cerrar panel
   } = useCart();
 
-  // 2. ¡Estado local para controlar el modal!
+  // Estado local SOLO para el modal de confirmación
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 3. Función que se llama cuando se confirma el borrado
   const handleConfirmClear = () => {
     clearCart(); // Llama al "cerebro" para borrar
     setIsModalOpen(false); // Cierra el modal
   };
 
   return (
-    // Usamos un Fragment <> para que el Panel y el Modal sean "hermanos"
     <>
       <aside id="cart-panel" className={`cart-panel ${isOpen ? 'active' : ''}`} aria-labelledby="cart-title">
         <h2 id="cart-title">Tu carrito</h2>
-
-        <div id="cart-feedback" className="cart-feedback" role="status" aria-live="polite">
-          {/* Cantidad actualizada. */}
-        </div>
 
         {cartItems.length === 0 ? (
           <p>Tu carrito está vacío.</p>
         ) : (
           <>
+            {/* 3. TU LISTA DE PRODUCTOS (con botones + / - / x) */}
             <ul id="cart-items" className="cart-items-new">
               {cartItems.map(item => (
                 <li key={item.code} className="cart-item-new">
-                  <img src={item.image} alt={item.name} className="cart-thumb" />
+                  <img src={item.image || '/assets/placeholder-64.png'} alt={item.name} className="cart-thumb" />
                   <div className="cart-item-details">
                     <span className="item-name">{item.name}</span>
                     <div className="qty-controls">
-                      <button type="button" className="qty-btn" onClick={() => updateQuantity(item.code, item.qty - 1)}>-</button>
+                      <button typeD="button" className="qty-btn" onClick={() => updateQuantity(item.code, item.qty - 1)}>-</button>
                       <span className="qty-text">{item.qty}</span>
                       <button type="button" className="qty-btn" onClick={() => updateQuantity(item.code, item.qty + 1)}>+</button>
                       <button type="button" className="qty-btn remove" onClick={() => removeFromCart(item.code)}>&times;</button>
@@ -59,29 +55,61 @@ export function CartPanel({ isOpen, onClose }) {
           </>
         )}
 
-        <div className="cart-actions-row">
-          {/* 4. ¡Botón actualizado! Ahora "abre el modal" */}
-          <button 
-            id="clear-cart" 
-            type="button" 
-            className="btn-primary"
-            onClick={() => setIsModalOpen(true)} // <-- CAMBIO CLAVE
-          >
-            Vaciar carrito
-          </button>
-          <button 
-            id="close-cart" 
-            type="button" 
-            className="btn-primary"
-            onClick={onClose}
-          >
-            Cerrar
-          </button>
+        {/* ---------------------------------------------------- */}
+        {/* 4. ÁREA DE ACCIONES (con el layout de la foto)      */}
+        {/* ---------------------------------------------------- */}
+        <div 
+          className="cart-actions-row"
+          // Empuja los botones al fondo del panel
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '0.5rem',
+            marginTop: 'auto' // <-- ¡CLAVE!
+          }}
+        >
+          {/* Fila superior: Vaciar y Cerrar (como en la foto) */}
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button 
+              id="clear-cart" 
+              type="button" 
+              className="btn-outline" // Botón blanco (como en la foto)
+              onClick={() => setIsModalOpen(true)} // Abre el modal
+              style={{ flex: 1 }}
+            >
+              Vaciar carrito
+            </button>
+            <button 
+              id="close-cart" 
+              type="button" 
+              className="btn-primary" // Botón verde (como en la foto)
+              onClick={closeCart} // Cierra el panel
+              style={{ flex: 1 }}
+            >
+              Cerrar
+            </button>
+          </div>
+
+          {/* Fila inferior: Comprar Ahora (ancho completo) */}
+          {cartItems.length > 0 && (
+            <Link 
+              to="/checkout"
+              className="btn-primary" 
+              onClick={closeCart}
+              style={{ 
+                textAlign: 'center', 
+                background: '#198754', // Verde
+                width: '100%',
+                padding: '10px 0' // Un poco más grande
+              }} 
+            >
+              Comprar ahora
+            </Link>
+          )}
         </div>
       </aside>
 
-      {/* --- 5. EL MODAL (PUESTO AQUÍ MISMO) --- */}
-      {/* Solo se muestra si 'isModalOpen' es true */}
+      {/* --- 5. EL MODAL (Sigue existiendo) --- */}
       {isModalOpen && (
         <div className="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
           <div className="modal-content" role="document">
@@ -89,32 +117,26 @@ export function CartPanel({ isOpen, onClose }) {
             <p id="confirm-desc">¿Seguro que deseas eliminar todos los productos del carrito?</p>
             
             <div className="modal-actions" style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-              
-              {/* Botón Vaciar (con el estilo blanco de tu foto) */}
               <button 
                 id="confirm-yes" 
                 className="btn btn-outline" 
                 type="button"
-                onClick={handleConfirmClear} // Llama a la función de confirmar
+                onClick={handleConfirmClear}
               >
                 Vaciar
               </button>
-              
-              {/* Botón Cancelar (con el estilo verde de tu foto) */}
               <button 
                 id="confirm-no" 
                 className="btn btn-primary"
                 type="button"
-                onClick={() => setIsModalOpen(false)} // Simplemente cierra el modal
+                onClick={() => setIsModalOpen(false)}
               >
                 Cancelar
               </button>
-
             </div>
           </div>
         </div>
       )}
-      {/* --- FIN DEL MODAL --- */}
     </>
   );
 }
