@@ -18,6 +18,10 @@ import CategoriesPage from './pages/categories';
 // 🚨 LÍNEA FALTANTE 1: IMPORTAR LA PÁGINA DE OFERTA
 import OfertaPage from './pages/oferta'; 
 
+import CheckoutPage from './pages/checkout';           // Figura 6
+import OrderConfirmationPage from './pages/order-confirmation'; // Figura 7 (Éxito)
+import PaymentErrorPage from './pages/payment-error';         // Figura 8 (Error)
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -31,6 +35,11 @@ const router = createBrowserRouter([
       
       // 🚨 LÍNEA FALTANTE 2: DEFINIR LA RUTA '/ofertas'
       { path: 'ofertas', element: <OfertaPage /> },
+
+      // 🚨 RUTAS DEL FLUJO DE COMPRAS (COMPRAR)
+      { path: 'checkout', element: <CheckoutPage /> }, 
+      { path: 'orden/exito/:orderId', element: <OrderConfirmationPage /> },
+      { path: 'orden/error/:orderId', element: <PaymentErrorPage /> },
       
       { path: 'login', element: <LoginPage /> },           
       { path: 'registro', element: <RegisterPage /> },  
