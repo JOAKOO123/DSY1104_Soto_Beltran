@@ -68,6 +68,11 @@ function Header({ onCartClick = () => {} }) {
           <div className="account-buttons">
             {user ? (
               <>
+                {user.role === 'admin' && (
+                  <Link to="/admin" style={{ marginRight: '10px', fontWeight: 'bold' }}>
+                    Admin
+                  </Link>
+                )}
                 <Link to="/perfil">Hola, {user.nombre || user.correo}</Link>
                 <span aria-hidden="true"> | </span>
                 <a href="#" onClick={handleLogout}>Cerrar sesión</a>

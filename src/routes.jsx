@@ -3,6 +3,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import App from './App';
+import ProtectedRoute from './components/root/ProtectedRoute';
 
 // --- Páginas ---
 import HomePage from './pages/home';
@@ -15,6 +16,14 @@ import ContactPage from './pages/contact';        
 import BlogsPage from './pages/blogs';         
 import BlogDetailPage from './pages/blog-detail'; 
 import CategoriesPage from './pages/categories'; 
+import AdminLayout from './pages/admin/AdminLayout';
+import DashboardPage from './pages/admin/DashboardPage';
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminNewProductPage from './pages/admin/AdminNewProductPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminReportsPage from './pages/admin/AdminReportsPage';
 
 // 🚨 LÍNEA FALTANTE 1: IMPORTAR LA PÁGINA DE OFERTA
 import OfertaPage from './pages/oferta'; 
@@ -50,6 +59,29 @@ const router = createBrowserRouter([
       { path: 'blogs/:blogId', element: <BlogDetailPage /> }, 
     ],
   },
+  {
+    path: '/admin',
+    element: <ProtectedRoute allowedRoles={["admin"]} />,
+    children: [
+      {
+        path: '',
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <DashboardPage /> },
+          { path: 'productos', element: <AdminProductsPage /> },
+          { path: 'usuarios', element: <AdminUsersPage /> },
+          { path: 'categorias', element: <AdminCategoriesPage /> },
+          { path: 'usuarios/nuevo', element: <h2>Nuevo Usuario Admin</h2> },
+          { path: 'usuarios/:email/editar', element: <h2>Editar Usuario</h2> },
+          { path: 'usuarios/:email/historial', element: <h2>Historial de Compras</h2> },
+          { path: 'reportes', element: <AdminReportsPage /> },
+          { path: 'perfil', element: <h2>Perfil de Administrador</h2> },
+          { path: 'productos/criticos', element: <h2>Productos Críticos</h2> },
+          { path: 'ordenes', element: <AdminOrdersPage /> },
+        ]
+      },
+    ],
+  },
 ]);
 
 function AppRoutes() {
