@@ -6,6 +6,7 @@ export const USUARIOS = [
     nombre: "Administrador",
     correo: "admin@duocuc.cl",
     password: "123456", 
+    role: "admin" // Add missing role for admin user
   },
   {
     id: 2,

@@ -7,10 +7,12 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 
-function Header({ onCartClick = () => {} }) {
+function Header({ onCartClick }) {
   const { user, logout } = useAuth();
   const isAdmin = user && user.role === 'admin';
-  const userLink = isAdmin ? '/admin' : '/perfil';
+  const linkDestination = isAdmin ? '/admin' : '/perfil';
+  const linkText = isAdmin ? 'ADMIN' : 'Mi Perfil';
+  const welcomeText = user ? `Hola, ${user.nombre}` : '';
   const { cartItems } = useCart();
   const navigate = useNavigate();
 
@@ -70,27 +72,46 @@ function Header({ onCartClick = () => {} }) {
           <div className="account-buttons">
             {user ? (
               <>
+                {!isAdmin && (
+                  <span style={{ marginRight: '10px', color: '#333' }}>
+                    {welcomeText}
+                  </span>
+                )}
                 <Link 
-                  to={userLink}
+                  to={linkDestination}
                   style={{ 
                     textDecoration: 'none',
                     color: 'white',
                     fontWeight: 'bold',
-                    background: isAdmin ? '#4CAF50' : '#007bff',
-                    padding: '5px 10px',
+                    padding: '8px 15px',
                     borderRadius: '4px',
+                    background: isAdmin ? '#4CAF50' : '#007bff',
                   }}
                 >
-                  Hola, {isAdmin ? 'Administrador' : user.nombre}
+                  {linkText}
                 </Link>
-                <span aria-hidden="true"> | </span>
-                <a href="#" onClick={handleLogout}>Cerrar sesión</a>
+                <button 
+                  onClick={logout}
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#dc3545', 
+                    cursor: 'pointer',
+                    marginLeft: '10px'
+                  }}
+                >
+                  Cerrar sesión
+                </button>
               </>
             ) : (
               <>
-                <Link to="/login">Iniciar sesión</Link>
-                <span aria-hidden="true"> | </span>
-                <Link to="/registro">Registrar usuario</Link>
+                <Link to="/login" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
+                  Iniciar sesión
+                </Link>
+                <span style={{ color: '#ccc', margin: '0 10px' }}> | </span>
+                <Link to="/registro" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
+                  Registrarse
+                </Link>
               </>
             )}
           </div>

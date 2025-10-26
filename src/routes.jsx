@@ -27,6 +27,7 @@ import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
 import OfertaPage from './pages/oferta'; 
+import UserProfilePage from './pages/UserProfilePage';
 
 import CheckoutPage from './pages/checkout';           // Figura 6
 import OrderConfirmationPage from './pages/order-confirmation'; // Figura 7 (Éxito)
@@ -57,28 +58,23 @@ const router = createBrowserRouter([
       { path: 'contacto', element: <ContactPage /> },  
       { path: 'blogs', element: <BlogsPage /> }, 
       { path: 'blogs/:blogId', element: <BlogDetailPage /> }, 
-      { path: 'perfil', element: <h2>Perfil de Usuario</h2> },
+      { path: 'perfil', element: <UserProfilePage /> },
    ],
   },
   {
     path: '/admin',
-    element: <AdminRouteGuard />,
+    element: <AdminLayout />,
     children: [
-      {
-        element: <AdminLayout />,
-        children: [
-          { index: true, element: <DashboardPage /> },
-          { path: 'productos', element: <AdminProductsPage /> },
-          { path: 'productos/nuevo', element: <AdminNewProductPage /> },
-          { path: 'categorias', element: <AdminCategoriesPage /> },
-          { path: 'usuarios', element: <AdminUsersPage /> },
-          { path: 'ordenes', element: <AdminOrdersPage /> },
-          { path: 'reportes', element: <AdminReportsPage /> },
-          { path: 'perfil', element: <h2>Perfil de Administrador</h2> },
-          { path: 'productos/criticos', element: <h2>Productos Críticos</h2> },
-        ]
-      }
-    ],
+      { index: true, element: <DashboardPage /> },
+      { path: 'productos', element: <AdminProductsPage /> },
+      { path: 'productos/nuevo', element: <AdminNewProductPage /> },
+      { path: 'categorias', element: <AdminCategoriesPage /> },
+      { path: 'usuarios', element: <AdminUsersPage /> },
+      { path: 'ordenes', element: <AdminOrdersPage /> },
+      { path: 'reportes', element: <AdminReportsPage /> },
+      { path: 'perfil', element: <h2>Perfil de Administrador</h2> },
+      { path: 'productos/criticos', element: <h2>Productos Críticos</h2> },
+    ]
   },
 ]);
 
