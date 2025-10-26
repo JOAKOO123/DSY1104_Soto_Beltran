@@ -7,7 +7,7 @@ const list = document.getElementById("blog-list");
 // Orden descendente por fecha
 const posts = [...POSTS].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// Utilidad para mostrar fecha legible
+// Utilidad para mostrar fecha legiblee
 const fmtDate = (iso) =>
   new Date(iso + "T00:00:00").toLocaleDateString("es-CL", {
     year: "numeric",
