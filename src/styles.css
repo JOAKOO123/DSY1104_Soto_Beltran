@@ -1,4 +1,4 @@
-/* Modern theme colors and variables */
+/* ===================== VARIABLES CSS ===================== */
 :root {
   --bg: #f8f9ff;
   --surface: #ffffff;
@@ -215,18 +215,17 @@ header.site-header {
 }
 
 .nav-bar {
-  /* ⬅️ CAMBIO 1: Cambiar de 'grid' a 'flex' */
+
   display: flex;
   
   /* Centra verticalmente */
   align-items: center; 
   
   /* Espacio entre los 3 bloques (Logo, Nav, Acciones) */
-  gap: 1.5rem; /* Aumentamos el gap para dar espacio */
+  gap: 1.5rem; 
   
   padding: .75rem 0;
   
-  /* IMPORTANTE: Quitar 'grid-template-columns' si estaba en el archivo original */
 }
 
 
@@ -442,7 +441,7 @@ section.categories {
   background-repeat: no-repeat;
 }
 
-/* --- RUTAS CORREGIDAS --- */
+
 .tile[data-cat="FR"] .icon {
   background-image: url("/assets/productos/frutas/manzana-fuji.jpg");
 }
@@ -497,7 +496,7 @@ section.featured {
   overflow: hidden;
 }
 
-/* --- Esta sección es para el ProductCard.jsx --- */
+/* --- ProductCard.jsx --- */
 .card h3 {
   margin: .2rem 0;
   font-size: 1rem;
@@ -1106,7 +1105,7 @@ button[disabled] {
   border-radius: 8px;
 }
 
-/* Prácticas / certificaciones */
+
 .cert-list {
   list-style: none;
   margin: 0;
@@ -1186,7 +1185,7 @@ button[disabled] {
   font-size: .95rem;
 }
 
-/* ===================== RATING ESTRELLAS (ÚNICA VERSIÓN) ===================== */
+/* ===================== RATING ESTRELLAS===================== */
 .rating-row {
   display: flex;
   align-items: center;
@@ -1441,7 +1440,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   margin: .25rem 0 .5rem;
 }
 
-/* === Botón "Ver caso" visible (verde) y compacto === */
+/* === Botón "Ver caso" === */
 .blog-info .cta-button {
   display: inline-flex;
   align-items: center;
@@ -1454,7 +1453,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   font-weight: 700;
   cursor: pointer;
   width: auto;
-  /* evita que se estire al 100% */
+  
 }
 
 .blog-info .cta-button:hover {
@@ -1483,7 +1482,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   width: 100%;
   height: 240px;
   object-fit: cover;
-  /* recorte agradable */
+ 
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
@@ -1524,7 +1523,6 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   padding-block: 1.25rem 2rem;
 }
 
-/* Hero centrado con logo + título */
 .about-hero {
   display: grid;
   justify-items: center;
@@ -1564,7 +1562,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* 2 columnas */
+ 
   gap: .9rem;
 }
 
@@ -1714,7 +1712,6 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 }
 
 /* ===== Paginación ===== */
-/* Paginación: que se vea el número en estado normal */
 .pager button {
   background: var(--surface) !important;
   color: var(--text) !important;
@@ -1743,11 +1740,8 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 }
 
 
-
-/* Pega esto al final de src/styles.css */
-
 .blog-detail-meta {
-  display: flex; /* <-- Esto junta la fecha y el tiempo de lectura */
+  display: flex; 
   justify-content: center;
   align-items: center;
   margin-top: -1rem;
@@ -1757,7 +1751,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 }
 
 .blog-detail-nav {
-  display: flex; /* <-- Esto alinea los botones de abajo */
+  display: flex; 
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
@@ -1767,7 +1761,6 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 }
 
 /* ===================== CARRITO (Estilos del Diseño Nuevo) ===================== */
-/* Borra el CSS anterior de .cart-panel #cart-items si choca */
 
 .cart-panel #cart-items {
   list-style: none;
@@ -1777,7 +1770,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   overflow-y: auto;
 }
 
-/* El nuevo layout de la fila del producto */
+
 .cart-item-new {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -1806,7 +1799,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   line-height: 1.2;
 }
 
-/* Los nuevos botones [-] 3 [+] [X] */
+/*  botones [-] 3 [+] [X] */
 .qty-controls {
   display: flex;
   align-items: center;
@@ -1827,8 +1820,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   margin-bottom: .5rem;
 }
 
-
-/* ¡ESTA ES LA REGLA CORREGIDA! (Botones verdes) */
+/
 .qty-btn {
   display: grid;
   place-items: center;
@@ -1845,7 +1837,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   transition: background .2s ease;
 }
 .qty-btn:hover {
-  background: var(--primary-600); /* Verde más oscuro al pasar el mouse */
+  background: var(--primary-600); 
   border-color: var(--primary-600);
 }
 
@@ -1853,7 +1845,6 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   margin-left: .25rem;
   font-size: 100;
 }
-/* (El botón de remover ahora también es verde, igual que en tu foto) */
 
 .qty-text {
   font-weight: 600;
@@ -1861,17 +1852,17 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   text-align: center;
 }
 
-/* ... (El resto de las clases quedan igual) ... */
+
 
 /* --- CSS para Product Detail (Página de Detalle) --- */
-/* (Pega esto en tu src/styles.css) */
 
-/* --- ESTE ES EL NUEVO CÓDIGO (reemplaza a .facts-table) --- */
-/* Nueva lista de "Hechos" (Origen, Stock...) */
+
+
+
 .facts-list {
   display: grid;
-  grid-template-columns: 1fr; /* ¡UNA columna! */
-  gap: 0.75rem; /* Espacio entre filas */
+  grid-template-columns: 1fr; 
+  gap: 0.75rem;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding-block: 1rem;
@@ -1882,9 +1873,9 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   gap: 0.1rem;
 }
 .facts-list dt {
-  font-weight: 700; /* Fixed: removed extra 'font' */
+  font-weight: 700; 
   font-size: 1rem;
-  color: var(--text); /* Color de texto normal */
+  color: var(--text); 
 }
 .facts-list dd {
   margin: 0;
@@ -1895,9 +1886,9 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   color: var(--primary);
   text-decoration: underline;
 }
-/* --- FIN DEL CÓDIGO NUEVO --- */
 
-/* (El resto de tus clases .add-to-cart-row, etc., déjalas como están) */
+
+
 
 /* ===================== VISTA DE CATEGORÍAS (NEW FEATURE) ===================== */
 
@@ -1910,9 +1901,9 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   flex-wrap: wrap; /* Permite que salten de línea en móvil */
 }
 
-/* Estilo de cada tile (tarjeta de Categoría 1, 2, 3, 4) */
+
 .tile-card {
-  /* Establece un ancho máximo para que no se estiren demasiado */
+  
   width: 150px; 
   padding: 15px;
   text-align: center;
@@ -1939,7 +1930,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 
 .placeholder-image.small {
   width: 100px;
-  height: 100px; /* Como se muestra en la propuesta */
+  height: 100px; 
   margin: 0 auto 10px auto;
 }
 
@@ -1962,7 +1953,7 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 
 /* Estilo de cada producto */
 .product-card {
-  /* Estilos de la tarjeta de producto si los tienes, o simple borde */
+  
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 10px;
@@ -1977,12 +1968,12 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 /* Media query simple para responsividad */
 @media (max-width: 900px) {
   .product-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet */
+    grid-template-columns: repeat(2, 1fr); 
   }
 }
 @media (max-width: 550px) {
   .product-grid {
-    grid-template-columns: 1fr; /* 1 columna en móvil */
+    grid-template-columns: 1fr; 
   }
   .category-tiles {
     gap: 10px;
@@ -1993,23 +1984,19 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 }
 /* src/styles.css */
 
-/* === SOLUCIÓN FINAL PARA CENTRADO Y ALTURA UNIFORME DE PRODUCTOS === */
 
-/* 1. Estabiliza la fila (row) para que sea flexible */
+/* --- INICIO SOLUCIÓN DEFINITIVA PARA CENTRAR TARJETAS EN GRILLA BOOTSTRAP --- */
 .product-grid.row {
     display: flex;
     flex-wrap: wrap; 
-    /* Esta es la clave de Bootstrap. Aseguramos que la fila no tenga márgenes negativos que rompan el contenedor. */
+    
     margin-left: -15px; 
     margin-right: -15px; 
 }
 
-/* 2. SOLUCIÓN CRÍTICA: Hace que la columna sea un contenedor Flexbox vertical.
-   Esto es ABSOLUTAMENTE necesario para que la clase 'h-100' funcione 
-   en la tarjeta del producto, ya que le da el 100% de la altura de la columna.
+
    
-   IMPORTANTE: NO USAMOS 'align-items: center' aquí, ya que rompe la grilla.
-*/
+
 .product-grid .col-lg-3,
 .product-grid .col-md-4,
 .product-grid .col-sm-6 {
@@ -2031,13 +2018,12 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
 
 /* Asegura que el texto sea blanco */
 .categoria-nombre-blanco {
-    color: white !important; /* Usamos !important para asegurar que anule cualquier estilo de Bootstrap/default. */
+    color: white !important; 
 }
 
-/* Opcional: Centra el texto si el contenedor aún no lo hace */
+
 .categoria-tarjeta-contenido {
     text-align: center; 
 }
-
 
 
