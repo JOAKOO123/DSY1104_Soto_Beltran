@@ -24,8 +24,10 @@ export function CartPanel({ isOpen, onClose }) {
   };
 
   const handleCheckout = () => {
-    onClose();
-    navigate('/checkout');
+    if (cartItems.length > 0) {
+      onClose();
+      navigate('/checkout');
+    }
   };
 
   const handleAddToCart = (product) => {

@@ -11,12 +11,9 @@ function ProductCard({ name, price, image, productData }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    if (!user || !user.correo) {
-      console.log('Usuario no autenticado, redirigiendo a login.');
+    const success = addToCart(productData);
+    if (!success) {
       navigate('/login');
-    } else {
-      console.log(`Producto ${productData.nombre} añadido al carrito`);
-      addToCart(productData);
     }
   };
 
