@@ -11,7 +11,7 @@ export const ORDENES = [
       { nombre: "Set de Hierbas", cantidad: 1, precioUnitario: 30000 },
     ],
   },
-  // ...more orders...
+  
 ];
 
 export const REPORTES_RESUMEN = {

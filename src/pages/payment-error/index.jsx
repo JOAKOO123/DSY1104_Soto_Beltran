@@ -22,8 +22,8 @@ function PaymentErrorPage() {
                     VOLVER A REALIZAR EL PAGO
                 </button>
 
-                {/* Aquí mostrarías el formulario pre-cargado (como en tu Figura 8) */}
-                {/* Por simplicidad, solo mostraremos el mensaje de error. */}
+                {}
+                {}
                 <p>Por favor, revisa tus datos de pago e inténtalo nuevamente.</p>
             </div>
         </div>

@@ -1,7 +1,7 @@
 // src/pages/categories/index.jsx
 
 import React from 'react';
-// ⬅️ Importamos todo desde el archivo de productos (incluyendo las categorías)
+
 import { 
     PRODUCTS_HH, 
     CATEGORY_TILES, 
@@ -32,7 +32,7 @@ const CategoriesPage = () => {
               <article key={category.id} className="tile-card">
                 
                 <div className="placeholder-image small">
-                    {/* Puedes usar una imagen real de tu objeto category aquí */}
+                    {}
                     <span style={{ fontSize: '0.8rem' }}>{category.name.substring(0, 3)} Icon</span> 
                 </div>
                 <h3 className="category-name">{category.name}</h3>

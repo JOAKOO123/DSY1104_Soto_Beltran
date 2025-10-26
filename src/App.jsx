@@ -1,14 +1,14 @@
 // src/App.jsx
 import { Outlet } from 'react-router-dom';
-import React from 'react'; // <-- Ya no se necesita useState
+import React from 'react'; 
     
 import Header from './components/root/Header';
 import Footer from './components/root/Footer';
-import { CartPanel } from './components/root/CartPanel'; // Fix import path
+import { CartPanel } from './components/root/CartPanel'; 
 import { useCart } from './context/CartContext'; 
 
 function App() {
-  // --- 2. Saca el estado y las funciones del "cerebro" ---
+  
   const { isOpen, openCart, closeCart } = useCart();
 
   return (

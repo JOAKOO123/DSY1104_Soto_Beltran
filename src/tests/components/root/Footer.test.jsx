@@ -5,7 +5,7 @@ import Footer from '../../../components/root/Footer';
 describe('Componente Footer', () => {
   it('debería mostrar el título "HuertoHogar" en el footer', () => {
     render(<Footer />);
-    // Buscamos específicamente el h4 que contiene el nombre
+      
     const brandTitle = screen.getByRole('heading', { level: 4, name: 'HuertoHogar' });
     expect(brandTitle).toBeInTheDocument();
   });

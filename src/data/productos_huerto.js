@@ -8,7 +8,7 @@ export const CATEGORY_DETAILS = {
         name: "Frutas", 
         description: "Frescas, jugosas y ricas en vitaminas.", 
         imageUrl: "/assets/productos/frutas/manzana-fuji.jpg",
-        // >>> NUEVOS CAMPOS DE ESTILO SUGERIDOS <<<
+    
         textColor: "white",
         alignment: "center"
     },
@@ -16,7 +16,7 @@ export const CATEGORY_DETAILS = {
         name: "Verduras", 
         description: "Orgánicas y esenciales para una dieta equilibrada.", 
         imageUrl: "/assets/productos/verduras/zanahoria-organica.jpg",
-        // >>> NUEVOS CAMPOS DE ESTILO SUGERIDOS <<<
+        
         textColor: "white",
         alignment: "center"
     },
@@ -24,7 +24,7 @@ export const CATEGORY_DETAILS = {
         name: "Productos Orgánicos", 
         description: "Alimentos procesados y granos con certificación orgánica.", 
         imageUrl: "/assets/productos/productos-organicos/miel-organica.jpg",
-        // >>> NUEVOS CAMPOS DE ESTILO SUGERIDOS <<<
+        
         textColor: "white",
         alignment: "center"
     },
@@ -32,7 +32,7 @@ export const CATEGORY_DETAILS = {
         name: "Lácteos y Derivados", 
         description: "Leche, yogur y quesos frescos de producción local.", 
         imageUrl: "/assets/productos/lacteos/leche-entera.jpg",
-        // >>> NUEVOS CAMPOS DE ESTILO SUGERIDOS <<<
+        
         textColor: "white",
         alignment: "center"
     },
@@ -44,7 +44,7 @@ export const CATEGORY_TILES = Object.keys(CATEGORY_DETAILS).map(key => ({
 }));
 
 // ====================================================================
-// --- 2. PRODUCTOS (DATOS SIMULADOS) --- (MANTENIDO SIN CAMBIOS ADICIONALES)
+// --- 2. PRODUCTOS (DATOS SIMULADOS) --- 
 // ====================================================================
 export const PRODUCTS_HH = [
     // ================== FRUTAS (FR) ==================
@@ -407,11 +407,11 @@ export const PRODUCTS_HH = [
 ];
 
 // ====================================================================
-// --- 3. FUNCIONES CRUD PARA LECTURA (READ) --- (MANTENIDO SIN CAMBIOS)
+// --- 3. FUNCIONES CRUD PARA LECTURA (READ) --- 
 // ====================================================================
 
 /**
- * Filtra y devuelve todos los productos que tienen la propiedad isOffer: true.
+ * Obtiene la lista de productos que están en oferta.
  * @returns {Array} Lista de productos en oferta.
  */
 export const getProductsInOffer = () => {
@@ -419,4 +419,3 @@ export const getProductsInOffer = () => {
     return PRODUCTS_HH.filter(product => product.isOffer === true);
 };
 
-// ... Otras funciones CRUD (si existen) ...

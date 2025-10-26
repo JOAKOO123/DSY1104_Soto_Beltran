@@ -87,8 +87,8 @@ function ProductsPage() {
         <ProductGrid 
           products={paginatedProducts} 
           totalFiltered={filteredProducts.length}
-          onAddToCart={addToCart}     // <-- ¡Le pasamos la función de añadir!
-          formatMoney={formatMoney} // <-- ¡Le pasamos tu helper de dinero!
+          onAddToCart={addToCart}     
+          formatMoney={formatMoney} 
         /> 
       </div>
 

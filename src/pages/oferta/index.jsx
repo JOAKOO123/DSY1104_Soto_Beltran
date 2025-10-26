@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// ⚠️ REVISA ESTAS IMPORTACIONES: 
-// Asegúrate que tu ruta a la función de datos y al contexto sean correctas.
+
 import { getProductsInOffer } from '../../data/productos_huerto'; 
 import { useCart } from '../../context/CartContext'; 
 
@@ -18,17 +17,17 @@ const OfertaPage = () => {
         let sortedData = [...data];
 
         if (criterion === 'price-asc') {
-            // Ordenar por precio de oferta ascendente (asume 'offerPriceCLP')
+            
             sortedData.sort((a, b) => a.offerPriceCLP - b.offerPriceCLP);
         } else if (criterion === 'price-desc') {
-            // Ordenar por precio de oferta descendente
+            
             sortedData.sort((a, b) => b.offerPriceCLP - a.offerPriceCLP);
         } else if (criterion === 'discount') {
-             // Ordenar por descuento: (Precio CLP - OfferPriceCLP)
+             
             sortedData.sort((a, b) => {
                 const discountA = a.precioCLP - a.offerPriceCLP;
                 const discountB = b.precioCLP - b.offerPriceCLP;
-                return discountB - discountA; // Mayor descuento primero
+                return discountB - discountA; 
             });
         }
         return sortedData;
@@ -51,7 +50,7 @@ const OfertaPage = () => {
     };
 
     const handleAddToCart = (product) => {
-        // Implementación de la función del contexto para el requisito de flujo de compra
+        
         addToCart(product); 
         console.log(`Producto ${product.nombre} añadido al carrito.`);
     };
@@ -62,7 +61,7 @@ const OfertaPage = () => {
             <h1 className="mb-4 text-center fw-bold">¡Grandes Ofertas Semanales!</h1>
             <p className="lead text-center mb-5">Aprovecha los mejores descuentos en productos frescos y orgánicos.</p>
 
-            {/* SECCIÓN DE ORDENACIÓN (Interactividad Mejorada) */}
+            {/* --- REQUISITO DE INTERACTIVIDAD MEJORADA: FILTRO DE ORDENACIÓN --- */}
             <div className="d-flex justify-content-end align-items-center mb-4">
                 <label htmlFor="sort" className="me-2 text-muted fw-bold">Ordenar por:</label>
                 <select 
@@ -84,17 +83,17 @@ const OfertaPage = () => {
                     En este momento no hay ofertas disponibles. Vuelve pronto!
                 </div>
             ) : (
-                // Usamos la clase 'product-grid row' para aplicar la estabilidad del CSS global
+                
                 <section className="product-grid row"> 
-                    {/* Iteramos sobre las ofertas clasificadas */}
+                    {}
                     {offers.map(product => (
                         <div key={product.code} className="col-lg-3 col-md-6 mb-4">
                             
-                            {/* Card: d-flex flex-column y h-100 son CLAVE para uniformidad de altura */}
+                            {}
                             <article className="card h-100 shadow-sm d-flex flex-column position-relative">
                                 
-                                {/* Badge de Descuento (Si quieres mostrar el porcentaje) */}
-                                {/* Este cálculo asume que precioCLP es el precio original */}
+                                {}
+                                {}
                                 {(product.precioCLP && product.offerPriceCLP) && (
                                     <span className="badge bg-danger position-absolute top-0 end-0 m-2">
                                         -{Math.round(((product.precioCLP - product.offerPriceCLP) / product.precioCLP) * 100)}%
@@ -111,8 +110,8 @@ const OfertaPage = () => {
                                     />
                                 </div>
                                 
-                                {/* Contenido de la Tarjeta */}
-                                {/* Usamos d-flex flex-column justify-content-end para empujar el contenido hacia abajo */}
+                                {}
+                                {}
                                 <div className="card-body text-center d-flex flex-column justify-content-end" style={{ flexGrow: 1 }}>
                                     <h5 className="card-title fw-bold">{product.nombre}</h5>
                                     

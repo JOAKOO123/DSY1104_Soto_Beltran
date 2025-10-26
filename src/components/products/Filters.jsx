@@ -1,6 +1,6 @@
 // src/components/products/Filters.jsx
 
-// Definimos las categorías (podrían venir de otro lado en el futuro)
+
 const categories = [
   { id: 'FR', name: 'Frutas' },
   { id: 'VR', name: 'Verduras' },
@@ -8,13 +8,13 @@ const categories = [
   { id: 'PL', name: 'Lácteos' },
 ];
 
-// Recibe props desde ProductsPage
+
 function Filters({ searchTerm, selectedCategory, onSearchChange, onCategoryChange }) {
   return (
     <aside className="filters">
       <h2>Filtros</h2>
       
-      {/* --- Input de Búsqueda Controlado --- */}
+      {}
       <div className="filter-group filter-search">
         <label htmlFor="search" className="sr-only">Buscar por nombre:</label>
         <input 
@@ -37,7 +37,7 @@ function Filters({ searchTerm, selectedCategory, onSearchChange, onCategoryChang
           >
             Todas
           </button>
-          {/* Mapeamos las categorías para crear los botones */}
+          {}
           {categories.map(cat => (
             <button 
               key={cat.id}

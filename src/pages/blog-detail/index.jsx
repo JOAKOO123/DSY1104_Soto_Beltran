@@ -1,5 +1,4 @@
 // src/pages/blog-detail/index.jsx
-// (¡ESTE ES EL CÓDIGO FINAL Y COMPLETO!)
 
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
@@ -31,7 +30,6 @@ function BlogDetailPage() {
     );
   }
 
-  // --- Esta es la plantilla definitiva ---
   return (
     <main className="container" id="contenido" style={{ padding: '1rem 0 2rem' }}>
       
@@ -65,7 +63,7 @@ function BlogDetailPage() {
         dangerouslySetInnerHTML={{ __html: post.content }} 
       />
 
-      {/* --- NAVEGACIÓN (¡LA PARTE CORREGIDA!) --- */}
+      {/* --- NAVEGACIÓN  --- */}
       <nav className="blog-detail-nav">
         
         {/* Botón "Volver" (Usa "cta-button" para el estilo blanco) */}

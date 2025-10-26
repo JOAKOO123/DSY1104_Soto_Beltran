@@ -30,7 +30,7 @@ const CategoriesPage = () => {
             {/* SECCIÓN SUPERIOR: Tiles de Categorías (Centrado con Flexbox forzado) */}
             {/* ---------------------------------------------------- */}
             
-            {/* ⬅️ CORRECCIÓN DE CENTRADO: Aplicamos estilos Flexbox directamente */}
+            {}
             <section 
                 className="category-tiles" 
                 style={{ 
@@ -42,7 +42,7 @@ const CategoriesPage = () => {
                 }}
             >
               {CATEGORY_TILES.map(category => ( 
-                    // No usamos 'col' de Bootstrap aquí, solo la tarjeta
+                    
                         <article 
                             key={category.id} 
                             className={`tile-card border rounded shadow-sm p-3 text-center cursor-pointer ${category.id === activeCategoryId ? 'is-active border-success border-3' : 'bg-white'}`}
@@ -50,7 +50,7 @@ const CategoriesPage = () => {
                             style={{ 
                                 width: '150px', 
                                 height: '180px',
-                                // Estilos para que el tile se vea bien
+                                
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
@@ -59,7 +59,7 @@ const CategoriesPage = () => {
                             }}
                         >
                             
-                            {/* IMAGEN DEL TILE (100x100) */}
+                            {}
                             <div style={{ width: '100px', height: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '8px' }}>
                                 <img 
                                     src={category.imageUrl} 
@@ -72,7 +72,7 @@ const CategoriesPage = () => {
                                 />
                             </div>
                             
-                            {/* Nombre de la Categoría */}
+                            {}
                             <h3 className="category-name" style={{ fontSize: '1rem', fontWeight: 'bold', margin: '0' }}>
                                 {category.name}
                             </h3>
@@ -91,10 +91,10 @@ const CategoriesPage = () => {
         
             <h2 className="current-category-title my-4" style={{ fontWeight: 'bold' }}>{currentCategory.name}</h2>
         
-            {/* Grid de Productos - Mantenemos la estructura de Bootstrap para la grilla */}
+            {}
             <section className="product-grid row">
               {productsInCurrentCategory.map(product => (
-                    // Columna responsiva para mostrar 4 productos por fila en pantallas grandes
+                    
                   <div key={product.code} className="col-lg-3 col-md-4 col-sm-6 mb-4">
                         <article className="product-card card h-100 shadow-sm">
                             
@@ -109,7 +109,7 @@ const CategoriesPage = () => {
                             </div>
                             
                             <div className="product-info card-body text-center">
-                                {/* ⬅️ CORRECCIÓN DE NEGRITA FORZADA: Usamos estilo inline */}
+                                {}
                                 <p 
                                     className="product-name fw-bold mb-1" 
                                     style={{ fontWeight: 'bold' }} 

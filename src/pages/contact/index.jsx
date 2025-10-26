@@ -90,7 +90,7 @@ function ContactPage() {
       return; 
     }
 
-    // ✅ EXTRA: el correo debe existir en la lista de usuarios
+    // ——— Verificación en "base de datos" (USUARIOS) ———
     const existe = Array.isArray(USUARIOS) && USUARIOS.some(
       u => String(u.correo || '').toLowerCase() === em
     );

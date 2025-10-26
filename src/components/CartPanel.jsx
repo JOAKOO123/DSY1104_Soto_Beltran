@@ -1,10 +1,10 @@
 // src/components/CartPanel.jsx
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom'; // 1. Importamos Link
+import { Link } from 'react-router-dom'; 
 
 export function CartPanel() {
-  // 2. Leemos TODO desde el context (incluyendo isOpen y closeCart)
+  
   const { 
     cartItems, 
     totalPrice, 
@@ -20,8 +20,8 @@ export function CartPanel() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleConfirmClear = () => {
-    clearCart(); // Llama al "cerebro" para borrar
-    setIsModalOpen(false); // Cierra el modal
+    clearCart(); 
+    setIsModalOpen(false); 
   };
 
   return (
@@ -65,7 +65,7 @@ export function CartPanel() {
             display: 'flex', 
             flexDirection: 'column', 
             gap: '0.5rem',
-            marginTop: 'auto' // <-- ¡CLAVE!
+            marginTop: 'auto' 
           }}
         >
           {/* Fila superior: Vaciar y Cerrar (como en la foto) */}
@@ -90,7 +90,7 @@ export function CartPanel() {
             </button>
           </div>
 
-          {/* Fila inferior: Comprar Ahora (ancho completo) */}
+          {}
           {cartItems.length > 0 && (
             <Link 
               to="/checkout"
@@ -98,9 +98,9 @@ export function CartPanel() {
               onClick={closeCart}
               style={{ 
                 textAlign: 'center', 
-                background: '#198754', // Verde
+                background: '#198754', 
                 width: '100%',
-                padding: '10px 0' // Un poco más grande
+                padding: '10px 0' 
               }} 
             >
               Comprar ahora
@@ -109,7 +109,7 @@ export function CartPanel() {
         </div>
       </aside>
 
-      {/* --- 5. EL MODAL (Sigue existiendo) --- */}
+      {}
       {isModalOpen && (
         <div className="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
           <div className="modal-content" role="document">

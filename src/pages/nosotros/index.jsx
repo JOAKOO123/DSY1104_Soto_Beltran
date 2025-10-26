@@ -3,14 +3,14 @@
 import React from 'react';
 
 // --- 1. IMPORTACIONES PARA EL MAPA ---
-// (Esto necesita que hayas hecho "npm install react-leaflet leaflet")
+
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-// --- Fin de importaciones ---
 
 
-// --- 2. CONFIGURACIÓN DEL MAPA (MANUAL) ---
-// (¡Aquí están tus 7 puntos de presencia "a mano"!)
+
+// --- 2. CONFIGURACIÓN DEL m,apa ---
+
 const puntosDePresencia = [
   { id: 1, nombre: 'Santiago', coords: [-33.45694, -70.64827] },
   { id: 2, nombre: 'Valparaíso', coords: [-33.0458, -71.6197] },
@@ -23,7 +23,6 @@ const puntosDePresencia = [
 
 // Centramos el mapa un poco más al sur para que se vean todos
 const mapCenter = [-38.45694, -72.64827];
-// --- Fin de configuración ---
 
 
 function NosotrosPage() {

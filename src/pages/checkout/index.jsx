@@ -72,7 +72,7 @@ function CheckoutPage() {
 
         if (paymentSuccess) {
             
-            // ¡Levantamos la bandera!
+            
             setIsNavigating(true);
 
             // Guardamos los datos
@@ -89,7 +89,7 @@ function CheckoutPage() {
                 console.error("Error guardando orden en sessionStorage", err);
             }
 
-            // Ya no vaciamos el carrito aquí
+            
             navigate(`/orden/exito/${orderId}`);
         } else {
             navigate(`/orden/error/${orderId}`);
@@ -101,11 +101,11 @@ function CheckoutPage() {
         return <Navigate to="/productos" replace />;
     }
 
-    // --- 🚨 AQUÍ ESTÁ EL JSX COMPLETO Y CORREGIDO 🚨 ---
+    
     return (
         <div className="container" style={{ padding: '2rem' }}>
             
-            {/* Este DIV es el contenedor del grid */}
+            {}
             <div 
                 className="checkout-grid" 
                 style={{ 
@@ -258,7 +258,7 @@ function CheckoutPage() {
                     </div>
                 </aside>
 
-            </div> {/* Fin del .checkout-grid */}
+            </div> {}
         </div>
     );
 }

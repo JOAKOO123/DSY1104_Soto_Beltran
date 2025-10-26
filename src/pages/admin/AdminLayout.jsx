@@ -22,7 +22,7 @@ function AdminLayout() {
       display: 'flex', 
       flexDirection: 'column', 
       minHeight: '100vh',
-      backgroundColor: '#f5f5f5' // Add light gray background
+      backgroundColor: '#f5f5f5' 
     }}>
       <Header onCartClick={openCart} />
       
@@ -30,12 +30,12 @@ function AdminLayout() {
         display: 'flex', 
         flex: 1, 
         paddingTop: '60px',
-        paddingBottom: '2rem' // Add some bottom padding
+        paddingBottom: '2rem' 
       }}>
         <aside style={{ 
           width: '250px', 
-          background: '#343a40', // Dark background
-          color: 'white',      // White text
+          background: '#343a40', 
+          color: 'white',      
           padding: '15px', 
           flexShrink: 0,
           borderRadius: '8px',
@@ -67,7 +67,7 @@ function AdminLayout() {
           marginTop: '20px',
           marginLeft: '20px',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          color: '#000000' // Add black text color
+          color: '#000000' 
         }}>
           <Outlet />
         </main>

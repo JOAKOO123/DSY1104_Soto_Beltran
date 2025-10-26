@@ -1,7 +1,7 @@
 // src/pages/order-confirmation/index.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { useCart } from '../../context/CartContext'; // 1. Importa useCart
+import { useCart } from '../../context/CartContext'; 
 
 // Ponemos el formateador de dinero aquí
 const formatMoney = (n) => new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(n);
@@ -17,7 +17,7 @@ function OrderConfirmationPage() {
     useEffect(() => {
         try {
             const data = JSON.parse(sessionStorage.getItem('lastOrderDetails'));
-            // Verificamos que la orden guardada coincida con la URL
+            
             if (data && data.orderId === orderId) {
                 setOrderData(data);
                 
@@ -28,7 +28,7 @@ function OrderConfirmationPage() {
             console.error("Error leyendo orden desde sessionStorage", err);
         }
         setLoading(false);
-    }, [orderId, clearCart]); // 4. Añade clearCart a las dependencias
+    }, [orderId, clearCart]); 
 
     // Si está cargando, muestra un loader
     if (loading) {
@@ -41,8 +41,7 @@ function OrderConfirmationPage() {
         return <Navigate to="/" replace />; 
     }
 
-    // 5. 🚨 ESTA ES LA PARTE QUE FALTABA 🚨
-    // Si tenemos datos, los extraemos y renderizamos
+   
     const { total, items, cliente, direccion } = orderData;
     const totalPagado = formatMoney(total);
 

@@ -6,16 +6,16 @@ import { useEffect, useState } from 'react';
 // 1. Importa el "cerebro" del carrito
 import { useCart } from '../../context/CartContext';
 
-// (Componente para las tarjetas de "Relacionados")
+
 function RelatedProductCard({ product, formatMoney }) {
-  // Usamos las clases de tu grilla de productos
+  
   return (
     <Link to={`/productos/${product.code}`} className="producto">
       <div className="thumb">
         <img src={product.imagen} alt={product.nombre} />
       </div>
       <h2>{product.nombre}</h2>
-      {/* Muestra el rating si existe */}
+      {}
       {product.rating > 0 && (
         <div className="rating-row" style={{justifyContent: 'center', fontSize: '0.9rem'}}>
           <span 
@@ -33,7 +33,7 @@ function RelatedProductCard({ product, formatMoney }) {
 
 
 function ProductDetailPage() {
-  // --- 2. Saca las funciones que necesitas ---
+ 
   const { addToCart, formatMoney } = useCart();
   
   const { productCode } = useParams();
@@ -41,13 +41,12 @@ function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // --- 3. ¡NUEVO ESTADO para la cantidad! ---
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     setLoading(true);
     setError(false);
-    setQuantity(1); // Resetea la cantidad al cambiar de producto
+    setQuantity(1); 
     const foundProduct = PRODUCTS_HH.find(p => p.code === productCode);
 
     if (foundProduct) {
@@ -56,13 +55,13 @@ function ProductDetailPage() {
       setError(true);
     }
     setLoading(false);
-  }, [productCode]); // Se ejecuta cada vez que el 'productCode' de la URL cambia
+  }, [productCode]); 
 
   // --- Lógica para "Productos Relacionados" ---
   const relatedProducts = product 
     ? PRODUCTS_HH.filter(p => 
         p.categoriaId === product.categoriaId && p.code !== product.code
-      ).slice(0, 4) // 4 productos de la misma categoría (excluyendo el actual)
+      ).slice(0, 4) 
     : [];
 
   if (loading) {
@@ -93,7 +92,7 @@ function ProductDetailPage() {
   return (
     <div className="container product-detail">
       
-      {/* (Breadcrumbs borradas, como pediste) */}
+      {}
 
       <div className="pd-grid">
         
@@ -107,15 +106,15 @@ function ProductDetailPage() {
             <button className="thumb-btn is-active">
               <img src={product.imagen} alt={product.nombre} />
             </button>
-            {/* (Aquí irían más thumbnails si tuvieras más imágenes) */}
+            {}
           </div>
         </div>
 
-        {/* --- Columna Derecha: Info (ACTUALIZADA) --- */}
+        {/* --- Columna Derecha: Info  --- */}
         <div className="product-info">
           <h1>{product.nombre}</h1>
           
-          {/* --- Rating Row (ACTUALIZADO) --- */}
+          {/* --- Rating Row  --- */}
           <div className="rating-row" style={{gap: '0.35rem'}}> 
             <span 
               className="star-rating" 
@@ -126,7 +125,7 @@ function ProductDetailPage() {
             <span>({product.reviews || 0} reseñas)</span>
           </div>
 
-          {/* --- Meta/Price (ACTUALIZADO) --- */}
+          {/* --- Meta/Price -- */}
           <div className="meta">
             <span className="price-lg">{formatMoney(product.precioCLP)}</span>
             <span className="unit"> / {product.unidad}</span>
@@ -159,7 +158,7 @@ function ProductDetailPage() {
             <span>Agricultura responsable</span>
           </div>
 
-          {/* --- Add to Cart Row (ACTUALIZADO) --- */}
+          {/* --- Add to Cart Row  --- */}
           <div className="add-to-cart-row">
             <label htmlFor="pd-qty">Cantidad</label>
             <input 
