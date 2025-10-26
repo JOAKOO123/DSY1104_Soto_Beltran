@@ -1,9 +1,11 @@
 // src/context/CartContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 export const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
+  const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isOpen, setIsOpen] = useState(false); // Add isOpen state
@@ -48,6 +50,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = (product) => {
+    if (!user) {
+      console.log('Usuario no autenticado');
+      return false; // Return false to indicate auth required
+    }
+
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.code === product.code);
       
@@ -65,7 +72,7 @@ export const CartProvider = ({ children }) => {
         }];
       }
     });
-    console.log("Producto añadido al estado del carrito:", product.nombre);
+    return true; // Return true on success
   };
 
   const openCart = () => setIsOpen(true);

@@ -11,17 +11,12 @@ function ProductCard({ name, price, image, productData }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    if (!user) {
+    if (!user || !user.correo) {
+      console.log('Usuario no autenticado, redirigiendo a login.');
       navigate('/login');
     } else {
-      const itemToAdd = {
-        code: productData.code,
-        nombre: productData.nombre,
-        precioCLP: productData.precioCLP,
-        imagen: productData.imagen,
-      };
-      addToCart(itemToAdd);
-      console.log(`Producto ${itemToAdd.nombre} añadido al carrito`);
+      console.log(`Producto ${productData.nombre} añadido al carrito`);
+      addToCart(productData);
     }
   };
 

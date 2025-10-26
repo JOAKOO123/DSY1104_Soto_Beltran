@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 export function CartPanel({ isOpen, onClose }) {
   const {
@@ -10,14 +11,28 @@ export function CartPanel({ isOpen, onClose }) {
     formatMoney,
     updateQuantity,
     removeFromCart,
-    clearCart
+    clearCart,
+    addToCart
   } = useCart();
+  const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleConfirmClear = () => {
     clearCart();
     setIsModalOpen(false);
+  };
+
+  const handleCheckout = () => {
+    onClose();
+    navigate('/checkout');
+  };
+
+  const handleAddToCart = (product) => {
+    const success = addToCart(product);
+    if (!success) {
+      navigate('/login');
+    }
   };
 
   return (
@@ -68,6 +83,14 @@ export function CartPanel({ isOpen, onClose }) {
             onClick={onClose}
           >
             Cerrar
+          </button>
+          <button
+            id="checkout-cart"
+            type="button"
+            className="btn-primary"
+            onClick={handleCheckout}
+          >
+            Checkout
           </button>
         </div>
       </aside>
