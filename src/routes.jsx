@@ -28,6 +28,7 @@ import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
 import OfertaPage from './pages/oferta'; 
 import UserProfilePage from './pages/UserProfilePage';
+import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
 
 import CheckoutPage from './pages/checkout';           // Figura 6
 import OrderConfirmationPage from './pages/order-confirmation'; // Figura 7 (Éxito)
@@ -69,6 +70,7 @@ const router = createBrowserRouter([
       { path: 'productos', element: <AdminProductsPage /> },
       { path: 'productos/nuevo', element: <AdminNewProductPage /> },
       { path: 'categorias', element: <AdminCategoriesPage /> },
+      { path: 'categorias/nueva', element: <AdminNewCategoryPage /> },
       { path: 'usuarios', element: <AdminUsersPage /> },
       { path: 'ordenes', element: <AdminOrdersPage /> },
       { path: 'reportes', element: <AdminReportsPage /> },
