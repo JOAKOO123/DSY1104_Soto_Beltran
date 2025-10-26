@@ -1820,7 +1820,6 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
   margin-bottom: .5rem;
 }
 
-/
 .qty-btn {
   display: grid;
   place-items: center;

@@ -18,28 +18,16 @@ function AdminLayout() {
   const { isOpen, openCart, closeCart } = useCart();
 
   return (
-    <div className="admin-wrapper" style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      minHeight: '100vh',
-      backgroundColor: '#f5f5f5' 
-    }}>
+    <div className="admin-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header onCartClick={openCart} />
       
-      <div className="admin-layout-content container" style={{ 
-        display: 'flex', 
-        flex: 1, 
-        paddingTop: '60px',
-        paddingBottom: '2rem' 
-      }}>
+      <main className="admin-layout" style={{ display: 'flex', flex: 1, paddingTop: '60px' }}> 
         <aside style={{ 
           width: '250px', 
           background: '#343a40', 
           color: 'white',      
           padding: '15px', 
           flexShrink: 0,
-          borderRadius: '8px',
-          marginTop: '20px' 
         }}>
           <h3 style={{ borderBottom: '1px solid #495057', paddingBottom: '10px', marginBottom: '15px' }}>ADMIN</h3>
           <nav>
@@ -59,19 +47,10 @@ function AdminLayout() {
           </nav>
         </aside>
         
-        <main style={{ 
-          flex: 1, 
-          padding: '20px', 
-          background: '#fff',
-          borderRadius: '8px',
-          marginTop: '20px',
-          marginLeft: '20px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          color: '#000000' 
-        }}>
+        <section className="admin-content" style={{ flex: 1, padding: '20px' }}> 
           <Outlet />
-        </main>
-      </div>
+        </section>
+      </main>
       
       <Footer />
       <CartPanel isOpen={isOpen} onClose={closeCart} />

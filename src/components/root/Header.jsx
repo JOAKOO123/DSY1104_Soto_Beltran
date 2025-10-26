@@ -9,6 +9,8 @@ import { useCart } from '../../context/CartContext';
 
 function Header({ onCartClick = () => {} }) {
   const { user, logout } = useAuth();
+  const isAdmin = user && user.role === 'admin';
+  const userLink = isAdmin ? '/admin' : '/perfil';
   const { cartItems } = useCart();
   const navigate = useNavigate();
 
@@ -68,12 +70,19 @@ function Header({ onCartClick = () => {} }) {
           <div className="account-buttons">
             {user ? (
               <>
-                {user.role === 'admin' && (
-                  <Link to="/admin" style={{ marginRight: '10px', fontWeight: 'bold' }}>
-                    Admin
-                  </Link>
-                )}
-                <Link to="/perfil">Hola, {user.nombre || user.correo}</Link>
+                <Link 
+                  to={userLink}
+                  style={{ 
+                    textDecoration: 'none',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    background: isAdmin ? '#4CAF50' : '#007bff',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                  }}
+                >
+                  Hola, {isAdmin ? 'Administrador' : user.nombre}
+                </Link>
                 <span aria-hidden="true"> | </span>
                 <a href="#" onClick={handleLogout}>Cerrar sesión</a>
               </>

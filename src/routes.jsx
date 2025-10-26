@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import App from './App';
 import ProtectedRoute from './components/root/ProtectedRoute';
+import ErrorPage from './pages/ErrorPage';
+import AdminRouteGuard from './components/AdminRouteGuard';
 
 // --- Páginas ---
 import HomePage from './pages/home';
@@ -24,8 +26,6 @@ import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
-
-
 import OfertaPage from './pages/oferta'; 
 
 import CheckoutPage from './pages/checkout';           // Figura 6
@@ -57,29 +57,27 @@ const router = createBrowserRouter([
       { path: 'contacto', element: <ContactPage /> },  
       { path: 'blogs', element: <BlogsPage /> }, 
       { path: 'blogs/:blogId', element: <BlogDetailPage /> }, 
+      { path: 'perfil', element: <h2>Perfil de Usuario</h2> },
    ],
   },
   {
     path: '/admin',
-    element: <ProtectedRoute allowedRoles={["admin"]} />,
+    element: <AdminRouteGuard />,
     children: [
       {
-        path: '',
         element: <AdminLayout />,
         children: [
           { index: true, element: <DashboardPage /> },
           { path: 'productos', element: <AdminProductsPage /> },
-          { path: 'usuarios', element: <AdminUsersPage /> },
+          { path: 'productos/nuevo', element: <AdminNewProductPage /> },
           { path: 'categorias', element: <AdminCategoriesPage /> },
-          { path: 'usuarios/nuevo', element: <h2>Nuevo Usuario Admin</h2> },
-          { path: 'usuarios/:email/editar', element: <h2>Editar Usuario</h2> },
-          { path: 'usuarios/:email/historial', element: <h2>Historial de Compras</h2> },
+          { path: 'usuarios', element: <AdminUsersPage /> },
+          { path: 'ordenes', element: <AdminOrdersPage /> },
           { path: 'reportes', element: <AdminReportsPage /> },
           { path: 'perfil', element: <h2>Perfil de Administrador</h2> },
           { path: 'productos/criticos', element: <h2>Productos Críticos</h2> },
-          { path: 'ordenes', element: <AdminOrdersPage /> },
         ]
-      },
+      }
     ],
   },
 ]);
