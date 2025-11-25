@@ -1,29 +1,29 @@
 // src/pages/checkout/index.jsx
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function CheckoutPage() {
-    // Bandera para evitar la redirección
     const [isNavigating, setIsNavigating] = useState(false);
 
-    // Hooks
-    const { cartItems, totalPrice, formatMoney } = useCart(); // Quitamos clearCart
+    const { cartItems, totalPrice, formatMoney } = useCart();
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     // Estados del formulario
-    const [nombre, setNombre] = useState('');
+    const [nombre, setNombre] = useState(user?.nombre || '');
     const [apellidos, setApellidos] = useState('');
-    const [correo, setCorreo] = useState('');
+    const [correo, setCorreo] = useState(user?.email || '');
     const [calle, setCalle] = useState('');
     const [depto, setDepto] = useState('');
     const [region, setRegion] = useState('Región Metropolitana de Santiago');
     const [comuna, setComuna] = useState('Cerrillos');
     const [indicaciones, setIndicaciones] = useState('');
 
-    // Estados de validación
+    // Validación
     const [feedback, setFeedback] = useState('');
     const [feedbackError, setFeedbackError] = useState(false);
     const [invalidNombre, setInvalidNombre] = useState(false);
@@ -33,11 +33,16 @@ function CheckoutPage() {
     const [invalidRegion, setInvalidRegion] = useState(false);
     const [invalidComuna, setInvalidComuna] = useState(false);
 
-    // --- HandleSubmit (con la bandera) ---
+    const setError = (msg, setter) => {
+        setFeedback(`❌ ${msg}`);
+        setFeedbackError(true);
+        setter(true);
+    };
+
     const handleCheckout = (e) => {
         e.preventDefault();
-        
-        // Reseteo de errores
+
+        // Reset errores
         setFeedback('');
         setFeedbackError(false);
         setInvalidNombre(false);
@@ -47,7 +52,7 @@ function CheckoutPage() {
         setInvalidRegion(false);
         setInvalidComuna(false);
 
-        // Limpieza de datos
+        // Limpiar inputs
         const n = nombre.trim();
         const ap = apellidos.trim();
         const em = correo.trim().toLowerCase();
@@ -58,207 +63,250 @@ function CheckoutPage() {
         const ind = indicaciones.trim();
 
         // Validaciones
-        if (!n) { setFeedback('❌ Debes ingresar un nombre'); setFeedbackError(true); setInvalidNombre(true); return; }
-        if (!ap) { setFeedback('❌ Debes ingresar tus apellidos'); setFeedbackError(true); setInvalidApellidos(true); return; }
-        if (!em) { setFeedback('❌ Debes ingresar un correo'); setFeedbackError(true); setInvalidCorreo(true); return; }
-        if (!emailRegex.test(em)) { setFeedback('❌ El formato del correo no es válido'); setFeedbackError(true); setInvalidCorreo(true); return; }
-        if (!ca) { setFeedback('❌ Debes ingresar una calle'); setFeedbackError(true); setInvalidCalle(true); return; }
-        if (!re) { setFeedback('❌ Debes seleccionar una región'); setFeedbackError(true); setInvalidRegion(true); return; }
-        if (!co) { setFeedback('❌ Debes seleccionar una comuna'); setFeedbackError(true); setInvalidComuna(true); return; }
+        if (!n) return setError('Debes ingresar un nombre', setInvalidNombre);
+        if (!ap) return setError('Debes ingresar tus apellidos', setInvalidApellidos);
+        if (!em) return setError('Debes ingresar un correo', setInvalidCorreo);
+        if (!emailRegex.test(em)) return setError('El formato del correo no es válido', setInvalidCorreo);
+        if (!ca) return setError('Debes ingresar una calle', setInvalidCalle);
+        if (!re) return setError('Debes seleccionar una región', setInvalidRegion);
+        if (!co) return setError('Debes seleccionar una comuna', setInvalidComuna);
 
-        // --- Simulación de pago ---
-        const orderId = '20240705'; 
+        const orderId = Date.now().toString();
         const paymentSuccess = Math.random() > 0.3;
 
         if (paymentSuccess) {
-            
-            
             setIsNavigating(true);
 
-            // Guardamos los datos
             const orderDetails = {
-                orderId: orderId,
+                orderId,
                 total: totalPrice,
                 items: cartItems,
                 cliente: { nombre: n, apellidos: ap, correo: em },
                 direccion: { calle: ca, depto: de, region: re, comuna: co, indicaciones: ind }
             };
-            try {
-                sessionStorage.setItem('lastOrderDetails', JSON.stringify(orderDetails));
-            } catch (err) {
-                console.error("Error guardando orden en sessionStorage", err);
-            }
 
-            
+            sessionStorage.setItem('lastOrderDetails', JSON.stringify(orderDetails));
             navigate(`/orden/exito/${orderId}`);
         } else {
             navigate(`/orden/error/${orderId}`);
         }
     };
 
-    // --- Redirección (con la bandera) ---
+    // Evita entrar sin carrito
     if (cartItems.length === 0 && !isNavigating) {
         return <Navigate to="/productos" replace />;
     }
 
-    
     return (
-        <div className="container" style={{ padding: '2rem' }}>
-            
-            {}
-            <div 
-                className="checkout-grid" 
-                style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: '2fr 1fr', // 2 columnas
-                    gap: '2rem' 
-                }}
-            >
-                
-                {/* --- Columna Izquierda: Formulario --- */}
-                <form 
-                    id="checkoutForm"
-                    onSubmit={handleCheckout} 
-                    noValidate
-                    style={{ gridColumn: '1 / 2' }} // Columna 1
-                >
-                    <h2>Información del cliente</h2>
-                    <p>Completa la siguiente información</p>
-                    
-                    {/* Nombre y Apellidos */}
-                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                        <div style={{ flex: 1 }}>
-                            <label htmlFor="nombre">Nombre*</label>
-                            <input 
-                                type="text" id="nombre" name="nombre" required 
-                                value={nombre}
-                                onChange={(e) => setNombre(e.target.value)}
-                                className={invalidNombre ? 'is-invalid' : ''}
-                                style={{ width: '100%' }} />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label htmlFor="apellidos">Apellidos*</label>
-                            <input 
-                                type="text" id="apellidos" name="apellidos" required 
-                                value={apellidos}
-                                onChange={(e) => setApellidos(e.target.value)}
-                                className={invalidApellidos ? 'is-invalid' : ''}
-                                style={{ width: '100%' }} />
-                        </div>
-                    </div>
+        <div
+            className="checkout-wrapper"
+            style={{
+                padding: "40px 0",
+                background: "#F6F8FB",
+                minHeight: "100vh"
+            }}
+        >
 
-                    {/* Correo */}
-                    <div style={{ marginBottom: '1rem' }}>
-                        <label htmlFor="correo">Correo*</label>
-                        <input 
-                            type="email" id="correo" name="correo" required 
-                            value={correo}
-                            onChange={(e) => setCorreo(e.target.value)}
-                            className={invalidCorreo ? 'is-invalid' : ''}
-                            style={{ width: '100%' }} />
-                    </div>
-
-                    {/* Título Dirección */}
-                    <h2>Dirección de entrega de los productos</h2>
-                    
-                    {/* Calle y Depto */}
-                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                        <div style={{ flex: 3 }}>
-                            <label htmlFor="calle">Calle*</label>
-                            <input 
-                                type="text" id="calle" name="calle" required placeholder="Ingrese dirección de forma detallada" 
-                                value={calle}
-                                onChange={(e) => setCalle(e.target.value)}
-                                className={invalidCalle ? 'is-invalid' : ''}
-                                style={{ width: '100%' }} />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label htmlFor="depto">Departamento (opcional)</label>
-                            <input 
-                                type="text" id="depto" name="depto" placeholder="Ej: 603" 
-                                value={depto}
-                                onChange={(e) => setDepto(e.target.value)}
-                                style={{ width: '100%' }} />
-                        </div>
-                    </div>
-
-                    {/* Región y Comuna */}
-                    <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                        <div style={{ flex: 1 }}>
-                            <label htmlFor="region">Región*</label>
-                            <select 
-                                id="region" name="region" required 
-                                value={region}
-                                onChange={(e) => setRegion(e.target.value)}
-                                className={invalidRegion ? 'is-invalid' : ''}
-                                style={{ width: '100%' }}>
-                                <option value="Región Metropolitana de Santiago">Región Metropolitana de Santiago</option>
-                            </select>
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label htmlFor="comuna">Comuna*</label>
-                            <select 
-                                id="comuna" name="comuna" required 
-                                value={comuna}
-                                onChange={(e) => setComuna(e.target.value)}
-                                className={invalidComuna ? 'is-invalid' : ''}
-                                style={{ width: '100%' }}>
-                                <option value="Cerrillos">Cerrillos</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    {/* Indicaciones */}
-                    <div style={{ marginBottom: '1rem' }}>
-                        <label htmlFor="indicaciones">Indicaciones para la entrega (opcional)</label>
-                        <textarea 
-                            id="indicaciones" name="indicaciones" rows="3" placeholder="Ej: Entre calles, color del edificio..." 
-                            value={indicaciones}
-                            onChange={(e) => setIndicaciones(e.target.value)}
-                            style={{ width: '100%', resize: 'none' }}></textarea>
-                    </div>
-
-                    {/* Feedback de Error */}
-                    <p 
-                      id="checkout-msg" 
-                      aria-live="polite" 
-                      className={feedbackError ? 'error' : 'ok'} 
-                      style={{ color: feedbackError ? 'red' : 'green', fontWeight: 'bold' }}
-                    >
-                      {feedback}
-                    </p>
-
-                    {/* Botón Pagar */}
-                    <button type="submit" className="btn-primary" style={{ background: '#198754', marginTop: '1rem', width: '100%', padding: '12px 0', fontSize: '1.1rem' }}>
-                        Pagar ahora {formatMoney(totalPrice)}
-                    </button>
-                </form>
-
-                {/* --- Columna Derecha: Resumen --- */}
-                <aside 
-                    className="order-summary" 
-                    style={{ 
-                        gridColumn: '2 / 3', // Columna 2
-                        gridRow: '1' 
+            {/* Caja invitado */}
+            {!user && (
+                <div
+                    style={{
+                        maxWidth: "900px",
+                        margin: "0 auto 20px auto",
+                        padding: "15px 20px",
+                        background: "#eef6ff",
+                        border: "1px solid #cce6ff",
+                        borderRadius: "8px",
+                        fontSize: "0.95rem",
+                        color: "#003566"
                     }}
                 >
-                    <div style={{ background: '#0d6efd', color: 'white', padding: '1rem', textAlign: 'center', fontWeight: 'bold' }}>
+                    👤 Estás comprando como <strong>invitado</strong>.
+                    Si deseas guardar tu historial, puedes <Link to="/login">iniciar sesión</Link>.
+                </div>
+            )}
+
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "1.6fr 1fr",
+                    gap: "30px",
+                    maxWidth: "1100px",
+                    margin: "0 auto"
+                }}
+            >
+                {/* FORMULARIO */}
+                <div
+                    style={{
+                        background: "white",
+                        padding: "30px 35px",
+                        borderRadius: "12px",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.06)"
+                    }}
+                >
+                    <h2 style={{ marginBottom: "10px", fontWeight: "700", fontSize: "1.6rem" }}>
+                        Información del cliente
+                    </h2>
+
+                    <form onSubmit={handleCheckout} noValidate>
+
+                        {/* Nombre / Apellidos */}
+                        <div style={{ display: "flex", gap: "15px", marginBottom: "15px" }}>
+                            <div style={{ flex: 1 }}>
+                                <label className="label-input">Nombre*</label>
+                                <input
+                                    className="modern-input"
+                                    value={nombre}
+                                    onChange={(e) => setNombre(e.target.value)}
+                                />
+                            </div>
+
+                            <div style={{ flex: 1 }}>
+                                <label className="label-input">Apellidos*</label>
+                                <input
+                                    className="modern-input"
+                                    value={apellidos}
+                                    onChange={(e) => setApellidos(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Correo */}
+                        <div style={{ marginBottom: "15px" }}>
+                            <label className="label-input">Correo*</label>
+                            <input
+                                className="modern-input"
+                                value={correo}
+                                onChange={(e) => setCorreo(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Dirección */}
+                        <h2 style={{ margin: "25px 0 10px", fontWeight: "700", fontSize: "1.4rem" }}>
+                            Dirección de entrega
+                        </h2>
+
+                        <div style={{ marginBottom: "15px" }}>
+                            <label className="label-input">Calle*</label>
+                            <input
+                                className="modern-input"
+                                value={calle}
+                                onChange={(e) => setCalle(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Region / Comuna */}
+                        <div style={{ display: "flex", gap: "15px", marginBottom: "15px" }}>
+                            <div style={{ flex: 1 }}>
+                                <label className="label-input">Región*</label>
+                                <select
+                                    className="modern-input"
+                                    value={region}
+                                    onChange={(e) => setRegion(e.target.value)}
+                                >
+                                    <option>Región Metropolitana de Santiago</option>
+                                </select>
+                            </div>
+
+                            <div style={{ flex: 1 }}>
+                                <label className="label-input">Comuna*</label>
+                                <select
+                                    className="modern-input"
+                                    value={comuna}
+                                    onChange={(e) => setComuna(e.target.value)}
+                                >
+                                    <option>Cerrillos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label className="label-input">Indicaciones (opcional)</label>
+                        <textarea
+                            rows="3"
+                            className="modern-input"
+                            value={indicaciones}
+                            onChange={(e) => setIndicaciones(e.target.value)}
+                            style={{ resize: "none" }}
+                        />
+
+                        {/* Feedback */}
+                        <p style={{ color: feedbackError ? 'red' : 'green' }}>
+                            {feedback}
+                        </p>
+
+                        {/* Botón */}
+                        <button
+                            type="submit"
+                            style={{
+                                width: "100%",
+                                marginTop: "20px",
+                                padding: "14px 0",
+                                border: "none",
+                                borderRadius: "8px",
+                                background: "#198754",
+                                color: "white",
+                                fontSize: "1.2rem",
+                                fontWeight: "700",
+                                cursor: "pointer",
+                                transition: "0.2s"
+                            }}
+                            onMouseOver={(e) => e.target.style.background = "#157347"}
+                            onMouseOut={(e) => e.target.style.background = "#198754"}
+                        >
+                            Pagar ahora {formatMoney(totalPrice)}
+                        </button>
+
+                    </form>
+                </div>
+
+                {/* RESUMEN */}
+                <aside
+                    style={{
+                        background: "white",
+                        padding: "20px 25px",
+                        borderRadius: "12px",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+                        height: "fit-content",
+                        position: "sticky",
+                        top: "20px"
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "#0d6efd",
+                            padding: "12px",
+                            borderRadius: "8px",
+                            textAlign: "center",
+                            color: "white",
+                            fontWeight: "700",
+                            marginBottom: "15px",
+                            fontSize: "1.1rem"
+                        }}
+                    >
                         Total a pagar: {formatMoney(totalPrice)}
                     </div>
-                    <div style={{ padding: '1rem', background: '#f8f8f8', border: '1px solid #ddd' }}>
-                        <h2>Carrito de compra</h2>
-                        <ul style={{ listStyle: 'none', padding: 0 }}>
-                            {cartItems.map(item => (
-                                <li key={item.code} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px dotted #ccc', padding: '8px 0' }}>
-                                    <span>{item.name} (x{item.qty})</span>
-                                    <span>{formatMoney(item.price * item.qty)}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </aside>
 
-            </div> {}
+                    <h3 style={{ fontWeight: "700", marginBottom: "10px" }}>Carrito</h3>
+
+                    <ul style={{ padding: 0, listStyle: "none" }}>
+                        {cartItems.map(item => (
+                            <li
+                                key={item.code}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    padding: "8px 0",
+                                    borderBottom: "1px solid #eee",
+                                    fontSize: "0.95rem"
+                                }}
+                            >
+                                <span>{item.name} (x{item.qty})</span>
+                                <span>{formatMoney(item.price * item.qty)}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </aside>
+            </div>
         </div>
     );
 }

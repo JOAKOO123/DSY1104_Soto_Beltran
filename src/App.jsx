@@ -1,29 +1,30 @@
 // src/App.jsx
 import { Outlet } from 'react-router-dom';
-import React from 'react'; 
-    
+import React from 'react';
+
 import Header from './components/root/Header';
 import Footer from './components/root/Footer';
-import { CartPanel } from './components/root/CartPanel'; 
-import { useCart } from './context/CartContext'; 
+import { CartPanel } from './components/root/CartPanel';
+import { useCart } from './context/CartContext';
 
 function App() {
-  
   const { isOpen, openCart, closeCart } = useCart();
 
   return (
     <>
-      {/* 3. Pasa la función "openCart" al Header */}
+      {/* Header principal */}
       <Header onCartClick={openCart} />
 
+      {/* Aquí se renderizan todas las páginas */}
       <Outlet />
-      
-      {/* <Footer /> */}
 
-      {/* 4. Pasa el estado "isOpen" y la función "closeCart" al Panel */}
+      {/* Footer AGREGADO nuevamente */}
+      <Footer />
+
+      {/* Panel del carrito */}
       <CartPanel 
-        isOpen={isOpen} 
-        onClose={closeCart} 
+        isOpen={isOpen}
+        onClose={closeCart}
       />
     </>
   );

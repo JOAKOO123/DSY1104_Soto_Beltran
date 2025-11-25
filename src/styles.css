@@ -2038,4 +2038,29 @@ button:focus, a:focus, input:focus, select:focus, textarea:focus {
     }
 }
 
+.modern-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.2s;
+  background: #fafafa;
+}
+
+.modern-input:focus {
+  border-color: #0d6efd;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.2);
+}
+
+.label-input {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
 

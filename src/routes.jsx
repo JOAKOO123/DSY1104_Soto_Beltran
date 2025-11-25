@@ -1,6 +1,6 @@
 // src/routes.jsx
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import App from './App';
 import ProtectedRoute from './components/root/ProtectedRoute';
@@ -11,13 +11,13 @@ import AdminRouteGuard from './components/AdminRouteGuard';
 import HomePage from './pages/home';
 import ProductsPage from './pages/products';
 import ProductDetailPage from './pages/product-detail';
-import LoginPage from './pages/login'; 
+import LoginPage from './pages/login';
 import RegisterPage from './pages/register';
-import NosotrosPage from './pages/nosotros'; 
-import ContactPage from './pages/contact'; 
-import BlogsPage from './pages/blogs'; 
-import BlogDetailPage from './pages/blog-detail'; 
-import CategoriesPage from './pages/categories'; 
+import NosotrosPage from './pages/nosotros';
+import ContactPage from './pages/contact';
+import BlogsPage from './pages/blogs';
+import BlogDetailPage from './pages/blog-detail';
+import CategoriesPage from './pages/categories';
 import AdminLayout from './pages/admin/AdminLayout';
 import DashboardPage from './pages/admin/DashboardPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
@@ -26,42 +26,42 @@ import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
-import OfertaPage from './pages/oferta'; 
+import OfertaPage from './pages/oferta';
 import UserProfilePage from './pages/UserProfilePage';
 import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
 
-import CheckoutPage from './pages/checkout';           // Figura 6
-import OrderConfirmationPage from './pages/order-confirmation'; // Figura 7 (Éxito)
-import PaymentErrorPage from './pages/payment-error';         // Figura 8 (Error)
+import CheckoutPage from './pages/checkout';
+import OrderConfirmationPage from './pages/order-confirmation';
+import PaymentErrorPage from './pages/payment-error';
 
-const router = createBrowserRouter([
- {
+const router = createHashRouter([
+  {
     path: '/',
-    element: <App />, 
+    element: <App />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'productos', element: <ProductsPage /> },
       { path: 'productos/:productCode', element: <ProductDetailPage /> },
- 
-      { path: 'categorias', element: <CategoriesPage /> }, 
- 
-      
+
+      { path: 'categorias', element: <CategoriesPage /> },
       { path: 'ofertas', element: <OfertaPage /> },
 
-      
-      { path: 'checkout', element: <CheckoutPage /> }, 
+      { path: 'checkout', element: <CheckoutPage /> },
       { path: 'orden/exito/:orderId', element: <OrderConfirmationPage /> },
       { path: 'orden/error/:orderId', element: <PaymentErrorPage /> },
 
-      { path: 'login', element: <LoginPage /> }, 
-      { path: 'registro', element: <RegisterPage /> }, 
-      { path: 'nosotros', element: <NosotrosPage /> }, 
-      { path: 'contacto', element: <ContactPage /> },  
-      { path: 'blogs', element: <BlogsPage /> }, 
-      { path: 'blogs/:blogId', element: <BlogDetailPage /> }, 
+      { path: 'login', element: <LoginPage /> },
+      { path: 'registro', element: <RegisterPage /> },
+      { path: 'nosotros', element: <NosotrosPage /> },
+      { path: 'contacto', element: <ContactPage /> },
+
+      { path: 'blogs', element: <BlogsPage /> },
+      { path: 'blogs/:blogId', element: <BlogDetailPage /> },
+
       { path: 'perfil', element: <UserProfilePage /> },
-   ],
+    ],
   },
+
   {
     path: '/admin',
     element: <AdminLayout />,

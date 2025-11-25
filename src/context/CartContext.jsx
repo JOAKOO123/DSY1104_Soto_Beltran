@@ -50,30 +50,35 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = (product) => {
-    if (!user) {
-      console.log('Usuario no autenticado');
-      return false; // Return false to indicate auth required
-    }
+  // ❗Permitir carrito como invitado: NO bloqueamos si no hay user
+  // Si quieres hacer algo especial cuando NO hay usuario, puedes agregarlo aquí
+  // pero NO bloqueamos la acción.
 
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.code === product.code);
-      
-      if (existingItem) {
-        return prevItems.map(item =>
-          item.code === product.code ? { ...item, qty: item.qty + 1 } : item
-        );
-      } else {
-        return [...prevItems, {
+  setCartItems(prevItems => {
+    const existingItem = prevItems.find(item => item.code === product.code);
+
+    if (existingItem) {
+      return prevItems.map(item =>
+        item.code === product.code
+          ? { ...item, qty: item.qty + 1 }
+          : item
+      );
+    } else {
+      return [
+        ...prevItems,
+        {
           code: product.code,
           name: product.nombre,
           price: product.precioCLP,
           image: product.imagen,
           qty: 1
-        }];
-      }
-    });
-    return true; // Return true on success
-  };
+        }
+      ];
+    }
+  });
+  return true; // Siempre true → carrito siempre funciona
+};
+
 
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);

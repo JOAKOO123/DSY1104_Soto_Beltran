@@ -1,22 +1,15 @@
 // src/components/products/ProductGrid.jsx
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
 function ProductGrid({ products, totalFiltered }) {
 
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, openCart } = useCart();
 
   const handleAddToCart = (product) => {
-    if (!user) {
-      navigate('/login');
-    } else {
-      addToCart(product);
-      console.log(`Producto ${product.nombre} añadido al carrito`);
-    }
+    addToCart(product);   // Permite invitados sin problema
+    openCart();           // Opcional: abrir carrito al agregar
+    console.log(`Producto ${product.nombre} añadido al carrito`);
   };
 
   return (
