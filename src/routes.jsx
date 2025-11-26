@@ -29,6 +29,9 @@ import AdminReportsPage from './pages/admin/AdminReportsPage';
 import OfertaPage from './pages/oferta';
 import UserProfilePage from './pages/UserProfilePage';
 import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
+//nuevas paginas conectadas al back
+import OrderSuccess from './pages/orden/OrderSuccess';
+import OrderError from './pages/orden/OrderError';
 
 import CheckoutPage from './pages/checkout';
 import OrderConfirmationPage from './pages/order-confirmation';
@@ -47,9 +50,10 @@ const router = createHashRouter([
       { path: 'ofertas', element: <OfertaPage /> },
 
       { path: 'checkout', element: <CheckoutPage /> },
-      { path: 'orden/exito/:orderId', element: <OrderConfirmationPage /> },
-      { path: 'orden/error/:orderId', element: <PaymentErrorPage /> },
-
+      //nuevo 
+      // 🔥 PÁGINAS REALES CONECTADAS
+      { path: 'orden/exito/:orderId', element: <OrderSuccess /> },
+      { path: 'orden/error/:orderId', element: <OrderError /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'registro', element: <RegisterPage /> },
       { path: 'nosotros', element: <NosotrosPage /> },

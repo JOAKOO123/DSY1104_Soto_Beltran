@@ -7,6 +7,7 @@ import Footer from './components/root/Footer';
 import { CartPanel } from './components/root/CartPanel';
 import { useCart } from './context/CartContext';
 
+
 function App() {
   const { isOpen, openCart, closeCart } = useCart();
 

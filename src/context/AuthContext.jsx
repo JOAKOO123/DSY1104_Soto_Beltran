@@ -1,57 +1,44 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { USUARIOS as seedUsers } from '../data/usuarios.js';
+// src/context/AuthContext.jsx
+import React, { createContext, useContext, useState } from "react";
 
-export const AuthContext = createContext(null);
+const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('mitienda_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    const saved = localStorage.getItem("mitienda_user");
+    return saved ? JSON.parse(saved) : null;
   });
 
-  useEffect(() => {
-    // Force seed users on mount
-    localStorage.setItem('mitienda_users', JSON.stringify(seedUsers));
-    console.log('Usuarios predefinidos cargados en localStorage (forzado).');
+  const login = async (email, password) => {
+    const res = await fetch("http://localhost:8080/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-    const savedUser = localStorage.getItem('mitienda_user');
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      setUser(userData);
+    if (!res.ok) {
+      return { ok: false, message: "Credenciales incorrectas" };
     }
-  }, []);
 
-  const login = (userData) => {
-    try {
-      localStorage.setItem('mitienda_user', JSON.stringify(userData));
-      setUser(userData);
-    } catch (error) {
-      console.error('Error saving user:', error);
-    }
+    const data = await res.json();
+
+    // Guardar token y usuario
+    localStorage.setItem("mitienda_token", data.token);
+    localStorage.setItem("mitienda_user", JSON.stringify(data.user));
+    setUser(data.user);
+
+    return { ok: true };
   };
 
   const logout = () => {
-    localStorage.removeItem('mitienda_user');
+    localStorage.removeItem("mitienda_token");
+    localStorage.removeItem("mitienda_user");
     setUser(null);
   };
 
-  const handleRegister = (userData) => {
-    const nuevoUsuario = {
-      ...userData,
-      correo: userData.email || userData.correo,
-    };
-    // ...existing registration logic...
-  };
-
-  const value = { user, login, logout, handleRegister };
+  const value = { user, login, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
