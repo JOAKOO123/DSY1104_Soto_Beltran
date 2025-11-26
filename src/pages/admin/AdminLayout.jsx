@@ -1,9 +1,5 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import Header from '../../components/root/Header';
-import Footer from '../../components/root/Footer';
-import { CartPanel } from '../../components/root/CartPanel';
-import { useCart } from '../../context/CartContext';
 
 const adminNavLinks = [
   { to: '/admin', label: 'Dashboard' },
@@ -15,13 +11,9 @@ const adminNavLinks = [
 ];
 
 function AdminLayout() {
-  const { isOpen, openCart, closeCart } = useCart();
-
   return (
     <div className="admin-wrapper" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Header onCartClick={openCart} />
-      
-      <main className="admin-layout" style={{ display: 'flex', flex: 1, paddingTop: '60px' }}> 
+      <main className="admin-layout" style={{ display: 'flex', flex: 1 }}> 
         <aside style={{ 
           width: '250px', 
           background: '#343a40', 
@@ -51,9 +43,6 @@ function AdminLayout() {
           <Outlet />
         </section>
       </main>
-      
-      <Footer />
-      <CartPanel isOpen={isOpen} onClose={closeCart} />
     </div>
   );
 }

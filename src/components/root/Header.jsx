@@ -32,10 +32,10 @@ function Header({ onCartClick }) {
 
   const navLinks = [
     { path: '/', name: 'Inicio' },
-    { path: '/productos', name: 'Productos' },
-    { path: '/categorias', name: 'Categorías' },
+    { path: '/products', name: 'Productos' },
+    { path: '/categories', name: 'Categorías' },
     { path: '/nosotros', name: 'Nosotros' },
-    { path: '/contacto', name: 'Contacto' },
+    { path: '/contact', name: 'Contacto' },
   ];
 
   return (
@@ -64,14 +64,14 @@ function Header({ onCartClick }) {
               <ul className="menu">
                 {/* Usamos NavLink para aplicar la clase 'active' automáticamente */}
                 <li><NavLink to="/">Inicio</NavLink></li>
-                <li><NavLink to="/productos">Productos</NavLink></li>
+                <li><NavLink to="/products">Productos</NavLink></li>
                 
                 {/* ⬅️ ¡NUEVO ENLACE! */}
-                <li><NavLink to="/categorias">Categorías</NavLink></li> 
-                <li><NavLink to="/ofertas">Ofertas</NavLink></li>
+                <li><NavLink to="/categories">Categorías</NavLink></li> 
+                <li><NavLink to="/oferta">Ofertas</NavLink></li>
                 <li><NavLink to="/blogs">Blogs</NavLink></li>
                 <li><NavLink to="/nosotros">Nosotros</NavLink></li>
-                <li><NavLink to="/contacto">Contacto</NavLink></li>
+                <li><NavLink to="/contact">Contacto</NavLink></li>
                 {/* Agrega aquí cualquier otro enlace como /ofertas o /comprar si lo necesitas */}
               </ul>
             </nav>
@@ -129,7 +129,7 @@ function Header({ onCartClick }) {
                       Iniciar sesión
                     </Link>
                     <span style={{ color: '#ccc', margin: '0 10px' }}> | </span>
-                    <Link to="/registro" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
+                    <Link to="/register" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
                       Registrarse
                     </Link>
                   </>
@@ -156,7 +156,7 @@ function Header({ onCartClick }) {
             </li>
           ))}
           <li><NavLink to="/login" onClick={toggleMenu}>Iniciar Sesión</NavLink></li>
-          <li><NavLink to="/registro" onClick={toggleMenu}>Registrarse</NavLink></li>
+          <li><NavLink to="/register" onClick={toggleMenu}>Registrarse</NavLink></li>
         </ul>
       </nav>
     </>

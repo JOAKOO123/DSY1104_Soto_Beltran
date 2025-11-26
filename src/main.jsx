@@ -1,17 +1,19 @@
-// src/main.jsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import AppRoutes from './routes.jsx';
-import { AuthProvider } from './context/AuthContext';
-import { CartProvider } from './context/CartContext';
+import React from "react";
+import ReactDOM from "react-dom/client";
 import './styles.css';
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/AppRouter";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+// IMPORTA TUS PROVIDERS
+import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
       <CartProvider>
-        <AppRoutes />
+        <RouterProvider router={router} />
       </CartProvider>
     </AuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

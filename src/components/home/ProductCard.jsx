@@ -1,20 +1,16 @@
 // src/components/home/ProductCard.jsx
 
-import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
 function ProductCard({ name, price, image, productData }) {
 
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, openCart } = useCart();
 
   const handleAddToCart = () => {
-    const success = addToCart(productData);
-    if (!success) {
-      navigate('/login');
-    }
+    addToCart(productData); // SIEMPRE agrega, sea invitado o usuario
+    openCart(); // opcional: abre el carrito al agregar
   };
 
   return (
