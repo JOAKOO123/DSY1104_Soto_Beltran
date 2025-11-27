@@ -5,17 +5,19 @@ import { apiGet } from "./api";
 export async function fetchAllProducts(page = 0, size = 1000) {
   const data = await apiGet(`/products?page=${page}&size=${size}`);
 
-  const productos = data.content || data; // fallback por si no viene paginado
+  const productos = data.content || data;
 
   return productos.map(p => ({
-    code: p.id,
+    id: p.id,
     nombre: p.nombre,
-    categoriaId: p.categoria,
+    categoria: p.categoria,
     descripcion: p.descripcion,
-    precioCLP: p.precio,
+    precio: p.precio,
     stock: p.stock,
     unidad: p.unidad || "unidad",
-    imagen: "/assets/default.jpg",
+
+    urlImagen: p.urlImagen || null,  // 👈 imagen real
+
     isOffer: false,
     offerPriceCLP: null,
   }));
@@ -26,14 +28,16 @@ export async function fetchProductById(id) {
   const p = await apiGet(`/products/${id}`);
 
   return {
-    code: p.id,
+    id: p.id,
     nombre: p.nombre,
-    categoriaId: p.categoria,
+    categoria: p.categoria,
     descripcion: p.descripcion,
-    precioCLP: p.precio,
+    precio: p.precio,
     stock: p.stock,
     unidad: p.unidad || "unidad",
-    imagen: "/assets/default.jpg",
+
+    urlImagen: p.urlImagen || null,  // 👈 imagen real
+
     isOffer: false,
     offerPriceCLP: null,
   };

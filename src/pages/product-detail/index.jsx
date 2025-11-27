@@ -1,5 +1,5 @@
 // src/pages/product-detail/index.jsx
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchProductById } from "../../services/productService";
 import { useCart } from "../../context/CartContext";
@@ -27,52 +27,38 @@ function ProductDetailPage() {
     load();
   }, [productCode]);
 
-  if (loading) {
-    return <div className="container">Cargando...</div>;
-  }
-
-  if (!product) {
-    return <div className="container">Producto no encontrado.</div>;
-  }
-
-  const handleQuantityChange = (e) => {
-    let q = parseInt(e.target.value);
-    if (isNaN(q) || q < 1) q = 1;
-    setQuantity(q);
-  };
+  if (loading) return <div className="container">Cargando...</div>;
+  if (!product) return <div className="container">Producto no encontrado.</div>;
 
   const handleAddToCart = () => {
-    // 🔥 ESTRUCTURA CORRECTA PARA CartContext
-    const item = {
-      id: product.id,                // ID real del backend
-      name: product.nombre,          // nombre que usa tu carrito
-      price: product.precioCLP,      // precio que viene de productService
-      image: product.imagen || "/assets/default.jpg",
+    addToCart({
+      id: product.id,
+      name: product.nombre,
+      price: product.precio,
+      image: product.urlImagen,
       qty: quantity
-    };
-
-    addToCart(item);
+    });
   };
 
   return (
     <div className="container product-detail">
-
       <div className="pd-grid">
 
-        {/* Imagen */}
         <div className="product-gallery">
           <div className="main">
-            <img src={product.imagen || "/assets/default.jpg"} alt={product.nombre} />
+            <img 
+              src={product.urlImagen || "/assets/default.jpg"} 
+              alt={product.nombre}
+            />
           </div>
         </div>
 
-        {/* Información */}
         <div className="product-info">
 
           <h1>{product.nombre}</h1>
 
           <div className="meta">
-            <span className="price-lg">{formatMoney(product.precioCLP)}</span>
+            <span className="price-lg">{formatMoney(product.precio)}</span>
           </div>
 
           <p className="desc">{product.descripcion}</p>
@@ -82,7 +68,6 @@ function ProductDetailPage() {
             <dd>{product.stock}</dd>
           </div>
 
-          {/* Añadir al carrito */}
           <div className="add-to-cart-row">
             <label>Cantidad</label>
 
@@ -90,7 +75,7 @@ function ProductDetailPage() {
               type="number"
               min="1"
               value={quantity}
-              onChange={handleQuantityChange}
+              onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
             />
 
             <button className="btn-primary" onClick={handleAddToCart}>
@@ -104,7 +89,6 @@ function ProductDetailPage() {
 
         </div>
       </div>
-
     </div>
   );
 }

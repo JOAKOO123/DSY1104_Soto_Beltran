@@ -10,35 +10,21 @@ export const CartProvider = ({ children }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
-  // 🔹 Cargar carrito
   useEffect(() => {
     try {
       const stored = localStorage.getItem("mitienda_cart");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setCartItems(parsed);
-      }
-    } catch (err) {
-      console.error("❌ JSON corrupto en localStorage. Se limpia.", err);
+      if (stored) setCartItems(JSON.parse(stored));
+    } catch {
       localStorage.removeItem("mitienda_cart");
       setCartItems([]);
     }
   }, []);
 
-  // 🔹 Guardar carrito
   useEffect(() => {
-    try {
-      localStorage.setItem("mitienda_cart", JSON.stringify(cartItems));
-    } catch (err) {
-      console.error("❌ No se pudo guardar carrito:", err);
-    }
-
-    const total = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-    setTotalPrice(total);
-
+    localStorage.setItem("mitienda_cart", JSON.stringify(cartItems));
+    setTotalPrice(cartItems.reduce((s, i) => s + i.price * i.qty, 0));
   }, [cartItems]);
 
-  // 🔹 Añadir productos
   const addToCart = (product) => {
     setCartItems(prev => {
       const found = prev.find(i => i.id === product.id);
@@ -46,20 +32,19 @@ export const CartProvider = ({ children }) => {
       if (found) {
         return prev.map(i =>
           i.id === product.id
-            ? { ...i, qty: i.qty + 1 }
+            ? { ...i, qty: i.qty + (product.qty || 1) }
             : i
         );
       }
 
-      // ESTRUCTURA ÚNICA Y CORRECTA
       return [
         ...prev,
         {
           id: product.id,
-          name: product.nombre,
-          price: product.price || product.precio || product.precioCLP,
-          image: product.image || product.imagen || "/assets/default.jpg",
-          qty: 1
+          name: product.name || product.nombre,
+          price: product.price || product.precio,
+          image: product.image || product.urlImagen,
+          qty: product.qty || 1
         }
       ];
     });
@@ -97,8 +82,4 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-export const useCart = () => {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart debe usarse dentro del CartProvider");
-  return ctx;
-};
+export const useCart = () => useContext(CartContext);

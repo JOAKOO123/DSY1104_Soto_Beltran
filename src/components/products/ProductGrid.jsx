@@ -6,14 +6,14 @@ function ProductGrid({ products, totalFiltered }) {
 
   const { addToCart, openCart } = useCart();
 
-  const handleAddToCart = (product) => {
+  console.log("PRODUCTOS DESDE BACKEND:", products);
 
-    // 🔥 Enviar SOLO la estructura correcta al carrito
+  const handleAddToCart = (product) => {
     addToCart({
-      id: product.code,             // ✔ USAMOS CODE COMO ID REAL
-      nombre: product.nombre,
-      precioCLP: product.precioCLP,
-      imagen: product.imagen
+      id: product.id,
+      name: product.nombre,
+      price: product.precio,
+      image: product.urlImagen
     });
 
     openCart();
@@ -28,17 +28,21 @@ function ProductGrid({ products, totalFiltered }) {
 
       <div className="productos-grid">
         {products.map(product => (
-          <div key={product.code} className="producto">
+          <div key={product.id} className="producto">
 
-            {/* ✔ USAMOS CODE PARA LA RUTA */}
-            <Link to={`/productos/${product.code}`}>
+            <Link to={`/productos/${product.id}`}>
               <div className="thumb">
-                <img src={product.imagen} alt={product.nombre} />
+                <img 
+                  src={product.urlImagen || "/placeholder.png"} 
+                  alt={product.nombre} 
+                />
               </div>
+
               <h2>{product.nombre}</h2>
-              <p>{product.unidad}</p>
+              <p>{product.unidad || ""}</p>
+
               <span className="precio">
-                ${product.precioCLP.toLocaleString('es-CL')}
+                ${(product.precio ?? 0).toLocaleString('es-CL')}
               </span>
             </Link>
 
