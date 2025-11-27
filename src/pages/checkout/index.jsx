@@ -24,23 +24,26 @@ function CheckoutPage() {
     setErrorMsg("");
 
     try {
-      const userId = user?.id || 1; // si no hay login, usar usuario 1 (opcional)
+      const userId = user?.id || 1;
 
-      // 1️⃣ Crear la venta en el backend
+      console.log("🛒 CARRITO ACTUAL:", cartItems);
+
+      // 1️⃣ Crear venta en backend
       const sale = await createSale(userId, cartItems);
-      console.log("Venta creada:", sale);
+      console.log("✔ Venta creada:", sale);
 
       // 2️⃣ Iniciar Transbank
       const init = await initTransbank(sale.id);
-      console.log("Transbank init:", init);
+      console.log("✔ Transbank init:", init);
 
-      // 3️⃣ Redirigir al return simulado
-      window.location.href = init.urlRedireccion;
-
+      // 3️⃣ Limpiar carrito ANTES de redirigir
       clearCart();
 
+      // 4️⃣ Redirigir
+      window.location.href = init.urlRedireccion;
+
     } catch (err) {
-      console.error(err);
+      console.error("❌ ERROR EN CHECKOUT:", err);
       setErrorMsg("Hubo un error procesando el pago.");
     } finally {
       setLoading(false);
@@ -74,7 +77,8 @@ function CheckoutPage() {
 
       {!user && (
         <p style={{ marginTop: "1rem" }}>
-          Estás comprando como invitado. <Link to="/login">Inicia sesión</Link> para guardar tu historial.
+          Estás comprando como invitado.{" "}
+          <Link to="/login">Inicia sesión</Link> para guardar tu historial.
         </p>
       )}
     </div>

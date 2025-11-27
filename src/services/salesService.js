@@ -1,16 +1,18 @@
 // src/services/salesService.js
 const API_URL = "http://localhost:8080/api/v1";
 
-
 // 🔹 1. Crear venta
 export async function createSale(userId, items) {
   const body = {
     userId,
     items: items.map(i => ({
-      productId: i.code,     // code = ID real del backend (ya está mapeado)
+      productId: i.id,    // ← AQUÍ EL FIX
       cantidad: i.qty
     }))
   };
+
+  console.log("CARRITO:", items);
+  console.log("BODY QUE SE ENVÍA A BACKEND:", body);
 
   const res = await fetch(`${API_URL}/sales`, {
     method: "POST",
@@ -18,7 +20,11 @@ export async function createSale(userId, items) {
     body: JSON.stringify(body)
   });
 
-  if (!res.ok) throw new Error("Error creando venta");
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("ERROR AL CREAR VENTA:", text);
+    throw new Error("Error creando venta");
+  }
 
   return res.json();
 }
@@ -32,7 +38,11 @@ export async function initTransbank(saleId) {
     body: JSON.stringify({ saleId })
   });
 
-  if (!res.ok) throw new Error("Error iniciando Transbank");
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("ERROR INICIANDO TBK:", text);
+    throw new Error("Error iniciando Transbank");
+  }
 
-  return res.json(); // { urlRedireccion: "...." }
+  return res.json();
 }

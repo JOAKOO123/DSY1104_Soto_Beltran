@@ -4,7 +4,7 @@ import React from 'react';
 
 import Header from './components/root/Header';
 import Footer from './components/root/Footer';
-import { CartPanel } from './components/root/CartPanel';
+import { CartPanel } from './components/CartPanel';
 import { useCart } from './context/CartContext';
 
 

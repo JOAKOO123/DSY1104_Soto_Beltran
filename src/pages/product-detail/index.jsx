@@ -42,12 +42,16 @@ function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    addToCart({
-      code: product.code,
-      nombre: product.nombre,
-      precioCLP: product.precioCLP,
-      imagen: product.imagen
-    }, quantity);
+    // 🔥 ESTRUCTURA CORRECTA PARA CartContext
+    const item = {
+      id: product.id,                // ID real del backend
+      name: product.nombre,          // nombre que usa tu carrito
+      price: product.precioCLP,      // precio que viene de productService
+      image: product.imagen || "/assets/default.jpg",
+      qty: quantity
+    };
+
+    addToCart(item);
   };
 
   return (
@@ -58,7 +62,7 @@ function ProductDetailPage() {
         {/* Imagen */}
         <div className="product-gallery">
           <div className="main">
-            <img src={product.imagen} alt={product.nombre} />
+            <img src={product.imagen || "/assets/default.jpg"} alt={product.nombre} />
           </div>
         </div>
 
@@ -81,6 +85,7 @@ function ProductDetailPage() {
           {/* Añadir al carrito */}
           <div className="add-to-cart-row">
             <label>Cantidad</label>
+
             <input
               type="number"
               min="1"

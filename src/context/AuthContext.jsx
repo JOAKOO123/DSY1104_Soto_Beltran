@@ -4,9 +4,22 @@ import React, { createContext, useContext, useState } from "react";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  
+  // 🔹 Cargar usuario desde localStorage con protección
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("mitienda_user");
-    return saved ? JSON.parse(saved) : null;
+    const raw = localStorage.getItem("mitienda_user");
+
+    // Si está vacío, null, "undefined", "null" → NO parsear
+    if (!raw || raw === "undefined" || raw === "null") {
+      return null;
+    }
+
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error("Error parsing user from localStorage:", e);
+      return null;
+    }
   });
 
   const login = async (email, password) => {
@@ -22,7 +35,6 @@ export const AuthProvider = ({ children }) => {
 
     const data = await res.json();
 
-    // Guardar token y usuario
     localStorage.setItem("mitienda_token", data.token);
     localStorage.setItem("mitienda_user", JSON.stringify(data.user));
     setUser(data.user);
