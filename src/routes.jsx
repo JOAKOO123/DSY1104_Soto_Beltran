@@ -29,11 +29,15 @@ import AdminReportsPage from './pages/admin/AdminReportsPage';
 import OfertaPage from './pages/oferta';
 import UserProfilePage from './pages/UserProfilePage';
 import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
-//nuevas paginas conectadas al back
+
+// NUEVAS páginas conectadas al backend
 import OrderSuccess from './pages/orden/OrderSuccess';
 import OrderError from './pages/orden/OrderError';
 
+// --- Página de éxito de pago (Transbank)
 import CheckoutPage from './pages/checkout';
+import CheckoutSuccess from './pages/checkout/CheckoutSuccess';
+
 import OrderConfirmationPage from './pages/order-confirmation';
 import PaymentErrorPage from './pages/payment-error';
 
@@ -49,11 +53,14 @@ const router = createHashRouter([
       { path: 'categorias', element: <CategoriesPage /> },
       { path: 'ofertas', element: <OfertaPage /> },
 
+      // Checkout + Éxito de compra
       { path: 'checkout', element: <CheckoutPage /> },
-      //nuevo 
-      // 🔥 PÁGINAS REALES CONECTADAS
+      { path: 'checkout/success', element: <CheckoutSuccess /> }, // <-- AGREGADO
+
+      // Páginas reales conectadas al back
       { path: 'orden/exito/:orderId', element: <OrderSuccess /> },
       { path: 'orden/error/:orderId', element: <OrderError /> },
+
       { path: 'login', element: <LoginPage /> },
       { path: 'registro', element: <RegisterPage /> },
       { path: 'nosotros', element: <NosotrosPage /> },
