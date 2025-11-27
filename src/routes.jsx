@@ -2,10 +2,14 @@
 
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext';
+
 import App from './App';
+
+// Rutas protegidas
 import ProtectedRoute from './components/root/ProtectedRoute';
-import ErrorPage from './pages/ErrorPage';
-import AdminRouteGuard from './components/AdminRouteGuard';
+import AdminRouteGuard from "./components/AdminRouteGuard";
+
 
 // --- Páginas ---
 import HomePage from './pages/home';
@@ -18,28 +22,26 @@ import ContactPage from './pages/contact';
 import BlogsPage from './pages/blogs';
 import BlogDetailPage from './pages/blog-detail';
 import CategoriesPage from './pages/categories';
+import OfertaPage from './pages/oferta';
+import UserProfilePage from './pages/UserProfilePage';
+
+// Checkout y transbank
+import CheckoutPage from './pages/checkout';
+import CheckoutSuccess from './pages/checkout/CheckoutSuccess';
+
+import OrderSuccess from './pages/orden/OrderSuccess';
+import OrderError from './pages/orden/OrderError';
+
+// Admin pages
 import AdminLayout from './pages/admin/AdminLayout';
 import DashboardPage from './pages/admin/DashboardPage';
 import AdminProductsPage from './pages/admin/AdminProductsPage';
 import AdminNewProductPage from './pages/admin/AdminNewProductPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
+import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
-import OfertaPage from './pages/oferta';
-import UserProfilePage from './pages/UserProfilePage';
-import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
-
-// NUEVAS páginas conectadas al backend
-import OrderSuccess from './pages/orden/OrderSuccess';
-import OrderError from './pages/orden/OrderError';
-
-// --- Página de éxito de pago (Transbank)
-import CheckoutPage from './pages/checkout';
-import CheckoutSuccess from './pages/checkout/CheckoutSuccess';
-
-import OrderConfirmationPage from './pages/order-confirmation';
-import PaymentErrorPage from './pages/payment-error';
 
 const router = createHashRouter([
   {
@@ -53,29 +55,55 @@ const router = createHashRouter([
       { path: 'categorias', element: <CategoriesPage /> },
       { path: 'ofertas', element: <OfertaPage /> },
 
-      // Checkout + Éxito de compra
-      { path: 'checkout', element: <CheckoutPage /> },
-      { path: 'checkout/success', element: <CheckoutSuccess /> }, // <-- AGREGADO
+      // 🔐 Checkout solo usuarios logueados
+      {
+        path: 'checkout',
+        element: (
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        ),
+      },
 
-      // Páginas reales conectadas al back
+      // Página de éxito del pago (pública porque viene desde Transbank)
+      { path: 'checkout/success', element: <CheckoutSuccess /> },
+
+      // 🔥 Páginas conectadas al backend
       { path: 'orden/exito/:orderId', element: <OrderSuccess /> },
       { path: 'orden/error/:orderId', element: <OrderError /> },
 
+      // Login / Registro
       { path: 'login', element: <LoginPage /> },
       { path: 'registro', element: <RegisterPage /> },
+
+      // Páginas informativas
       { path: 'nosotros', element: <NosotrosPage /> },
       { path: 'contacto', element: <ContactPage /> },
 
+      // Blog
       { path: 'blogs', element: <BlogsPage /> },
       { path: 'blogs/:blogId', element: <BlogDetailPage /> },
 
-      { path: 'perfil', element: <UserProfilePage /> },
+      // 🔐 Perfil (solo usuario logueado)
+      {
+        path: 'perfil',
+        element: (
+          <ProtectedRoute>
+            <UserProfilePage />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 
+  // 🔥 ZONA ADMIN (solo ADMIN)
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: (
+      <AdminRouteGuard>
+        <AdminLayout />
+      </AdminRouteGuard>
+    ),
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'productos', element: <AdminProductsPage /> },
@@ -85,17 +113,17 @@ const router = createHashRouter([
       { path: 'usuarios', element: <AdminUsersPage /> },
       { path: 'ordenes', element: <AdminOrdersPage /> },
       { path: 'reportes', element: <AdminReportsPage /> },
-      { path: 'perfil', element: <h2>Perfil de Administrador</h2> },
-      { path: 'productos/criticos', element: <h2>Productos Críticos</h2> },
-    ]
+    ],
   },
 ]);
 
 function AppRoutes() {
   return (
-    <CartProvider>
-      <RouterProvider router={router} />
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

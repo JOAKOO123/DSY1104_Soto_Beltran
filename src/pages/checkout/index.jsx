@@ -1,4 +1,3 @@
-// src/pages/checkout/index.jsx
 import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
@@ -9,7 +8,7 @@ import { createSale, initTransbank } from "../../services/salesService";
 function CheckoutPage() {
   const navigate = useNavigate();
   const { cartItems, totalPrice, formatMoney, clearCart } = useCart();
-  const { user } = useAuth();
+  const { token, userId } = useAuth();   // ✅ CAMBIO AQUÍ
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -24,23 +23,26 @@ function CheckoutPage() {
     setErrorMsg("");
 
     try {
-      const userId = user?.id || 1;
+
+      if (!token) {
+        setErrorMsg("Debes iniciar sesión para comprar.");
+        setLoading(false);
+        return;
+      }
 
       console.log("🛒 CARRITO ACTUAL:", cartItems);
 
-      // 1️⃣ Crear venta en backend
-      const sale = await createSale(userId, cartItems);
+      // 1️⃣ Crear venta en backend con token
+      const sale = await createSale(userId, cartItems, token); // ✅ TOKEN AGREGADO
       console.log("✔ Venta creada:", sale);
 
       // 2️⃣ Iniciar Transbank
       const init = await initTransbank(sale.id);
       console.log("✔ Transbank init:", init);
 
-      // 3️⃣ Limpiar carrito ANTES de redirigir
-      clearCart();
+      clearCart(); // 3️⃣ Limpiar carrito
 
-      // 4️⃣ Redirigir
-      window.location.href = init.urlRedireccion;
+      window.location.href = init.urlRedireccion; // 4️⃣ Redirigir
 
     } catch (err) {
       console.error("❌ ERROR EN CHECKOUT:", err);
@@ -75,7 +77,7 @@ function CheckoutPage() {
         </button>
       </form>
 
-      {!user && (
+      {!token && (
         <p style={{ marginTop: "1rem" }}>
           Estás comprando como invitado.{" "}
           <Link to="/login">Inicia sesión</Link> para guardar tu historial.

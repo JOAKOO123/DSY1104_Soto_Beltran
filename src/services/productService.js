@@ -1,17 +1,12 @@
 // src/services/productService.js
-const API_URL = "http://localhost:8080/api/v1";
+import { apiGet } from "./api";
 
-// 🔥 Traer todos los productos desde Spring Boot (PAGINADO)
+// 🔥 Traer todos los productos desde el backend
 export async function fetchAllProducts(page = 0, size = 1000) {
-  const res = await fetch(`${API_URL}/products?page=${page}&size=${size}`);
+  const data = await apiGet(`/products?page=${page}&size=${size}`);
 
-  if (!res.ok) throw new Error("Error cargando productos");
+  const productos = data.content || data; // fallback por si no viene paginado
 
-  const data = await res.json();
-
-  const productos = data.content; // 👈 AQUÍ ESTABA EL PROBLEMA
-
-  // Mapear formato backend → frontend
   return productos.map(p => ({
     code: p.id,
     nombre: p.nombre,
@@ -26,14 +21,9 @@ export async function fetchAllProducts(page = 0, size = 1000) {
   }));
 }
 
-
-// 🔥 Traer producto por ID
+// 🔥 Traer producto por id
 export async function fetchProductById(id) {
-  const res = await fetch(`${API_URL}/products/${id}`);
-
-  if (!res.ok) throw new Error("Producto no encontrado");
-
-  const p = await res.json();
+  const p = await apiGet(`/products/${id}`);
 
   return {
     code: p.id,

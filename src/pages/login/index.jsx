@@ -11,21 +11,31 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMsg("");
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setMsg("");
 
-    const result = await login(email, password);
+  const result = await login(email, password);
 
-    if (!result.ok) {
-      setMsg("❌ Credenciales inválidas");
-      return;
+  if (!result.ok) {
+    setMsg("❌ Credenciales inválidas");
+    return;
+  }
+
+  setMsg("✔ Inicio de sesión exitoso. Redirigiendo...");
+
+  // Determinar a dónde redirigir según rol
+  const rol = localStorage.getItem("mitienda_rol");
+
+  setTimeout(() => {
+    if (rol === "ADMIN") {
+      navigate("/admin");
+    } else {
+      navigate("/");
     }
+  }, 700);
+};
 
-    setMsg("✔ Inicio de sesión exitoso. Redirigiendo...");
-
-    setTimeout(() => navigate("/"), 800);
-  };
 
   return (
     <div className="container">
