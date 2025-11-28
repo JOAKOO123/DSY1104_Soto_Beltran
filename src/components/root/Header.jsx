@@ -90,51 +90,43 @@ function Header({ onCartClick }) {
               
               {/* Botones Cuenta - Usamos NavLink */}
               <div className="account-buttons">
-                {user ? (
-                  <>
-                    {!isAdmin && (
-                      <span style={{ marginRight: '10px', color: '#333' }}>
-                        {welcomeText}
-                      </span>
-                    )}
-                    <Link 
-                      to={linkDestination}
-                      style={{ 
-                        textDecoration: 'none',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        padding: '8px 15px',
-                        borderRadius: '4px',
-                        background: isAdmin ? '#4CAF50' : '#007bff',
-                      }}
-                    >
-                      {linkText}
-                    </Link>
-                    <button 
-                      onClick={logout}
-                      style={{ 
-                        background: 'none', 
-                        border: 'none', 
-                        color: '#dc3545', 
-                        cursor: 'pointer',
-                        marginLeft: '10px'
-                      }}
-                    >
-                      Cerrar sesión
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
-                      Iniciar sesión
-                    </Link>
-                    <span style={{ color: '#ccc', margin: '0 10px' }}> | </span>
-                    <Link to="/registro" style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}>
-                      Registrarse
-                    </Link>
-                  </>
-                )}
-              </div>
+  {user ? (
+    <>
+      <button 
+        onClick={logout}
+        style={{
+          background: 'none',
+          border: 'none',
+          color: '#dc3545',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          marginLeft: '10px'
+        }}
+      >
+        Cerrar sesión
+      </button>
+    </>
+  ) : (
+    <>
+      <Link 
+        to="/login" 
+        style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}
+      >
+        Iniciar sesión
+      </Link>
+
+      <span style={{ color: '#ccc', margin: '0 10px' }}>|</span>
+
+      <Link 
+        to="/registro" 
+        style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}
+      >
+        Registrarse
+      </Link>
+    </>
+  )}
+</div>
+
             </div>
 
             {/* ======================= 4. BOTÓN MENU MOBILE ======================= */}

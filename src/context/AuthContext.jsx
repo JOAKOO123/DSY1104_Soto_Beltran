@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext(null);
 
@@ -9,6 +9,22 @@ export const AuthProvider = ({ children }) => {
   const [email, setEmail] = useState(localStorage.getItem("mitienda_email"));
   const [userId, setUserId] = useState(localStorage.getItem("mitienda_userId"));
 
+  const [user, setUser] = useState(null);
+
+  // 🔥 RECONSTRUIR USER CUANDO HAY DATOS EN LOCAL STORAGE
+  useEffect(() => {
+    if (token && email && rol && userId) {
+      setUser({
+        id: userId,
+        email: email,
+        role: rol,
+      });
+    } else {
+      setUser(null);
+    }
+  }, [token, email, rol, userId]);
+
+  // 🔥 LOGIN
   const login = async (email, password) => {
     const res = await fetch("http://localhost:8080/api/v1/auth/login", {
       method: "POST",
@@ -34,9 +50,17 @@ export const AuthProvider = ({ children }) => {
     setEmail(data.email);
     setUserId(data.userId);
 
+    // Construir user
+    setUser({
+      id: data.userId,
+      email: data.email,
+      role: data.rol
+    });
+
     return { ok: true };
   };
 
+  // 🔥 LOGOUT
   const logout = () => {
     localStorage.clear();
 
@@ -44,10 +68,11 @@ export const AuthProvider = ({ children }) => {
     setRol(null);
     setEmail(null);
     setUserId(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, rol, email, userId, login, logout }}>
+    <AuthContext.Provider value={{ user, token, rol, email, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
