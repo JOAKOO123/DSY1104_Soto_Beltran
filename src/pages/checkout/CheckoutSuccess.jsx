@@ -1,27 +1,27 @@
+// src/pages/checkout/CheckoutSuccess.jsx
+
+import { useLocation, Link } from "react-router-dom";
+
 export default function CheckoutSuccess() {
-  // Leer parámetros desde el HASH (porque usamos HashRouter)
-  const hash = window.location.hash;  
-  console.log("HASH:", hash);
 
-  // Extraer solo la parte después de "?"
-  const queryString = hash.split("?")[1] || "";
-  console.log("QUERYSTRING:", queryString);
+  const { state } = useLocation();
 
-  const params = new URLSearchParams(queryString);
-  const saleId = params.get("saleId");
+  // Datos reales de la transacción
+  const buyOrder = state?.buy_order || "Desconocido";
+  const status = state?.status || "Sin info";
+  const authorizationCode = state?.authorization_code || "N/A";
 
   return (
-    <div className="container py-5">
-      <h1 className="text-success mb-3">✅ Pago realizado con éxito</h1>
+    <div className="container" style={{ padding: "50px" }}>
+      <h1>✔ Pago realizado con éxito</h1>
 
-      <p style={{ fontSize: "18px" }}>
-        <strong>ID de la venta: </strong>
-        {saleId ? saleId : "Desconocido"}
-      </p>
+      <p><strong>ID de la venta:</strong> {buyOrder}</p>
+      <p><strong>Estado:</strong> {status}</p>
+      <p><strong>Código de autorización:</strong> {authorizationCode}</p>
 
-      <a className="btn btn-success mt-3" href="#/">
-        Volver al inicio
-      </a>
+      <br />
+
+      <Link to="/">Volver al inicio</Link>
     </div>
   );
 }

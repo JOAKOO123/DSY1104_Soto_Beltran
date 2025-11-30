@@ -1,6 +1,6 @@
 // src/routes.jsx
 
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 
@@ -9,7 +9,6 @@ import App from './App';
 // Rutas protegidas
 import ProtectedRoute from './components/root/ProtectedRoute';
 import AdminRouteGuard from "./components/AdminRouteGuard";
-
 
 // --- Páginas ---
 import HomePage from './pages/home';
@@ -25,9 +24,10 @@ import CategoriesPage from './pages/categories';
 import OfertaPage from './pages/oferta';
 import UserProfilePage from './pages/UserProfilePage';
 
-// Checkout y transbank
-import CheckoutPage from './pages/checkout';
+// Checkout y Transbank
+import CheckoutPage from './pages/CheckoutPage';
 import CheckoutSuccess from './pages/checkout/CheckoutSuccess';
+import WebpayReturnPage from './pages/WebpayReturnPage';
 
 import OrderSuccess from './pages/orden/OrderSuccess';
 import OrderError from './pages/orden/OrderError';
@@ -43,7 +43,7 @@ import AdminNewCategoryPage from './pages/admin/AdminNewCategoryPage';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
@@ -55,20 +55,19 @@ const router = createHashRouter([
       { path: 'categorias', element: <CategoriesPage /> },
       { path: 'ofertas', element: <OfertaPage /> },
 
-      // 🔐 Checkout solo usuarios logueados
+      // 🔥 Checkout: AHORA ES PÚBLICO (para probar Webpay)
       {
         path: 'checkout',
-        element: (
-          <ProtectedRoute>
-            <CheckoutPage />
-          </ProtectedRoute>
-        ),
+        element: <CheckoutPage />,
       },
 
-      // Página de éxito del pago (pública porque viene desde Transbank)
+      // Página de éxito del pago
       { path: 'checkout/success', element: <CheckoutSuccess /> },
 
-      // 🔥 Páginas conectadas al backend
+      // Página de retorno desde Webpay (token_ws viene por GET)
+      { path: 'webpay/return', element: <WebpayReturnPage /> },
+
+      // 🔥 Páginas conectadas al backend para órdenes
       { path: 'orden/exito/:orderId', element: <OrderSuccess /> },
       { path: 'orden/error/:orderId', element: <OrderError /> },
 
