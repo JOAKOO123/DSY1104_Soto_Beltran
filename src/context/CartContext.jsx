@@ -10,20 +10,19 @@ export const CartProvider = ({ children }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("mitienda_cart");
-      if (stored) setCartItems(JSON.parse(stored));
-    } catch {
-      localStorage.removeItem("mitienda_cart");
-      setCartItems([]);
-    }
-  }, []);
+useEffect(() => {
+  localStorage.setItem("mitienda_cart", JSON.stringify(cartItems));
+}, [cartItems]);
 
-  useEffect(() => {
-    localStorage.setItem("mitienda_cart", JSON.stringify(cartItems));
-    setTotalPrice(cartItems.reduce((s, i) => s + i.price * i.qty, 0));
-  }, [cartItems]);
+
+useEffect(() => {
+  const saved = localStorage.getItem("mitienda_cart");
+  if (saved) {
+    setCartItems(JSON.parse(saved));
+  }
+}, []);
+
+
 
   const addToCart = (product) => {
     setCartItems(prev => {
@@ -77,9 +76,9 @@ export const CartProvider = ({ children }) => {
       closeCart: () => setIsOpen(false),
       formatMoney: (v) => `$${(v || 0).toLocaleString('es-CL')}`
     }}>
-      {children}
+      {children}c
     </CartContext.Provider>
   );
-};
+}; 
 
 export const useCart = () => useContext(CartContext);

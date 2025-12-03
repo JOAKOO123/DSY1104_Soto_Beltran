@@ -4,13 +4,10 @@ import { useState, useEffect } from 'react';
 import Filters from '../../components/products/Filters';
 import ProductGrid from '../../components/products/ProductGrid';
 import { fetchAllProducts } from '../../services/productService';
-import { useCart } from '../../context/CartContext';
 
 const ITEMS_PER_PAGE = 12;
 
 function ProductsPage() {
-
-  const { addToCart, formatMoney } = useCart();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -26,9 +23,9 @@ function ProductsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await fetchAllProducts();
-        setAllProducts(data);
-        setFilteredProducts(data);
+        const products = await fetchAllProducts(0, 500); // aseguramos array
+        setAllProducts(products);
+        setFilteredProducts(products);
       } catch (err) {
         console.error("Error cargando productos:", err);
       }
@@ -42,12 +39,12 @@ function ProductsPage() {
 
     if (searchTerm) {
       products = products.filter(p =>
-        p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        p.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (selectedCategory) {
-      products = products.filter(p => p.categoriaId === selectedCategory);
+      products = products.filter(p => p.categoria === selectedCategory);
     }
 
     setFilteredProducts(products);
@@ -68,28 +65,28 @@ function ProductsPage() {
 
   return (
     <div className="container" style={{ paddingBlock: "1.5rem" }}>
+
       <div className="catalogo-head">
         <h1>Nuestro Catálogo</h1>
         <p>Explora frutas, verduras y más.</p>
       </div>
 
       <div className="catalogo-grid">
+
         <Filters
           searchTerm={searchTerm}
           selectedCategory={selectedCategory}
-          onSearchChange={(t) => setSearchTerm(t)}
-          onCategoryChange={(cat) => setSelectedCategory(cat)}
+          onSearchChange={setSearchTerm}
+          onCategoryChange={setSelectedCategory}
         />
 
         <ProductGrid
           products={paginatedProducts}
           totalFiltered={filteredProducts.length}
-          onAddToCart={addToCart}
-          formatMoney={formatMoney}
         />
+
       </div>
 
-      {/* Paginación */}
       {totalPages > 1 && (
         <div className="pager">
           <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>

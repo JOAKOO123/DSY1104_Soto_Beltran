@@ -5,8 +5,10 @@ import { apiGet } from "./api";
 export async function fetchAllProducts(page = 0, size = 1000) {
   const data = await apiGet(`/products?page=${page}&size=${size}`);
 
-  const productos = data.content || data;
+  // Si el backend devuelve Page<Product>, tomamos data.content
+  const productos = Array.isArray(data) ? data : (data.content || []);
 
+  // Normalizar los productos
   return productos.map(p => ({
     id: p.id,
     nombre: p.nombre,
@@ -15,15 +17,13 @@ export async function fetchAllProducts(page = 0, size = 1000) {
     precio: p.precio,
     stock: p.stock,
     unidad: p.unidad || "unidad",
-
-    urlImagen: p.urlImagen || null,  // 👈 imagen real
-
+    urlImagen: p.urlImagen || null,
     isOffer: false,
     offerPriceCLP: null,
   }));
 }
 
-// 🔥 Traer producto por id
+// 🔥 Traer un producto por ID
 export async function fetchProductById(id) {
   const p = await apiGet(`/products/${id}`);
 
@@ -35,9 +35,7 @@ export async function fetchProductById(id) {
     precio: p.precio,
     stock: p.stock,
     unidad: p.unidad || "unidad",
-
-    urlImagen: p.urlImagen || null,  // 👈 imagen real
-
+    urlImagen: p.urlImagen || null,
     isOffer: false,
     offerPriceCLP: null,
   };
