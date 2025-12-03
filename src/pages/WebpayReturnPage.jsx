@@ -8,44 +8,71 @@ export default function WebpayReturnPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
-  const token = params.get("token_ws");
+  const tokenWs = params.get("token_ws");
   const tbkToken = params.get("TBK_TOKEN");
 
   useEffect(() => {
 
-    // 🔥 Caso: usuario canceló el pago
+    // -------------------------------------------------------
+    // 🔥 1. Caso: usuario CANCELÓ el pago en Webpay
+    // -------------------------------------------------------
     if (tbkToken) {
-      navigate("/checkout/error");
+      navigate("/orden/error/0");
       return;
     }
 
-    // 🔥 Caso: Webpay aprobó y envió token_ws
-    if (token) {
-      commitPago(token);
+    // -------------------------------------------------------
+    // 🔥 2. Caso: Webpay APROBÓ → llega token_ws
+    // -------------------------------------------------------
+    if (tokenWs) {
+      commitPago(tokenWs);
     }
 
-  }, [token, tbkToken]);
+  }, [tokenWs, tbkToken]);
 
-  const commitPago = async (tokenWS) => {
+
+  const commitPago = async (token) => {
     try {
+
       const res = await fetch(
-        `http://localhost:8080/api/v1/transbank/return?token_ws=${tokenWS}`
+        `http://localhost:8080/api/v1/transbank/return?token_ws=${token}`
       );
 
-      const data = await res.json();
-      console.log("RESPUESTA DEL COMMIT:", data);
-
-      if (data.status === "AUTHORIZED") {
-        navigate("/checkout/success", { state: data });
-      } else {
-        navigate("/checkout/error", { state: data });
+      // Si el backend responde error (403, 500, etc.)
+      if (!res.ok) {
+        navigate("/orden/error/0");
+        return;
       }
 
+      const data = await res.json();
+      console.log("🔵 RESPUESTA DEL COMMIT:", data);
+
+      // -------------------------------------------------------
+      // 💰 Pago autorizado → ir a éxito con ID real de la orden
+      // -------------------------------------------------------
+      if (data.status === "AUTHORIZED") {
+
+        const orderId =
+          data.buyOrder ||
+          data.buy_order ||
+          data.buy_order_id ||
+          0;
+
+        navigate(`/orden/exito/${orderId}`, { state: data });
+        return;
+      }
+
+      // -------------------------------------------------------
+      // ❌ Pago rechazado
+      // -------------------------------------------------------
+      navigate("/orden/error/0", { state: data });
+
     } catch (error) {
-      console.error(error);
-      navigate("/checkout/error");
+      console.error("❌ ERROR COMMIT:", error);
+      navigate("/orden/error/0");
     }
   };
+
 
   return (
     <div style={{ padding: 50 }}>
