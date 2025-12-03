@@ -1,47 +1,20 @@
-import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useLocation, useParams, Link } from "react-router-dom";
 
 export default function OrderSuccess() {
+  const { state } = useLocation();
   const { orderId } = useParams();
-  const [estado, setEstado] = useState("Cargando...");
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch(`http://localhost:8080/api/v1/sales/${orderId}`);
-        if (!res.ok) throw new Error("No se pudo cargar venta");
-
-        const sale = await res.json();
-        setEstado(sale.estado || "DESCONOCIDO");
-      } catch {
-        setEstado("ERROR");
-      }
-    }
-    load();
-  }, [orderId]);
+  const status = state?.status || "AUTHORIZED";
 
   return (
-    <div className="container" style={{ padding: "3rem", textAlign: "center" }}>
-      <h1 style={{ color: "green" }}>✔ Pago realizado con éxito</h1>
+    <div style={{ padding: 50, textAlign: "center" }}>
+      <h1 style={{ color: "green" }}>✓ Pago realizado con éxito</h1>
+
       <h2>Orden #{orderId}</h2>
 
-      <p style={{ fontSize: "1.2rem" }}>
-        Estado del pago: <strong>{estado}</strong>
-      </p>
+      <p>Estado del pago: <strong>{status}</strong></p>
 
-      <br />
-      <Link
-        to="/productos"
-        style={{
-          padding: "1rem 2rem",
-          background: "#0d6efd",
-          color: "white",
-          textDecoration: "none",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          fontSize: "1.1rem",
-        }}
-      >
+      <Link to="/" className="btn btn-primary" style={{ marginTop: 20 }}>
         Seguir comprando
       </Link>
     </div>
