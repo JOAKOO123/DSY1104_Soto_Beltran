@@ -56,21 +56,9 @@ export default function CheckoutPage() {
       });
 
       const data = await res.json();
+      window.location.href = `${data.url}?token_ws=${data.token}`;
 
-      // 4️⃣ Crear form y enviar a Webpay
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = data.url;
-
-      const hidden = document.createElement("input");
-      hidden.type = "hidden";
-      hidden.name = "token_ws";
-      hidden.value = data.token;
-
-      form.appendChild(hidden);
-      document.body.appendChild(form);
-      form.submit();
-
+     
     } catch (err) {
       console.error(err);
       alert("Error iniciando pago");
