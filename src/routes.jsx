@@ -14,8 +14,8 @@ import AdminRouteGuard from "./components/AdminRouteGuard";
 import HomePage from './pages/home';
 import ProductsPage from './pages/products';
 import ProductDetailPage from './pages/product-detail';
+import RegisterPage from "./pages/RegisterPage";
 import LoginPage from './pages/login';
-import RegisterPage from './pages/register';
 import NosotrosPage from './pages/nosotros';
 import ContactPage from './pages/contact';
 import BlogsPage from './pages/blogs';
@@ -74,7 +74,6 @@ const router = createBrowserRouter([
       // Login / Registro
       { path: 'login', element: <LoginPage /> },
       { path: 'registro', element: <RegisterPage /> },
-
       // Páginas informativas
       { path: 'nosotros', element: <NosotrosPage /> },
       { path: 'contacto', element: <ContactPage /> },
