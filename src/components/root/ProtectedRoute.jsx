@@ -1,19 +1,14 @@
-import React from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { Navigate, Outlet } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-const ProtectedRoute = ({ allowedRoles = [] }) => {
-  const { user } = useAuth();
+export default function ProtectedRoute({ children }) {
+  const { token } = useAuth();
 
-  if (!user) {
+  // Si NO hay token → no está logueado
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles.length > 0 && (!user.role || !allowedRoles.includes(user.role))) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <Outlet />;
-};
-
-export default ProtectedRoute;
+  return children;
+}

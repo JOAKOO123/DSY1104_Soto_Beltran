@@ -1,57 +1,81 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { USUARIOS as seedUsers } from '../data/usuarios.js';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-export const AuthContext = createContext(null);
+const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('mitienda_user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+export const AuthProvider = ({ children }) => {
 
+  const [token, setToken] = useState(localStorage.getItem("mitienda_token"));
+  const [rol, setRol] = useState(localStorage.getItem("mitienda_rol"));
+  const [email, setEmail] = useState(localStorage.getItem("mitienda_email"));
+  const [userId, setUserId] = useState(localStorage.getItem("mitienda_userId"));
+
+  const [user, setUser] = useState(null);
+
+  // 🔥 RECONSTRUIR USER CUANDO HAY DATOS EN LOCAL STORAGE
   useEffect(() => {
-    // Force seed users on mount
-    localStorage.setItem('mitienda_users', JSON.stringify(seedUsers));
-    console.log('Usuarios predefinidos cargados en localStorage (forzado).');
-
-    const savedUser = localStorage.getItem('mitienda_user');
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      setUser(userData);
+    if (token && email && rol && userId) {
+      setUser({
+        id: userId,
+        email: email,
+        role: rol,
+      });
+    } else {
+      setUser(null);
     }
-  }, []);
+  }, [token, email, rol, userId]);
 
-  const login = (userData) => {
-    try {
-      localStorage.setItem('mitienda_user', JSON.stringify(userData));
-      setUser(userData);
-    } catch (error) {
-      console.error('Error saving user:', error);
+  // 🔥 LOGIN
+  const login = async (email, password) => {
+    const res = await fetch("http://localhost:8080/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      return { ok: false, message: "Credenciales incorrectas" };
     }
+
+    const data = await res.json();
+
+    // Guardar en localStorage
+    localStorage.setItem("mitienda_token", data.token);
+    localStorage.setItem("mitienda_rol", data.rol);
+    localStorage.setItem("mitienda_email", data.email);
+    localStorage.setItem("mitienda_userId", data.userId);
+
+    // Guardar en estado global
+    setToken(data.token);
+    setRol(data.rol);
+    setEmail(data.email);
+    setUserId(data.userId);
+
+    // Construir user
+    setUser({
+      id: data.userId,
+      email: data.email,
+      role: data.rol
+    });
+
+    return { ok: true };
   };
 
+  // 🔥 LOGOUT
   const logout = () => {
-    localStorage.removeItem('mitienda_user');
+    localStorage.clear();
+
+    setToken(null);
+    setRol(null);
+    setEmail(null);
+    setUserId(null);
     setUser(null);
   };
 
-  const handleRegister = (userData) => {
-    const nuevoUsuario = {
-      ...userData,
-      correo: userData.email || userData.correo,
-    };
-    // ...existing registration logic...
-  };
-
-  const value = { user, login, logout, handleRegister };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, token, rol, email, userId, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);

@@ -1,18 +1,22 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 
 function AdminRouteGuard() {
-  const { user, loading } = useAuth();
+  const { token, rol } = useAuth();
 
-  if (loading) {
-    return <div>Verificando permisos...</div>;
+  // 1) Si no hay token → no está logueado
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (!user || user.role !== 'admin') {
+  // 2) Si el rol no es ADMIN → no puede acceder
+  if (rol !== "ADMIN") {
     return <Navigate to="/" replace />;
   }
 
+  // 3) Si pasa validaciones → puede entrar
   return <Outlet />;
 }
 

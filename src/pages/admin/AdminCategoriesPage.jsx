@@ -1,61 +1,54 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { CATEGORIAS } from '../../data/categories.js';
+// src/pages/admin/AdminCategoriesPage.jsx
+import React from "react";
+import { Link } from "react-router-dom";
+import { CATEGORIAS } from "../../data/categories.js";
 
 function AdminCategoriesPage() {
-    const categorias = CATEGORIAS;
-    const tableHeaderStyle = { padding: '10px', border: '1px solid #eee', textAlign: 'left', backgroundColor: '#f4f4f4' };
-    const tableDataStyle = { padding: '8px', border: '1px solid #eee' };
+  const th = { padding: "10px", border: "1px solid #eee", background: "#f4f4f4" };
+  const td = { padding: "8px", border: "1px solid #eee" };
 
-    return (
-        <div>
-            <h2>Gestión de Categorías</h2>
-            
-            <div style={{ marginBottom: '1rem', display: 'flex', gap: '15px' }}>
-                <Link to="/admin/categorias/nueva" 
-                    style={{ 
-                        display: 'inline-block', 
-                        padding: '10px 15px', 
-                        background: '#28a745',
-                        color: 'white', 
-                        textDecoration: 'none', 
-                        borderRadius: '4px',
-                        fontWeight: 'bold'
-                    }}>
-                    + Nueva Categoría
-                </Link>
-            </div>
+  return (
+    <div>
+      <h2>Gestión de Categorías</h2>
 
-            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '1rem', background: '#fff' }}>
-                <thead>
-                    <tr>
-                        <th style={tableHeaderStyle}>ID</th>
-                        <th style={tableHeaderStyle}>Nombre</th>
-                        <th style={tableHeaderStyle}>Slug (URL)</th>
-                        <th style={tableHeaderStyle}>Productos</th>
-                        <th style={tableHeaderStyle}>Estado</th>
-                        <th style={tableHeaderStyle}>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {categorias.map(cat => (
-                        <tr key={cat.id} style={{ borderBottom: '1px solid #ddd' }}>
-                            <td style={tableDataStyle}>{cat.id}</td>
-                            <td style={tableDataStyle}>{cat.nombre}</td>
-                            <td style={tableDataStyle}>{cat.slug}</td>
-                            <td style={tableDataStyle}>{cat.productos}</td>
-                            <td style={tableDataStyle}>{cat.estado}</td>
-                            <td style={tableDataStyle}>
-                                <Link to={`/admin/categorias/${cat.id}/editar`}>
-                                    Editar
-                                </Link>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+      <Link
+        to="/admin/categorias/nueva"
+        style={{
+          padding: "10px 15px",
+          background: "green",
+          color: "white",
+          textDecoration: "none",
+          borderRadius: "4px",
+          fontWeight: "bold",
+        }}
+      >
+        + Nueva Categoría
+      </Link>
+
+      <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "1rem" }}>
+        <thead>
+          <tr>
+            <th style={th}>ID</th>
+            <th style={th}>Nombre</th>
+            <th style={th}>Slug</th>
+            <th style={th}>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {CATEGORIAS.map((cat) => (
+            <tr key={cat.id}>
+              <td style={td}>{cat.id}</td>
+              <td style={td}>{cat.nombre}</td>
+              <td style={td}>{cat.slug}</td>
+              <td style={td}>
+                <Link to={`/admin/categorias/${cat.id}/editar`}>Editar</Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default AdminCategoriesPage;

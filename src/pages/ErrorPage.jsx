@@ -12,3 +12,5 @@ export default function ErrorPage() {
     </div>
   );
 }
+
+// pp

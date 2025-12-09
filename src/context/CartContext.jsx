@@ -8,96 +8,77 @@ export const CartProvider = ({ children }) => {
   const { user } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [isOpen, setIsOpen] = useState(false); // Add isOpen state
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('mitienda_cart');
-      if (stored) setCartItems(JSON.parse(stored));
-    } catch (error) { console.error("Error loading cart:", error); }
-  }, []);
+useEffect(() => {
+  localStorage.setItem("mitienda_cart", JSON.stringify(cartItems));
+}, [cartItems]);
 
-  useEffect(() => {
-    const total = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    setTotalPrice(total);
-    try {
-      localStorage.setItem('mitienda_cart', JSON.stringify(cartItems));
-    } catch (error) { console.error("Error saving cart:", error); }
-  }, [cartItems]);
 
-  const formatMoney = (amount) => {
-    const numAmount = Number(amount) || 0;
-    return `$${numAmount.toLocaleString('es-CL')}`;
-  };
+useEffect(() => {
+  const saved = localStorage.getItem("mitienda_cart");
+  if (saved) {
+    setCartItems(JSON.parse(saved));
+  }
+}, []);
 
-  const updateQuantity = (code, newQty) => {
-    setCartItems(prev => {
-      if (newQty < 1) {
-        return prev.filter(item => item.code !== code);
-      }
-      return prev.map(item =>
-        item.code === code ? { ...item, qty: newQty } : item
-      );
-    });
-  };
 
-  const removeFromCart = (code) => {
-    setCartItems(prev => prev.filter(item => item.code !== code));
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
 
   const addToCart = (product) => {
-    if (!user) {
-      console.log('Usuario no autenticado');
-      return false; // Return false to indicate auth required
-    }
+    setCartItems(prev => {
+      const found = prev.find(i => i.id === product.id);
 
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.code === product.code);
-      
-      if (existingItem) {
-        return prevItems.map(item =>
-          item.code === product.code ? { ...item, qty: item.qty + 1 } : item
+      if (found) {
+        return prev.map(i =>
+          i.id === product.id
+            ? { ...i, qty: i.qty + (product.qty || 1) }
+            : i
         );
-      } else {
-        return [...prevItems, {
-          code: product.code,
-          name: product.nombre,
-          price: product.precioCLP,
-          image: product.imagen,
-          qty: 1
-        }];
       }
+
+      return [
+        ...prev,
+        {
+          id: product.id,
+          name: product.name || product.nombre,
+          price: product.price || product.precio,
+          image: product.image || product.urlImagen,
+          qty: product.qty || 1
+        }
+      ];
     });
-    return true; // Return true on success
   };
 
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
-
-  const value = {
-    cartItems,
-    totalPrice,
-    formatMoney,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
-    addToCart,
-    isOpen,
-    openCart,
-    closeCart
+  const updateQuantity = (id, qty) => {
+    setCartItems(prev =>
+      qty < 1
+        ? prev.filter(i => i.id !== id)
+        : prev.map(i => i.id === id ? { ...i, qty } : i)
+    );
   };
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-};
+  const removeFromCart = (id) => {
+    setCartItems(prev => prev.filter(i => i.id !== id));
+  };
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart debe ser usado dentro de un CartProvider');
-  }
-  return context;
-};
+  const clearCart = () => setCartItems([]);
+
+  return (
+    <CartContext.Provider value={{
+      cartItems,
+      totalPrice,
+      addToCart,
+      updateQuantity,
+      removeFromCart,
+      clearCart,
+      isOpen,
+      openCart: () => setIsOpen(true),
+      closeCart: () => setIsOpen(false),
+      formatMoney: (v) => `$${(v || 0).toLocaleString('es-CL')}`
+    }}>
+      {children}c
+    </CartContext.Provider>
+  );
+}; 
+
+export const useCart = () => useContext(CartContext);
